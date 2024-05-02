@@ -1,6 +1,6 @@
 {
     "name": "@tyisi/docker-config-tool-js",
-    "version": "1.0.0",
+    "version": "1.0.0rc1",
     "description": "Javascript/Typescript implementation of Docker Config Tool",
     "main": "./dist/index.js",
     "license": "GPL-3.0-only",
@@ -44,8 +44,7 @@
     "scripts": {
         "build": "wireit",
         "compile": "wireit",
-        "test": "wireit",
-        "test:from": "wireit"
+        "test": "wireit"
     },
     "wireit": {
         "compile": {
@@ -97,16 +96,7 @@
             "dependencies": [
                 "compile"
             ],
-            "command": "jest"
-        },
-        "test:from": {
-            "dependencies": [
-                "compile"
-            ],
-            "files": [
-                "tests/commands/from/"
-            ],
-            "command": "jest tests/commands/from/"
+            "command": "jest --all --no-cache"
         }
     },
     "dependencies": {
