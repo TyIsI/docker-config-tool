@@ -1,0 +1,15 @@
+{
+    "private": true,
+    "name": "@tyisi/docker-config-tool",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {},
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "prettier": "^3.2.5",
+        "prettier-plugin-sh": "^0.14.0"
+    }
+}

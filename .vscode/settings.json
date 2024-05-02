@@ -1,0 +1,17 @@
+{
+    "[javascript][typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.sonarlint": "explicit",
+            "source.fixAll.prettier": "explicit"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[shellscript]": {
+        "files.eol": "\n",
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}

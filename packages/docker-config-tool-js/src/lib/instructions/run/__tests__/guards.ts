@@ -1,0 +1,181 @@
+import {
+    isRunInstructionArgsObject,
+    isRunInstructionBooleanFields,
+    isRunInstructionCacheSharingTypes,
+    isRunInstructionMountRunArg,
+    isRunInstructionMountTypeBind,
+    isRunInstructionMountTypeBindCommon,
+    isRunInstructionMountTypeBindRW,
+    isRunInstructionMountTypeBindReadWrite,
+    isRunInstructionMountTypeCache,
+    isRunInstructionMountTypeCacheCommon,
+    isRunInstructionMountTypeCacheRO,
+    isRunInstructionMountTypeCacheReadOnly,
+    isRunInstructionMountTypeSSH,
+    isRunInstructionMountTypeSecret,
+    isRunInstructionMountTypeTmpFS,
+    isRunInstructionNetworkRunArg,
+    isRunInstructionParameters,
+    isRunInstructionSecurityRunArg,
+    isRunInstructions
+} from '../guards'
+
+import {
+    RunInstructionArgsObjectTestData,
+    RunInstructionBooleanFieldsTestData,
+    RunInstructionCacheSharingTypesTestData,
+    RunInstructionMountTypeBindCommonTestData,
+    RunInstructionMountTypeCacheCommonTestData,
+    RunInstructionMountTypeSecretTestData,
+    RunInstructionMountTypeSSHTestData,
+    RunInstructionMountTypeTmpFSTestData,
+    RunInstructionMountRunArgTestData,
+    RunInstructionNetworkRunArgTestData,
+    RunInstructionParametersTestData,
+    RunInstructionSecurityRunArgTestData,
+    RunInstructionsTestData
+} from './data/guards'
+
+describe('DCT', () => {
+    describe('lib', () => {
+        describe('instructions', () => {
+            describe(`RUN`, () => {
+                describe(`guards`, () => {
+                    test(`isRunInstructionArgsObject`, () => {
+                        RunInstructionArgsObjectTestData.forEach((testVal) => {
+                            expect(isRunInstructionArgsObject(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionBooleanFields`, () => {
+                        RunInstructionBooleanFieldsTestData.forEach((testVal) => {
+                            expect(isRunInstructionBooleanFields(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionCacheSharingTypes`, () => {
+                        RunInstructionCacheSharingTypesTestData.forEach((testVal) => {
+                            expect(isRunInstructionCacheSharingTypes(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeBindCommon`, () => {
+                        RunInstructionMountTypeBindCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeBindCommon(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeBindReadWrite`, () => {
+                        RunInstructionMountTypeBindCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeBindReadWrite({ ...testVal, readwrite: true })).toBe(true)
+                            expect(isRunInstructionMountTypeBindReadWrite({ ...testVal, readwrite: false })).toBe(true)
+                            expect(isRunInstructionMountTypeBindReadWrite({ ...testVal, rw: true })).toBe(false)
+                            expect(isRunInstructionMountTypeBindReadWrite({ ...testVal, rw: false })).toBe(false)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeBindRW`, () => {
+                        RunInstructionMountTypeBindCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeBindRW({ ...testVal, rw: true })).toBe(true)
+                            expect(isRunInstructionMountTypeBindRW({ ...testVal, rw: false })).toBe(true)
+                            expect(isRunInstructionMountTypeBindRW({ ...testVal, readwrite: true })).toBe(false)
+                            expect(isRunInstructionMountTypeBindRW({ ...testVal, readwrite: false })).toBe(false)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeBind`, () => {
+                        RunInstructionMountTypeBindCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeBind(testVal)).toBe(true)
+                            expect(isRunInstructionMountTypeBind({ ...testVal, readwrite: true })).toBe(true)
+                            expect(isRunInstructionMountTypeBind({ ...testVal, readwrite: false })).toBe(true)
+                            expect(isRunInstructionMountTypeBind({ ...testVal, rw: true })).toBe(true)
+                            expect(isRunInstructionMountTypeBind({ ...testVal, rw: false })).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeCacheCommon`, () => {
+                        RunInstructionMountTypeCacheCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeCacheCommon(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeCacheReadOnly`, () => {
+                        RunInstructionMountTypeCacheCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeCacheReadOnly({ ...testVal, readonly: true })).toBe(true)
+                            expect(isRunInstructionMountTypeCacheReadOnly({ ...testVal, readonly: false })).toBe(true)
+                            expect(isRunInstructionMountTypeCacheReadOnly({ ...testVal, ro: true })).toBe(false)
+                            expect(isRunInstructionMountTypeCacheReadOnly({ ...testVal, ro: false })).toBe(false)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeCacheRO`, () => {
+                        RunInstructionMountTypeCacheCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeCacheRO({ ...testVal, ro: true })).toBe(true)
+                            expect(isRunInstructionMountTypeCacheRO({ ...testVal, ro: false })).toBe(true)
+                            expect(isRunInstructionMountTypeCacheRO({ ...testVal, readonly: true })).toBe(false)
+                            expect(isRunInstructionMountTypeCacheRO({ ...testVal, readonly: false })).toBe(false)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeCache`, () => {
+                        RunInstructionMountTypeCacheCommonTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeCache(testVal)).toBe(true)
+                            expect(isRunInstructionMountTypeCache({ ...testVal, readonly: true })).toBe(true)
+                            expect(isRunInstructionMountTypeCache({ ...testVal, readonly: false })).toBe(true)
+                            expect(isRunInstructionMountTypeCache({ ...testVal, ro: true })).toBe(true)
+                            expect(isRunInstructionMountTypeCache({ ...testVal, ro: false })).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeSecret`, () => {
+                        RunInstructionMountTypeSecretTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeSecret(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeSSH`, () => {
+                        RunInstructionMountTypeSSHTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeSSH(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountTypeTmpFS`, () => {
+                        RunInstructionMountTypeTmpFSTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountTypeTmpFS(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionMountRunArg`, () => {
+                        RunInstructionMountRunArgTestData.forEach((testVal) => {
+                            expect(isRunInstructionMountRunArg(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionNetworkRunArg`, () => {
+                        RunInstructionNetworkRunArgTestData.forEach((testVal) => {
+                            expect(isRunInstructionNetworkRunArg(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionParameters`, () => {
+                        RunInstructionParametersTestData.forEach((testVal) => {
+                            expect(isRunInstructionParameters(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructionSecurityRunArg`, () => {
+                        RunInstructionSecurityRunArgTestData.forEach((testVal) => {
+                            expect(isRunInstructionSecurityRunArg(testVal)).toBe(true)
+                        })
+                    })
+
+                    test(`isRunInstructions`, () => {
+                        RunInstructionsTestData.forEach((testVal) => {
+                            expect(isRunInstructions(testVal)).toBe(true)
+                        })
+                    })
+                })
+            })
+        })
+    })
+})

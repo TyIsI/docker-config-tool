@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "rootDir": "./",
+        "baseUrl": "./src",
+        "paths": {
+            "lib/": [
+                "./src/lib"
+            ]
+        },
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "checkJs": true,
+        "declaration": true,
+        "declarationMap": false,
+        "sourceMap": true,
+        "noEmit": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": false
+    },
+    "include": [
+        "src/**/*.ts",
+        "jest.config.ts",
+    ],
+    "exclude": [
+        "dist/**",
+        "node_modules/**"
+    ],
+    "ts-node": {
+        "esm": true,
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "folders": [
+        {
+            "name": "Docker Config Tool - Root",
+            "path": "."
+        },
+        {
+            "name": "Docker Config Tool - JS",
+            "path": "packages/docker-config-tool-js"
+        },
+        {
+            "name": "Docker Config Tool - eslint config",
+            "path": "packages/eslint-config-dct"
+        }
+    ],
+    "settings": {
+        "[javascript][typescript]": {
+            "editor.codeActionsOnSave": {
+                "source.fixAll.eslint": "explicit",
+                "source.fixAll.sonarlint": "explicit",
+                "source.fixAll.prettier": "explicit"
+            },
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "eslint.execArgv": null,
+        "[shellscript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "jest.coverageFormatter": "DefaultFormatter"
+    }
+}

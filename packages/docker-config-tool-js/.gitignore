@@ -1,0 +1,16 @@
+*
+
+!.gitignore
+
+!examples/
+!examples/**/
+!examples/**/*
+
+!src/
+!src/**/
+!src/**/*.ts
+
+!package.json
+
+!jest.config.ts
+!tsconfig.json

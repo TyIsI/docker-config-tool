@@ -1,0 +1,115 @@
+{
+    "name": "@tyisi/docker-config-tool-js",
+    "version": "1.0.0",
+    "description": "Javascript/Typescript implementation of Docker Config Tool",
+    "main": "./dist/index.js",
+    "license": "GPL-3.0-only",
+    "author": "Ty Eggen",
+    "keywords": [
+        "docker",
+        "dockerfile",
+        "infrastructure as code",
+        "iac",
+        "infrastructure",
+        "containerization"
+    ],
+    "exports": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+    },
+    "devDependencies": {
+        "@jest/globals": "^29.7.0",
+        "@types/jest": "^29.5.12",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "esbuild": "^0.20.2",
+        "eslint": "^8.57.0",
+        "eslint-config-love": "^44.0.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-n": "^15.7.0",
+        "eslint-plugin-promise": "^6.1.1",
+        "jest": "^29.7.0",
+        "prettier": "^3.2.5",
+        "prettier-plugin-sh": "^0.14.0",
+        "ts-jest": "^29.1.2",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.3",
+        "typescript-eslint": "^7.5.0",
+        "wireit": "^0.14.4"
+    },
+    "scripts": {
+        "build": "wireit",
+        "compile": "wireit",
+        "test": "wireit",
+        "test:from": "wireit"
+    },
+    "wireit": {
+        "compile": {
+            "command": "node_modules/.bin/tsc"
+        },
+        "build:cjs": {
+            "command": "node_modules/.bin/tsup --format cjs -d dist src/index.ts",
+            "output": [
+                "dist/index.js"
+            ],
+            "clean": true,
+            "dependencies": [
+                "compile",
+                "test"
+            ]
+        },
+        "build:dts": {
+            "command": "node_modules/.bin/tsup -d dist src/index.ts --dts-only",
+            "output": [
+                "dist/index.d.ts"
+            ],
+            "clean": true,
+            "dependencies": [
+                "compile",
+                "test"
+            ]
+        },
+        "build:esm": {
+            "command": "node_modules/.bin/tsup --format esm --target esnext -d dist src/index.ts",
+            "output": [
+                "dist/index.mjs"
+            ],
+            "clean": true,
+            "dependencies": [
+                "compile",
+                "test"
+            ]
+        },
+        "build": {
+            "dependencies": [
+                "compile",
+                "test",
+                "build:cjs",
+                "build:dts",
+                "build:esm"
+            ]
+        },
+        "test": {
+            "dependencies": [
+                "compile"
+            ],
+            "command": "jest"
+        },
+        "test:from": {
+            "dependencies": [
+                "compile"
+            ],
+            "files": [
+                "tests/commands/from/"
+            ],
+            "command": "jest tests/commands/from/"
+        }
+    },
+    "dependencies": {
+        "zod": "^3.22.5"
+    }
+}
