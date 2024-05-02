@@ -4,34 +4,34 @@ const dct = new DockerConfigTool()
 
 const workspaceStage = dct.createStage({ from: 'scratch', as: 'workspace' })
 
-workspaceStage.addCopy('.', '/workspace').setLinked()
+workspaceStage.createCOPY('.', '/workspace').setLinked()
 
 const baseStage = dct.createStage({ from: 'node:lts-alpine', as: 'base' })
 
-baseStage.addRun('apk add --no-cache libc6-compat vips vips-cpp')
+baseStage.createRUN('apk add --no-cache libc6-compat vips vips-cpp')
 
-baseStage.addCommand('npm', 'start')
+baseStage.createCMD('npm', 'start')
 
 const buildStage = dct.createStage({ from: baseStage, as: 'app-build' })
 
-buildStage.addWorkdir('/build')
+buildStage.createWORKDIR('/build')
 
-buildStage.addUser(54321, 54321)
+buildStage.createUSER(54321, 54321)
 
 buildStage
-    .addCopy('/workspace/app/frontend', '/build')
+    .createCOPY('/workspace/app/frontend', '/build')
     .setFrom(workspaceStage)
     .setLinked()
     .setChown('runtime:runtime')
 
-// buildStage.addRun(["pnpm", "run", "build"])
+// buildStage.createRUN(["pnpm", "run", "build"])
 
 // const prodStage = dct.createStage({ from: 'nginx:stable', as: 'app-prod' })
 const prodStage = dct.createStage({ from: 'nginx:stable' })
 
-prodStage.addExpose('3000')
+prodStage.createEXPOSE('3000')
 
-prodStage.addCopy('/build/dist/', '/usr/share/nginx/html/').setFrom(buildStage).setLinked()
+prodStage.createCOPY('/build/dist/', '/usr/share/nginx/html/').setFrom(buildStage).setLinked()
 
 
 
