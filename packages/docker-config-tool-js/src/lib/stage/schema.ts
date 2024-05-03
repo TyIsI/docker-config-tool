@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
 import {
-    zFromInstructionStringFromParameter,
     zFromInstructionObjectParameter,
-    zFromInstructionParameters
+    zFromInstructionParameters,
+    zFromInstructionStringFromParameter
 } from '../instructions/from/schema'
 
 export const zStage = z.object({

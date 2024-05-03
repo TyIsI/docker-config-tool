@@ -4,11 +4,11 @@ import {
     type zHealthCheckCmdsNone,
     type zHealthCheckCmdsParam,
     type zHealthCheckCmdsString,
-    type zHealthCheckDurationParam,
-    type zHealthCheckRetriesParam,
-    type zHealthCheckParamsObject,
     type zHealthCheckCmdsStringArray,
-    type zHealthCheckParams
+    type zHealthCheckDurationParam,
+    type zHealthCheckParams,
+    type zHealthCheckParamsObject,
+    type zHealthCheckRetriesParam
 } from './schema'
 import { type Instruction } from '../common/types'
 

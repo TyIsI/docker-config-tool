@@ -1,7 +1,7 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isArgInstructionParameters, isArgInstructionParameterObject } from './guards'
-import { type IArgInstruction, type ArgInstructionParameters } from './types'
+import { isArgInstructionParameterObject, isArgInstructionParameters } from './guards'
+import { type ArgInstructionParameters, type IArgInstruction } from './types'
 
 export class ArgInstruction implements IArgInstruction {
     type = 'instruction' as const

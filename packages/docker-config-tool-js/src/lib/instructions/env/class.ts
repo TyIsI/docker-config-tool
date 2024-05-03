@@ -1,7 +1,7 @@
 import { coerceString } from '../../shared/coerce'
-import { isEnvVar, isStringArray, isEnvVarArray, isStringRecord } from '../../shared/guards'
+import { isEnvVar, isEnvVarArray, isStringArray, isStringRecord } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type IEnvInstruction, type EnvInstructionParameters } from './types'
+import { type EnvInstructionParameters, type IEnvInstruction } from './types'
 
 export class EnvInstruction implements IEnvInstruction {
     type = 'instruction' as const

@@ -1,12 +1,12 @@
 import {
+    zAddInstructionChecksum,
+    zAddInstructionChmod,
+    zAddInstructionChown,
+    zAddInstructionKeepGitDir,
+    zAddInstructionLink,
     zAddInstructionParamObject,
     zAddInstructionParams,
-    zAddInstructionSources,
-    zAddInstructionKeepGitDir,
-    zAddInstructionChecksum,
-    zAddInstructionChown,
-    zAddInstructionChmod,
-    zAddInstructionLink
+    zAddInstructionSources
 } from './schema'
 import { type AddInstructionParamObject, type AddInstructionParams } from './types'
 

@@ -3,8 +3,8 @@ import {
     isExposeInstructionParameter,
     isExposeInstructionPortNumber,
     isExposeInstructionPortProtoString,
-    isExposeInstructionProto,
-    isExposeInstructionPortProtoTuple
+    isExposeInstructionPortProtoTuple,
+    isExposeInstructionProto
 } from './guards'
 import { type ExposePortDefinition } from './types'
 

@@ -1,5 +1,5 @@
-import { zArgInstructionParametersObject, zArgInstructionParameters } from './schema'
-import { type ArgInstructionParametersObject, type ArgInstructionParameters } from './types'
+import { zArgInstructionParameters, zArgInstructionParametersObject } from './schema'
+import { type ArgInstructionParameters, type ArgInstructionParametersObject } from './types'
 
 export const isArgInstructionParameterObject = (value: unknown): value is ArgInstructionParametersObject => {
     return zArgInstructionParametersObject.safeParse(value).success

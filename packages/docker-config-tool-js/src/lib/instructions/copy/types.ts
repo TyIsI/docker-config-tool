@@ -3,17 +3,17 @@ import { type z } from 'zod'
 import { type IStage } from '../../stage/types'
 import { type Instruction } from '../common/types'
 import {
-    type zCopyInstructionFrom,
-    type zCopyInstructionDestination,
-    type zCopyInstructionSources,
-    type zCopyInstructionChown,
     type zCopyInstructionChmod,
-    type zCopyInstructionLink,
-    type zCopyInstructionParents,
+    type zCopyInstructionChown,
+    type zCopyInstructionDestination,
     type zCopyInstructionExclude,
     type zCopyInstructionExcludes,
+    type zCopyInstructionFrom,
+    type zCopyInstructionLink,
     type zCopyInstructionParamObject,
-    type zCopyInstructionParams
+    type zCopyInstructionParams,
+    type zCopyInstructionParents,
+    type zCopyInstructionSources
 } from './schema'
 
 export type CopyInstructionSources = z.infer<typeof zCopyInstructionSources>

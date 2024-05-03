@@ -1,4 +1,4 @@
-import { isPartialLabelVarArray, isPartialLabelVar, isStringRecord } from '../../shared/guards'
+import { isPartialLabelVar, isPartialLabelVarArray, isStringRecord } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { type ILabelInstruction, type LabelInstructionArgs } from './types'
 

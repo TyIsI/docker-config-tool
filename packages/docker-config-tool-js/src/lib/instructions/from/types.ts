@@ -3,8 +3,8 @@ import { type z } from 'zod'
 import { type Instruction } from '../common/types'
 import {
     type zFromInstructionObjectParameter as zFromInstructionObject,
-    type zFromInstructionStringFromParameter as zFromInstructionStringFrom,
-    type zFromInstructionParameters
+    type zFromInstructionParameters,
+    type zFromInstructionStringFromParameter as zFromInstructionStringFrom
 } from './schema'
 
 export type FromInstructionParameterObject = z.infer<typeof zFromInstructionObject>

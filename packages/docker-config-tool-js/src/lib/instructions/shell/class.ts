@@ -1,6 +1,6 @@
-import { isStringArray, isString } from '../../shared/guards'
+import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage, generateInvalidArgumentErrorMessage } from '../../shared/utils'
-import { type ShellInstructionParameters, type IShellInstruction } from './types'
+import { type IShellInstruction, type ShellInstructionParameters } from './types'
 
 export class ShellInstruction implements IShellInstruction {
     type = 'instruction' as const

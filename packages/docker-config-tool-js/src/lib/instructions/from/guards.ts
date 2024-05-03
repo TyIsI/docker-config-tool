@@ -1,12 +1,12 @@
 import {
-    zFromInstructionParameters,
-    zFromInstructionObjectParameter,
     zFromInstructionAsParameter,
+    zFromInstructionObjectParameter,
+    zFromInstructionParameters,
     zFromInstructionStringFromParameter
 } from './schema'
 import {
-    type FromInstructionParameters,
     type FromInstructionParameterObject,
+    type FromInstructionParameters,
     type FromInstructionStringFromParameter
 } from './types'
 

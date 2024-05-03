@@ -1,6 +1,6 @@
-import { isStringArray, isString } from '../../shared/guards'
+import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type ICmdInstruction, type CmdInstructionParameters } from './types'
+import { type CmdInstructionParameters, type ICmdInstruction } from './types'
 
 export class CmdInstruction implements ICmdInstruction {
     type = 'instruction' as const

@@ -1,15 +1,15 @@
 import { type NetworkProtocols } from '../../shared/types'
 import {
-    zExposeInstructionPortProtoString,
-    zExposeInstructionParameters,
     zExposeInstructionParameter,
-    zExposeInstructionProto,
+    zExposeInstructionParameters,
     zExposeInstructionPort,
-    zExposeInstructionPortProtoTuple
+    zExposeInstructionPortProtoString,
+    zExposeInstructionPortProtoTuple,
+    zExposeInstructionProto
 } from './schema'
 import {
-    type ExposeInstructionParameters,
     type ExposeInstructionParameter,
+    type ExposeInstructionParameters,
     type ExposePortDefinitionTuple
 } from './types'
 

@@ -1,8 +1,8 @@
 import { coerceStringArray } from '../../shared/coerce'
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isHealthCheckParamsObject, isHealthCheckDurationParam, isHealthCheckRetriesParam } from './guards'
-import { type IHealthCheckInstruction, type HealthCheckParams, type HealthCheckCmdsString } from './types'
+import { isHealthCheckDurationParam, isHealthCheckParamsObject, isHealthCheckRetriesParam } from './guards'
+import { type HealthCheckCmdsString, type HealthCheckParams, type IHealthCheckInstruction } from './types'
 import { validateHealthCheckParams } from './validators'
 
 export class HealthCheckInstruction implements IHealthCheckInstruction {

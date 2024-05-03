@@ -1,7 +1,7 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isFromInstructionParameters, isFromInstructionParameterObject, isFromInstructionAsParameter } from './guards'
-import { type IFromInstruction, type FromInstructionParameters } from './types'
+import { isFromInstructionAsParameter, isFromInstructionParameterObject, isFromInstructionParameters } from './guards'
+import { type FromInstructionParameters, type IFromInstruction } from './types'
 
 export class FromInstruction implements IFromInstruction {
     type = 'instruction' as const

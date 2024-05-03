@@ -1,10 +1,10 @@
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isExposeInstructionParameters, isExposeInstructionParameter } from './guards'
+import { isExposeInstructionParameter, isExposeInstructionParameters } from './guards'
 import {
-    type IExposeInstruction,
-    type ExposePortDefinition,
+    type ExposeInstructionParameter,
     type ExposeInstructionParameters,
-    type ExposeInstructionParameter
+    type ExposePortDefinition,
+    type IExposeInstruction
 } from './types'
 import { coerceExposeDefinition } from './utils'
 

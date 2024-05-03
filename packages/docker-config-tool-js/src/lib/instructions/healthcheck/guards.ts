@@ -9,14 +9,14 @@ import {
     zHealthCheckRetriesParam
 } from './schema'
 import {
-    type HealthCheckCmdsStringArray,
     type HealthCheckCmdsNone,
     type HealthCheckCmdsParam,
     type HealthCheckCmdsString,
-    type HealthCheckParamsObject,
-    type HealthCheckRetriesParam,
+    type HealthCheckCmdsStringArray,
+    type HealthCheckDurationParam,
     type HealthCheckParams,
-    type HealthCheckDurationParam
+    type HealthCheckParamsObject,
+    type HealthCheckRetriesParam
 } from './types'
 
 export const isHealthCheckCmdsNone = (value: unknown): value is HealthCheckCmdsNone =>

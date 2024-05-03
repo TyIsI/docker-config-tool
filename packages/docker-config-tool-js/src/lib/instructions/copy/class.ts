@@ -15,8 +15,8 @@ import {
 } from './guards'
 import { type CopyInstructionParamObject, type CopyInstructionParams, type ICopyInstruction } from './types'
 import {
-    validateCopyInstructionParams,
     validateCopyInstructionLink,
+    validateCopyInstructionParams,
     validateCopyInstructionParents
 } from './validators'
 

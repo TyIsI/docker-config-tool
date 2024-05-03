@@ -1,6 +1,6 @@
-import { isStringArray, isString } from '../../shared/guards'
+import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type IEntryPointInstruction, type EntryPointInstructionParameters } from './types'
+import { type EntryPointInstructionParameters, type IEntryPointInstruction } from './types'
 
 export class EntryPointInstruction implements IEntryPointInstruction {
     type = 'instruction' as const
