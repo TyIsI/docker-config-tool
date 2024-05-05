@@ -2,7 +2,6 @@ import { type z } from 'zod'
 
 import { type Instruction } from '../common/types'
 import {
-    type zRunInstructionArgsObject,
     type zRunInstructionBooleanFields,
     type zRunInstructionCacheSharingTypes,
     type zRunInstructionMountType,
@@ -18,12 +17,12 @@ import {
     type zRunInstructionMountTypeSecret,
     type zRunInstructionMountTypeTmpFS,
     type zRunInstructionNetworkType,
-    type zRunInstructionParameters,
+    type zRunInstructionParams,
+    type zRunInstructionParamsObject,
     type zRunInstructionSecurityType,
     type zRunInstructions
 } from './schema'
 
-export type RunInstructionArgsObject = z.input<typeof zRunInstructionArgsObject>
 export type RunInstructionBooleanFields = z.input<typeof zRunInstructionBooleanFields>
 export type RunInstructionCacheSharingTypes = z.input<typeof zRunInstructionCacheSharingTypes>
 export type RunInstructionMountTypeBindCommon = z.input<typeof zRunInstructionMountTypeBindCommon>
@@ -39,7 +38,8 @@ export type RunInstructionMountTypeSSH = z.input<typeof zRunInstructionMountType
 export type RunInstructionMountTypeTmpFS = z.input<typeof zRunInstructionMountTypeTmpFS>
 export type RunInstructionMountType = z.input<typeof zRunInstructionMountType>
 export type RunInstructionNetworkType = z.input<typeof zRunInstructionNetworkType>
-export type RunInstructionParameters = z.input<typeof zRunInstructionParameters>
+export type RunInstructionParams = z.input<typeof zRunInstructionParams>
+export type RunInstructionParamsObject = z.input<typeof zRunInstructionParamsObject>
 export type RunInstructionSecurityType = z.input<typeof zRunInstructionSecurityType>
 export type RunInstructions = z.input<typeof zRunInstructions>
 

@@ -1,13 +1,13 @@
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type CmdInstructionParameters, type ICmdInstruction } from './types'
+import { type CmdInstructionParams, type ICmdInstruction } from './types'
 
 export class CmdInstruction implements ICmdInstruction {
     type = 'instruction' as const
 
     commands: string[] = []
 
-    public constructor(...cmds: CmdInstructionParameters) {
+    public constructor(...cmds: CmdInstructionParams) {
         if (!isStringArray(cmds)) throw new Error(generateConstructorErrorMessage('CMD', cmds))
 
         this.commands = cmds.length === 1 ? cmds[0].split(' ') : cmds

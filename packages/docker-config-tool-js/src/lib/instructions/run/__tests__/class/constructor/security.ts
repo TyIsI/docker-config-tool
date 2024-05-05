@@ -1,6 +1,6 @@
 import { generateConstructorErrorMessage } from '../../../../../shared/utils'
 import { RunInstruction } from '../../../class'
-import { type RunInstructionArgsObject } from '../../../types'
+import { type RunInstructionParamsObject } from '../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                     describe(`constructor`, () => {
                         describe(`security`, () => {
                             test(`create with sandbox security option`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['apt', 'update'],
                                     security: 'sandbox'
                                 }
@@ -21,7 +21,7 @@ describe('DCT', () => {
                             })
 
                             test(`create with insecure security option`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['apt', 'update'],
                                     security: 'insecure'
                                 }
@@ -32,7 +32,7 @@ describe('DCT', () => {
                             })
 
                             test(`don't create with invalid security option`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['echo', 'test'],
                                     // @ts-expect-error invalid
                                     security: 'invalid'
@@ -46,7 +46,7 @@ describe('DCT', () => {
                             })
 
                             test(`don't create with a null security option`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['echo', 'test'],
                                     // @ts-expect-error null
                                     security: null

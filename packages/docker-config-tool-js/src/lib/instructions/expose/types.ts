@@ -10,7 +10,7 @@ export interface ExposePortDefinition {
 
 export type ExposePortDefinitionTuple = [ExposePortType, NetworkProtocols?]
 
-export type ExposeInstructionParameter = string | number | ExposePortDefinition | ExposePortDefinitionTuple
-export type ExposeInstructionParameters = ExposeInstructionParameter[]
+export type ExposeInstructionParam = string | number | ExposePortDefinition | ExposePortDefinitionTuple
+export type ExposeInstructionParams = ExposeInstructionParam[]
 
 export interface IExposeInstruction extends Instruction {}

@@ -1,8 +1,8 @@
 import { type UnixUserGroupId } from '../../shared/types'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { isUserInstructionParamObject, isUserInstructionParamTuple } from './guards'
-import { type IUserInstruction, type UserInstructionParameters } from './types'
-import { validateUserInstructionParameters } from './validators'
+import { type IUserInstruction, type UserInstructionParams } from './types'
+import { validateUserInstructionParams } from './validators'
 
 export class UserInstruction implements IUserInstruction {
     type = 'instruction' as const
@@ -10,8 +10,8 @@ export class UserInstruction implements IUserInstruction {
     uid?: UnixUserGroupId
     gid?: UnixUserGroupId
 
-    constructor(...userInstructionParams: UserInstructionParameters) {
-        const [valid, result] = validateUserInstructionParameters(userInstructionParams)
+    constructor(...userInstructionParams: UserInstructionParams) {
+        const [valid, result] = validateUserInstructionParams(userInstructionParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('USER', userInstructionParams, result))
 

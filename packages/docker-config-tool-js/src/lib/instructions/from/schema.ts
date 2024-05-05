@@ -1,22 +1,19 @@
 import { z } from 'zod'
 
-export const zFromInstructionStringFromParameter = z
+export const zFromInstructionStringFromParam = z
     .string()
     .trim()
     .min(3)
     .regex(/^[\w/-]+(:[\w/-]+)?/)
 
-export const zFromInstructionPlatformParameter = z.string().trim().min(2)
+export const zFromInstructionPlatformParam = z.string().trim().min(2)
 
-export const zFromInstructionAsParameter = z.string().min(2)
+export const zFromInstructionAsParam = z.string().min(2)
 
-export const zFromInstructionObjectParameter = z.object({
-    from: zFromInstructionStringFromParameter,
-    platform: zFromInstructionPlatformParameter.optional(),
-    as: zFromInstructionAsParameter.optional()
+export const zFromInstructionObjectParam = z.object({
+    from: zFromInstructionStringFromParam,
+    platform: zFromInstructionPlatformParam.optional(),
+    as: zFromInstructionAsParam.optional()
 })
 
-export const zFromInstructionParameters = z.union([
-    zFromInstructionStringFromParameter,
-    zFromInstructionObjectParameter
-])
+export const zFromInstructionParams = z.union([zFromInstructionStringFromParam, zFromInstructionObjectParam])

@@ -1,5 +1,5 @@
 import { RunInstruction } from '../../../../class'
-import { type RunInstructionArgsObject } from '../../../../types'
+import { type RunInstructionParamsObject } from '../../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                         describe(`mount`, () => {
                             describe(`secret`, () => {
                                 test(`create run instruction, with secret mount options 'default'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -26,7 +26,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'target'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -43,7 +43,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'required set false'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -61,7 +61,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'required set true'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -79,7 +79,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'numeric file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -97,7 +97,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'string file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -115,7 +115,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'uid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -133,7 +133,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',
@@ -151,7 +151,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with secret mount options 'uid and gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'secret',

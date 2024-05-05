@@ -1,8 +1,8 @@
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isExposeInstructionParameter, isExposeInstructionParameters } from './guards'
+import { isExposeInstructionParam, isExposeInstructionParams } from './guards'
 import {
-    type ExposeInstructionParameter,
-    type ExposeInstructionParameters,
+    type ExposeInstructionParam,
+    type ExposeInstructionParams,
     type ExposePortDefinition,
     type IExposeInstruction
 } from './types'
@@ -13,14 +13,14 @@ export class ExposeInstruction implements IExposeInstruction {
 
     exposeCmds: ExposePortDefinition[]
 
-    public constructor(...exposes: ExposeInstructionParameters) {
-        if (!isExposeInstructionParameters(exposes)) throw new Error(generateConstructorErrorMessage('EXPOSE', exposes))
+    public constructor(...exposes: ExposeInstructionParams) {
+        if (!isExposeInstructionParams(exposes)) throw new Error(generateConstructorErrorMessage('EXPOSE', exposes))
 
         this.exposeCmds = exposes.map((e) => coerceExposeDefinition(e))
     }
 
-    public addExposeArg(expose: ExposeInstructionParameter): this {
-        if (!isExposeInstructionParameter(expose)) throw new Error('Invalid parameter value for addExposeArg')
+    public addExposeArg(expose: ExposeInstructionParam): this {
+        if (!isExposeInstructionParam(expose)) throw new Error('Invalid parameter value for addExposeArg')
 
         this.exposeCmds.push(coerceExposeDefinition(expose))
 

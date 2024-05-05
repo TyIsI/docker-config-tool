@@ -1,10 +1,10 @@
 import { type ResultTuple } from '../shared/types'
 import { reduceZodErrors } from '../shared/utils'
-import { zStageConstructorArgs } from './schema'
-import { type StageConstructorArgs } from './types'
+import { zStageConstructorParams } from './schema'
+import { type StageConstructorParams } from './types'
 
-export const validStageConstructorArgs = (value: StageConstructorArgs): ResultTuple<StageConstructorArgs> => {
-    const result = zStageConstructorArgs.safeParse(value)
+export const validStageConstructorParams = (value: StageConstructorParams): ResultTuple<StageConstructorParams> => {
+    const result = zStageConstructorParams.safeParse(value)
 
     return result.success ? [true, value] : [false, reduceZodErrors(result.error)]
 }

@@ -1,12 +1,10 @@
 import { type ResultTuple } from '../../shared/types'
 import { reduceZodErrors } from '../../shared/utils'
-import { zUserInstructionParameters } from './schema'
-import { type UserInstructionParameters } from './types'
+import { zUserInstructionParams } from './schema'
+import { type UserInstructionParams } from './types'
 
-export const validateUserInstructionParameters = (
-    value: UserInstructionParameters
-): ResultTuple<UserInstructionParameters> => {
-    const result = zUserInstructionParameters.safeParse(value)
+export const validateUserInstructionParams = (value: UserInstructionParams): ResultTuple<UserInstructionParams> => {
+    const result = zUserInstructionParams.safeParse(value)
 
     return result.success ? [true, value] : [false, reduceZodErrors(result.error)]
 }

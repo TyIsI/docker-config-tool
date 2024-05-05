@@ -1,5 +1,5 @@
 import { RunInstruction } from '../../../../class'
-import { type RunInstructionArgsObject } from '../../../../types'
+import { type RunInstructionParamsObject } from '../../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                         describe(`mount`, () => {
                             describe(`tmpfs`, () => {
                                 test(`create run instruction, with tmpfs mount options 'common'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'tmpfs',
@@ -27,7 +27,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`don't create run instruction, with invalid tmpfs mount options`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         // @ts-expect-error invalid assignment
                                         mount: { type: 'tmpfs' }

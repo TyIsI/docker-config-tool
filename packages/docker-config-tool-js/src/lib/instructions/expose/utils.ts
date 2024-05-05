@@ -1,6 +1,6 @@
 import { zExposeInstructionPortProtoObject } from './schema'
 import {
-    isExposeInstructionParameter,
+    isExposeInstructionParam,
     isExposeInstructionPortNumber,
     isExposeInstructionPortProtoString,
     isExposeInstructionPortProtoTuple,
@@ -9,7 +9,7 @@ import {
 import { type ExposePortDefinition } from './types'
 
 export const coerceExposeDefinition = (value: unknown): ExposePortDefinition => {
-    if (!isExposeInstructionParameter(value)) throw new Error('non-coerceable value')
+    if (!isExposeInstructionParam(value)) throw new Error('non-coerceable value')
 
     let port: ExposePortDefinition['port'] = 0
     let proto: ExposePortDefinition['proto'] = 'tcp'

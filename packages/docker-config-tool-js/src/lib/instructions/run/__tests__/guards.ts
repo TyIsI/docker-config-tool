@@ -1,5 +1,4 @@
 import {
-    isRunInstructionArgsObject,
     isRunInstructionBooleanFields,
     isRunInstructionCacheSharingTypes,
     isRunInstructionMountRunArg,
@@ -15,24 +14,25 @@ import {
     isRunInstructionMountTypeSecret,
     isRunInstructionMountTypeTmpFS,
     isRunInstructionNetworkRunArg,
-    isRunInstructionParameters,
+    isRunInstructionParams,
+    isRunInstructionParamsObject,
     isRunInstructionSecurityRunArg,
     isRunInstructions
 } from '../guards'
 
 import {
-    RunInstructionArgsObjectTestData,
     RunInstructionBooleanFieldsTestData,
     RunInstructionCacheSharingTypesTestData,
-    RunInstructionMountRunArgTestData,
+    RunInstructionMountRunParamsTestData,
     RunInstructionMountTypeBindCommonTestData,
     RunInstructionMountTypeCacheCommonTestData,
     RunInstructionMountTypeSSHTestData,
     RunInstructionMountTypeSecretTestData,
     RunInstructionMountTypeTmpFSTestData,
-    RunInstructionNetworkRunArgTestData,
-    RunInstructionParametersTestData,
-    RunInstructionSecurityRunArgTestData,
+    RunInstructionNetworkRunParamTestData,
+    RunInstructionParamsObjectTestData,
+    RunInstructionParamsTestData,
+    RunInstructionSecurityRunParamTestData,
     RunInstructionsTestData
 } from './data/guards'
 
@@ -41,9 +41,9 @@ describe('DCT', () => {
         describe('instructions', () => {
             describe(`RUN`, () => {
                 describe(`guards`, () => {
-                    test(`isRunInstructionArgsObject`, () => {
-                        RunInstructionArgsObjectTestData.forEach((testVal) => {
-                            expect(isRunInstructionArgsObject(testVal)).toBe(true)
+                    test(`isRunInstructionParamsObject`, () => {
+                        RunInstructionParamsObjectTestData.forEach((testVal) => {
+                            expect(isRunInstructionParamsObject(testVal)).toBe(true)
                         })
                     })
 
@@ -146,25 +146,25 @@ describe('DCT', () => {
                     })
 
                     test(`isRunInstructionMountRunArg`, () => {
-                        RunInstructionMountRunArgTestData.forEach((testVal) => {
+                        RunInstructionMountRunParamsTestData.forEach((testVal) => {
                             expect(isRunInstructionMountRunArg(testVal)).toBe(true)
                         })
                     })
 
                     test(`isRunInstructionNetworkRunArg`, () => {
-                        RunInstructionNetworkRunArgTestData.forEach((testVal) => {
+                        RunInstructionNetworkRunParamTestData.forEach((testVal) => {
                             expect(isRunInstructionNetworkRunArg(testVal)).toBe(true)
                         })
                     })
 
-                    test(`isRunInstructionParameters`, () => {
-                        RunInstructionParametersTestData.forEach((testVal) => {
-                            expect(isRunInstructionParameters(testVal)).toBe(true)
+                    test(`isRunInstructionParams`, () => {
+                        RunInstructionParamsTestData.forEach((testVal) => {
+                            expect(isRunInstructionParams(testVal)).toBe(true)
                         })
                     })
 
                     test(`isRunInstructionSecurityRunArg`, () => {
-                        RunInstructionSecurityRunArgTestData.forEach((testVal) => {
+                        RunInstructionSecurityRunParamTestData.forEach((testVal) => {
                             expect(isRunInstructionSecurityRunArg(testVal)).toBe(true)
                         })
                     })

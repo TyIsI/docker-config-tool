@@ -8,14 +8,14 @@ import {
     zUnixUserGroupNumericId
 } from '../../shared/schema'
 
-export const zUserInstructionPrimaryParameter = z.union([
+export const zUserInstructionPrimaryParam = z.union([
     zUnixUserGroupIdComboString,
     zUIDGIDTuple,
     z.array(zUnixUserGroupNumericId).nonempty().max(2),
     zUnixUserGroupNumericId
 ])
 
-export const zUserInstructionParameters = z.union(
+export const zUserInstructionParams = z.union(
     [
         z.tuple([zUIDGIDObj], { invalid_type_error: 'Invalid UIDGIDObj' }),
         z.tuple([zUnixUserGroupIdComboString], { invalid_type_error: 'Invalid UnixUserGroupIdComboString' }),
@@ -42,5 +42,5 @@ export const zUserInstructionParameters = z.union(
         }),
         z.tuple([zRequiredString()], { invalid_type_error: 'Invalid RequiredString tuple' })
     ],
-    { invalid_type_error: 'Invalid UserInstructionParameters' }
+    { invalid_type_error: 'Invalid UserInstructionParams' }
 )

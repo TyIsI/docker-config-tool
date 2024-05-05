@@ -1,6 +1,6 @@
 import { generateConstructorErrorMessage } from '../../../../../shared/utils'
 import { RunInstruction } from '../../../class'
-import { type RunInstructionArgsObject } from '../../../types'
+import { type RunInstructionParamsObject } from '../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                     describe(`constructor`, () => {
                         describe(`network`, () => {
                             test(`create run instruction, with network option 'default'`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['apt', 'update'],
                                     network: 'default'
                                 }
@@ -21,7 +21,7 @@ describe('DCT', () => {
                             })
 
                             test(`create run instruction, with network option 'none'`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['apt', 'update'],
                                     network: 'none'
                                 }
@@ -32,7 +32,7 @@ describe('DCT', () => {
                             })
 
                             test(`create run instruction, with network option 'host'`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['apt', 'update'],
                                     network: 'host'
                                 }
@@ -43,7 +43,7 @@ describe('DCT', () => {
                             })
 
                             test(`don't create run instruction, with network option: invalid`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['echo', 'test'],
                                     // @ts-expect-error invalid
                                     network: 'invalid'
@@ -57,7 +57,7 @@ describe('DCT', () => {
                             })
 
                             test(`don't create run instruction, with network option: null`, () => {
-                                const testVal: RunInstructionArgsObject = {
+                                const testVal: RunInstructionParamsObject = {
                                     commands: ['echo', 'test'],
                                     // @ts-expect-error null
                                     network: null

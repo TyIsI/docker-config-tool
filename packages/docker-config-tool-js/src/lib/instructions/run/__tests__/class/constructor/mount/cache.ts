@@ -1,5 +1,5 @@
 import { RunInstruction } from '../../../../class'
-import { type RunInstructionArgsObject } from '../../../../types'
+import { type RunInstructionParamsObject } from '../../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                         describe(`mount`, () => {
                             describe(`cache`, () => {
                                 test(`create run instruction, with cache mount options 'common'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -26,7 +26,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'id'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -43,7 +43,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'from'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -60,7 +60,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'source'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -77,7 +77,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'from and source'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -95,7 +95,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'ro'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -114,7 +114,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'ro'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -133,7 +133,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'readonly'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -152,7 +152,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'readonly'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -171,7 +171,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option: shared=sharing`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -190,7 +190,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option: private=sharing`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -209,7 +209,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option: locked=sharing`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -228,7 +228,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'numeric file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -245,7 +245,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'string file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -262,7 +262,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'uid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -279,7 +279,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',
@@ -296,7 +296,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with cache mount option 'uid and gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'cache',

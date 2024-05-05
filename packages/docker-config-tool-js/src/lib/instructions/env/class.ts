@@ -1,14 +1,14 @@
 import { coerceString } from '../../shared/coerce'
 import { isEnvVar, isEnvVarArray, isStringArray, isStringRecord } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type EnvInstructionParameters, type IEnvInstruction } from './types'
+import { type EnvInstructionParams, type IEnvInstruction } from './types'
 
 export class EnvInstruction implements IEnvInstruction {
     type = 'instruction' as const
 
     envs: Record<string, string> = {}
 
-    constructor(envParam: EnvInstructionParameters) {
+    constructor(envParam: EnvInstructionParams) {
         if (isEnvVar(envParam)) {
             const [envKey, envVal] = envParam.split('=')
 

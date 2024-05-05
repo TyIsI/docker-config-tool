@@ -1,5 +1,4 @@
 import {
-    zRunInstructionArgsObject,
     zRunInstructionBooleanFields,
     zRunInstructionCacheSharingTypes,
     zRunInstructionMountType,
@@ -15,12 +14,12 @@ import {
     zRunInstructionMountTypeSecret,
     zRunInstructionMountTypeTmpFS,
     zRunInstructionNetworkType,
-    zRunInstructionParameters,
+    zRunInstructionParams,
+    zRunInstructionParamsObject,
     zRunInstructionSecurityType,
     zRunInstructions
 } from './schema'
 import {
-    type RunInstructionArgsObject,
     type RunInstructionBooleanFields,
     type RunInstructionCacheSharingTypes,
     type RunInstructionMountType,
@@ -36,13 +35,14 @@ import {
     type RunInstructionMountTypeSecret,
     type RunInstructionMountTypeTmpFS,
     type RunInstructionNetworkType,
-    type RunInstructionParameters,
+    type RunInstructionParams,
+    type RunInstructionParamsObject,
     type RunInstructionSecurityType,
     type RunInstructions
 } from './types'
 
-export const isRunInstructionArgsObject = (value: unknown): value is RunInstructionArgsObject =>
-    zRunInstructionArgsObject.safeParse(value).success
+export const isRunInstructionParamsObject = (value: unknown): value is RunInstructionParamsObject =>
+    zRunInstructionParamsObject.safeParse(value).success
 
 export const isRunInstructionBooleanFields = (value: unknown): value is RunInstructionBooleanFields =>
     zRunInstructionBooleanFields.safeParse(value).success
@@ -89,8 +89,8 @@ export const isRunInstructionMountRunArg = (value: unknown): value is RunInstruc
 export const isRunInstructionNetworkRunArg = (value: unknown): value is RunInstructionNetworkType =>
     zRunInstructionNetworkType.safeParse(value).success
 
-export const isRunInstructionParameters = (value: unknown): value is RunInstructionParameters =>
-    zRunInstructionParameters.safeParse(value).success
+export const isRunInstructionParams = (value: unknown): value is RunInstructionParams =>
+    zRunInstructionParams.safeParse(value).success
 
 export const isRunInstructionSecurityRunArg = (value: unknown): value is RunInstructionSecurityType =>
     zRunInstructionSecurityType.safeParse(value).success

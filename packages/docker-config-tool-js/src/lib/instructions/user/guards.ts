@@ -1,10 +1,10 @@
 import { zUIDGIDObj, zUIDGIDTuple } from '../../shared/schema'
 import { type UnixUserGroupIdOpt } from '../../shared/types'
-import { zUserInstructionParameters } from './schema'
-import { type UserInstructionParameters } from './types'
+import { zUserInstructionParams } from './schema'
+import { type UserInstructionParams } from './types'
 
-export const isUserInstructionParameters = (value: unknown): value is UserInstructionParameters =>
-    zUserInstructionParameters.safeParse(value).success
+export const isUserInstructionParams = (value: unknown): value is UserInstructionParams =>
+    zUserInstructionParams.safeParse(value).success
 
 export const isUserInstructionParamObject = (value: unknown): value is UnixUserGroupIdOpt =>
     zUIDGIDObj.safeParse(value).success

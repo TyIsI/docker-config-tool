@@ -1,28 +1,24 @@
 import { type NetworkProtocols } from '../../shared/types'
 import {
-    zExposeInstructionParameter,
-    zExposeInstructionParameters,
+    zExposeInstructionParam,
+    zExposeInstructionParams,
     zExposeInstructionPort,
     zExposeInstructionPortProtoString,
     zExposeInstructionPortProtoTuple,
     zExposeInstructionProto
 } from './schema'
-import {
-    type ExposeInstructionParameter,
-    type ExposeInstructionParameters,
-    type ExposePortDefinitionTuple
-} from './types'
+import { type ExposeInstructionParam, type ExposeInstructionParams, type ExposePortDefinitionTuple } from './types'
 
 export const isExposeInstructionPortProtoString = (exposes: unknown): exposes is string => {
     return zExposeInstructionPortProtoString.safeParse(exposes).success
 }
 
-export const isExposeInstructionParameters = (exposes: unknown[]): exposes is ExposeInstructionParameters => {
-    return zExposeInstructionParameters.nonempty().safeParse(exposes).success
+export const isExposeInstructionParams = (exposes: unknown[]): exposes is ExposeInstructionParams => {
+    return zExposeInstructionParams.nonempty().safeParse(exposes).success
 }
 
-export const isExposeInstructionParameter = (value: unknown): value is ExposeInstructionParameter =>
-    zExposeInstructionParameter.safeParse(value).success
+export const isExposeInstructionParam = (value: unknown): value is ExposeInstructionParam =>
+    zExposeInstructionParam.safeParse(value).success
 
 export const isExposeInstructionProto = (value: unknown): value is NetworkProtocols =>
     zExposeInstructionProto.safeParse(value).success

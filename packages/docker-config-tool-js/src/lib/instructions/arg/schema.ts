@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-export const zArgInstructionParametersObject = z.object({
+export const zArgInstructionParamsObject = z.object({
     name: z.string().trim().min(2),
     value: z.string().trim().min(2).optional()
 })
 
-export const zArgInstructionParameters = z.union([z.string().trim().min(2), zArgInstructionParametersObject])
+export const zArgInstructionParams = z.union([z.string().trim().min(2), zArgInstructionParamsObject])

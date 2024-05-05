@@ -42,38 +42,38 @@ export class CopyInstruction implements ICopyInstruction {
         if (isCopyInstructionParamObject(copyInstructionParams[0])) {
             this.hoistCopyObject(copyInstructionParams[0])
         } else if (isStringArray(copyInstructionParams)) {
-            const joinedArgs = coerceStringArray(copyInstructionParams)
+            const joinedParams = coerceStringArray(copyInstructionParams)
 
-            this.destination = joinedArgs.splice(joinedArgs.length - 1, 1)[0]
+            this.destination = joinedParams.splice(joinedParams.length - 1, 1)[0]
 
-            this.sources = joinedArgs
+            this.sources = joinedParams
         }
     }
 
-    private hoistCopyObject(copyArgs: CopyInstructionParamObject): void {
-        if (isCopyInstructionSources(copyArgs.sources)) this.sources = coerceStringArray(copyArgs.sources)
+    private hoistCopyObject(copyParams: CopyInstructionParamObject): void {
+        if (isCopyInstructionSources(copyParams.sources)) this.sources = coerceStringArray(copyParams.sources)
 
-        if (isCopyInstructionDestination(copyArgs.destination)) this.destination = copyArgs.destination
+        if (isCopyInstructionDestination(copyParams.destination)) this.destination = copyParams.destination
 
-        if (isCopyInstructionFrom(copyArgs.from)) this.from = copyArgs.from
+        if (isCopyInstructionFrom(copyParams.from)) this.from = copyParams.from
 
-        if (isCopyInstructionChown(copyArgs.chown)) this.chown = copyArgs.chown
+        if (isCopyInstructionChown(copyParams.chown)) this.chown = copyParams.chown
 
-        if (isCopyInstructionChmod(copyArgs.chmod)) this.chmod = copyArgs.chmod
+        if (isCopyInstructionChmod(copyParams.chmod)) this.chmod = copyParams.chmod
 
-        if (isCopyInstructionLink(copyArgs.link)) this.link = copyArgs.link
+        if (isCopyInstructionLink(copyParams.link)) this.link = copyParams.link
 
-        if (isCopyInstructionParents(copyArgs.link)) this.link = copyArgs.link
+        if (isCopyInstructionParents(copyParams.link)) this.link = copyParams.link
 
-        if (isString(copyArgs.exclude)) {
+        if (isString(copyParams.exclude)) {
             if (this.excludes == null) this.excludes = []
 
-            this.excludes.push(copyArgs.exclude)
+            this.excludes.push(copyParams.exclude)
         }
 
-        if (isStringArray(copyArgs.excludes)) {
-            if (this.excludes != null) this.excludes = this.excludes.concat(copyArgs.excludes)
-            else this.excludes = copyArgs.excludes
+        if (isStringArray(copyParams.excludes)) {
+            if (this.excludes != null) this.excludes = this.excludes.concat(copyParams.excludes)
+            else this.excludes = copyParams.excludes
         }
     }
 

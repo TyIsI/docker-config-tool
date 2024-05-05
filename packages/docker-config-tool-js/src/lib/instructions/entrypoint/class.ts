@@ -1,13 +1,13 @@
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type EntryPointInstructionParameters, type IEntryPointInstruction } from './types'
+import { type EntryPointInstructionParams, type IEntryPointInstruction } from './types'
 
 export class EntryPointInstruction implements IEntryPointInstruction {
     type = 'instruction' as const
 
     entrypointCmds: string[]
 
-    public constructor(...entrypointCmds: EntryPointInstructionParameters) {
+    public constructor(...entrypointCmds: EntryPointInstructionParams) {
         if (!isStringArray(entrypointCmds))
             throw new Error(generateConstructorErrorMessage('ENTRYPOINT', entrypointCmds))
 

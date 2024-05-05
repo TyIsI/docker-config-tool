@@ -29,11 +29,11 @@ export const zExposeInstructionPortProtoObject = z.object({
     proto: zExposeInstructionProto.optional()
 })
 
-export const zExposeInstructionParameter = z.union([
+export const zExposeInstructionParam = z.union([
     zExposeInstructionPortProtoObject,
     zExposeInstructionPortProtoTuple,
     zExposeInstructionPortProtoString,
     zExposeInstructionPort
 ])
 
-export const zExposeInstructionParameters = z.array(zExposeInstructionParameter)
+export const zExposeInstructionParams = z.array(zExposeInstructionParam)

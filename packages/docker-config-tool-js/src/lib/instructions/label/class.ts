@@ -1,13 +1,13 @@
 import { isPartialLabelVar, isPartialLabelVarArray, isStringRecord } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type ILabelInstruction, type LabelInstructionArgs } from './types'
+import { type ILabelInstruction, type LabelInstructionParams } from './types'
 
 export class LabelInstruction implements ILabelInstruction {
     type = 'instruction' as const
 
     labels: Record<string, string> = {}
 
-    constructor(labelParam: LabelInstructionArgs) {
+    constructor(labelParam: LabelInstructionParams) {
         if (isPartialLabelVarArray(labelParam))
             labelParam.forEach((labelItem) => (this.labels[labelItem.split('=')[0]] = labelItem.split('=')[1]))
         else if (isPartialLabelVar(labelParam)) this.labels[labelParam.split('=')[0]] = labelParam.split('=')[1]

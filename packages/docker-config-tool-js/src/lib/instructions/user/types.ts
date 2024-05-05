@@ -1,10 +1,10 @@
 import { type z } from 'zod'
 
 import { type Instruction } from '../common/types'
-import { type zUserInstructionParameters, type zUserInstructionPrimaryParameter } from './schema'
+import { type zUserInstructionParams, type zUserInstructionPrimaryParam } from './schema'
 
-export type UserInstructionPrimaryParameter = z.input<typeof zUserInstructionPrimaryParameter>
+export type UserInstructionPrimaryParam = z.input<typeof zUserInstructionPrimaryParam>
 
-export type UserInstructionParameters = z.input<typeof zUserInstructionParameters>
+export type UserInstructionParams = z.input<typeof zUserInstructionParams>
 
 export interface IUserInstruction extends Instruction {}

@@ -1,7 +1,7 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isFromInstructionAsParameter, isFromInstructionParameterObject, isFromInstructionParameters } from './guards'
-import { type FromInstructionParameters, type IFromInstruction } from './types'
+import { isFromInstructionAsParam, isFromInstructionParamObject, isFromInstructionParams } from './guards'
+import { type FromInstructionParams, type IFromInstruction } from './types'
 
 export class FromInstruction implements IFromInstruction {
     type = 'instruction' as const
@@ -10,12 +10,12 @@ export class FromInstruction implements IFromInstruction {
     platform?: string
     as?: string
 
-    constructor(from: FromInstructionParameters) {
-        if (!isFromInstructionParameters(from)) throw new Error(generateConstructorErrorMessage(`FROM`, from))
+    constructor(from: FromInstructionParams) {
+        if (!isFromInstructionParams(from)) throw new Error(generateConstructorErrorMessage(`FROM`, from))
 
         if (isString(from)) this.from = from
 
-        if (isFromInstructionParameterObject(from)) {
+        if (isFromInstructionParamObject(from)) {
             this.from = from.from
 
             if (isString(from.platform)) this.platform = from.platform
@@ -25,7 +25,7 @@ export class FromInstruction implements IFromInstruction {
     }
 
     setAs(name: string): this {
-        if (!isFromInstructionAsParameter(name))
+        if (!isFromInstructionAsParam(name))
             throw new Error(`Missing or invalid arguments for setAs: ${typeof name} ${JSON.stringify(name)}`)
 
         this.as = name

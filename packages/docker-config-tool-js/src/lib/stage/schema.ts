@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
 import {
-    zFromInstructionObjectParameter,
-    zFromInstructionParameters,
-    zFromInstructionStringFromParameter
+    zFromInstructionObjectParam,
+    zFromInstructionParams,
+    zFromInstructionStringFromParam
 } from '../instructions/from/schema'
 
 export const zStage = z.object({
@@ -11,11 +11,11 @@ export const zStage = z.object({
     id: z.string()
 })
 
-export const zStageFromInstruction = zFromInstructionObjectParameter.omit({ from: true }).extend({ from: zStage })
+export const zStageFromInstruction = zFromInstructionObjectParam.omit({ from: true }).extend({ from: zStage })
 
-export const zStageConstructorArgs = z.union([
+export const zStageConstructorParams = z.union([
     zStage,
-    zFromInstructionStringFromParameter,
-    zFromInstructionParameters,
+    zFromInstructionStringFromParam,
+    zFromInstructionParams,
     zStageFromInstruction
 ])

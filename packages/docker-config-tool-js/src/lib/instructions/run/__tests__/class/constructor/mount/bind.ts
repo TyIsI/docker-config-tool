@@ -1,5 +1,5 @@
 import { RunInstruction } from '../../../../class'
-import { type RunInstructionArgsObject } from '../../../../types'
+import { type RunInstructionParamsObject } from '../../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                         describe(`mount`, () => {
                             describe(`bind`, () => {
                                 test(`create run instruction, with bind mount options 'common'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -26,7 +26,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'from'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -43,7 +43,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'source'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -60,7 +60,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount options 'from and source'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -78,7 +78,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'rw'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -97,7 +97,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'rw'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -116,7 +116,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'readwrite'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',
@@ -135,7 +135,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with bind mount option 'readwrite'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'bind',

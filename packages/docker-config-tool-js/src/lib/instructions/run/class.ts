@@ -2,21 +2,21 @@ import { coerceString, coerceStringArray } from '../../shared/coerce'
 import { isString, isStringArray, isTrueBoolean } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import {
-    isRunInstructionArgsObject,
     isRunInstructionBooleanFields,
     isRunInstructionMountRunArg,
     isRunInstructionNetworkRunArg,
+    isRunInstructionParamsObject,
     isRunInstructionSecurityRunArg
 } from './guards'
 import {
     type IRunInstruction,
     type RunInstructionMountType,
     type RunInstructionNetworkType,
-    type RunInstructionParameters,
+    type RunInstructionParams,
     type RunInstructionSecurityType
 } from './types'
 import { mapMountOptions } from './utils'
-import { validateRunInstructionParameters } from './validators'
+import { validateRunInstructionParams } from './validators'
 
 export class RunInstruction implements IRunInstruction {
     type = 'instruction' as const
@@ -26,25 +26,25 @@ export class RunInstruction implements IRunInstruction {
     network?: RunInstructionNetworkType
     security?: RunInstructionSecurityType
 
-    public constructor(runArgs: RunInstructionParameters) {
-        const [valid, result] = validateRunInstructionParameters(runArgs)
+    public constructor(runParams: RunInstructionParams) {
+        const [valid, result] = validateRunInstructionParams(runParams)
 
-        if (!valid) throw new Error(generateConstructorErrorMessage('RUN', runArgs, result))
+        if (!valid) throw new Error(generateConstructorErrorMessage('RUN', runParams, result))
 
-        if (isString(runArgs)) {
-            this.commands = [runArgs]
-        } else if (isStringArray(runArgs)) {
-            this.commands = runArgs
-        } else if (isRunInstructionArgsObject(runArgs)) {
-            this.commands = coerceStringArray(runArgs.commands)
+        if (isString(runParams)) {
+            this.commands = [runParams]
+        } else if (isStringArray(runParams)) {
+            this.commands = runParams
+        } else if (isRunInstructionParamsObject(runParams)) {
+            this.commands = coerceStringArray(runParams.commands)
 
-            if (runArgs.mount != null && isRunInstructionMountRunArg(runArgs.mount)) this.mount = runArgs.mount
+            if (runParams.mount != null && isRunInstructionMountRunArg(runParams.mount)) this.mount = runParams.mount
 
-            if (runArgs.network != null && isRunInstructionNetworkRunArg(runArgs.network))
-                this.network = runArgs.network
+            if (runParams.network != null && isRunInstructionNetworkRunArg(runParams.network))
+                this.network = runParams.network
 
-            if (runArgs.security != null && isRunInstructionSecurityRunArg(runArgs.security))
-                this.security = runArgs.security
+            if (runParams.security != null && isRunInstructionSecurityRunArg(runParams.security))
+                this.security = runParams.security
         }
     }
 

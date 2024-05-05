@@ -42,38 +42,38 @@ export class AddInstruction implements IAddInstruction {
         } else if (isAddInstructionParamObject(addInstructionParams[0])) {
             this.hoistAddObject(addInstructionParams[0])
         } else if (isStringArray(addInstructionParams)) {
-            const joinedArgs: string[] = addInstructionParams
+            const joinedParams: string[] = addInstructionParams
 
-            this.destination = joinedArgs.splice(joinedArgs.length - 1, 1)[0]
+            this.destination = joinedParams.splice(joinedParams.length - 1, 1)[0]
 
-            this.sources = joinedArgs
+            this.sources = joinedParams
         }
     }
 
-    private hoistAddObject(addArgs: AddInstructionParamObject): void {
-        if (isAddInstructionSources(addArgs.sources)) this.sources = coerceStringArray(addArgs.sources)
+    private hoistAddObject(addParamsObject: AddInstructionParamObject): void {
+        if (isAddInstructionSources(addParamsObject.sources)) this.sources = coerceStringArray(addParamsObject.sources)
 
-        if (isString(addArgs.destination)) this.destination = addArgs.destination
+        if (isString(addParamsObject.destination)) this.destination = addParamsObject.destination
 
-        if (isAddInstructionKeepGitDir(addArgs.keepGitDir)) this.keepGitDir = addArgs.keepGitDir
+        if (isAddInstructionKeepGitDir(addParamsObject.keepGitDir)) this.keepGitDir = addParamsObject.keepGitDir
 
-        if (isAddInstructionChecksum(addArgs.checksum)) this.checksum = addArgs.checksum
+        if (isAddInstructionChecksum(addParamsObject.checksum)) this.checksum = addParamsObject.checksum
 
-        if (isAddInstructionChown(addArgs.chown)) this.chown = addArgs.chown
+        if (isAddInstructionChown(addParamsObject.chown)) this.chown = addParamsObject.chown
 
-        if (isAddInstructionChmod(addArgs.chmod)) this.chmod = addArgs.chmod
+        if (isAddInstructionChmod(addParamsObject.chmod)) this.chmod = addParamsObject.chmod
 
-        if (isAddInstructionLink(addArgs.link)) this.link = addArgs.link
+        if (isAddInstructionLink(addParamsObject.link)) this.link = addParamsObject.link
 
-        if (isString(addArgs.exclude)) {
+        if (isString(addParamsObject.exclude)) {
             if (this.excludes == null) this.excludes = []
 
-            this.excludes.push(addArgs.exclude)
+            this.excludes.push(addParamsObject.exclude)
         }
 
-        if (isStringArray(addArgs.excludes)) {
-            if (this.excludes != null) this.excludes = this.excludes.concat(addArgs.excludes)
-            else this.excludes = addArgs.excludes
+        if (isStringArray(addParamsObject.excludes)) {
+            if (this.excludes != null) this.excludes = this.excludes.concat(addParamsObject.excludes)
+            else this.excludes = addParamsObject.excludes
         }
     }
 

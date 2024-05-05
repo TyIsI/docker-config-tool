@@ -1,44 +1,44 @@
 import { AddInstruction } from '../instructions/add/class'
 import { type AddInstructionParams, type IAddInstruction } from '../instructions/add/types'
 import { ArgInstruction } from '../instructions/arg/class'
-import { type ArgInstructionParameters, type IArgInstruction } from '../instructions/arg/types'
+import { type ArgInstructionParams, type IArgInstruction } from '../instructions/arg/types'
 import { CmdInstruction } from '../instructions/cmd/class'
-import { type CmdInstructionParameters, type ICmdInstruction } from '../instructions/cmd/types'
+import { type CmdInstructionParams, type ICmdInstruction } from '../instructions/cmd/types'
 import { isInstruction } from '../instructions/common/guards'
 import { type Instruction } from '../instructions/common/types'
 import { CopyInstruction } from '../instructions/copy/class'
 import { type CopyInstructionParams, type ICopyInstruction } from '../instructions/copy/types'
 import { EntryPointInstruction } from '../instructions/entrypoint/class'
-import { type EntryPointInstructionParameters, type IEntryPointInstruction } from '../instructions/entrypoint/types'
+import { type EntryPointInstructionParams, type IEntryPointInstruction } from '../instructions/entrypoint/types'
 import { EnvInstruction } from '../instructions/env/class'
-import { type EnvInstructionParameters, type IEnvInstruction } from '../instructions/env/types'
+import { type EnvInstructionParams, type IEnvInstruction } from '../instructions/env/types'
 import { ExposeInstruction } from '../instructions/expose/class'
-import { type ExposeInstructionParameters, type IExposeInstruction } from '../instructions/expose/types'
+import { type ExposeInstructionParams, type IExposeInstruction } from '../instructions/expose/types'
 import { FromInstruction } from '../instructions/from/class'
-import { isFromInstructionStringFromParameter } from '../instructions/from/guards'
-import { type FromInstructionParameters, type IFromInstruction } from '../instructions/from/types'
+import { isFromInstructionStringFromParam } from '../instructions/from/guards'
+import { type FromInstructionParams, type IFromInstruction } from '../instructions/from/types'
 import { HealthCheckInstruction } from '../instructions/healthcheck/class'
 import { type HealthCheckParams, type IHealthCheckInstruction } from '../instructions/healthcheck/types'
 import { LabelInstruction } from '../instructions/label/class'
-import { type ILabelInstruction, type LabelInstructionArgs } from '../instructions/label/types'
+import { type ILabelInstruction, type LabelInstructionParams } from '../instructions/label/types'
 import { RunInstruction } from '../instructions/run/class'
-import { type IRunInstruction, type RunInstructionParameters } from '../instructions/run/types'
+import { type IRunInstruction, type RunInstructionParams } from '../instructions/run/types'
 import { ShellInstruction } from '../instructions/shell/class'
-import { type IShellInstruction, type ShellInstructionParameters } from '../instructions/shell/types'
+import { type IShellInstruction, type ShellInstructionParams } from '../instructions/shell/types'
 import { StopSignalInstruction } from '../instructions/stopsignal/class'
-import { type IStopSignalInstruction, type StopSignalInstructionParameters } from '../instructions/stopsignal/types'
+import { type IStopSignalInstruction, type StopSignalInstructionParams } from '../instructions/stopsignal/types'
 import { UserInstruction } from '../instructions/user/class'
-import { type IUserInstruction, type UserInstructionParameters } from '../instructions/user/types'
+import { type IUserInstruction, type UserInstructionParams } from '../instructions/user/types'
 import { VolumeInstruction } from '../instructions/volume/class'
-import { type IVolumeInstruction, type VolumeInstructionParameters } from '../instructions/volume/types'
+import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
 import { WorkdirInstruction } from '../instructions/workdir/class'
 import { type IWorkDirInstruction } from '../instructions/workdir/types'
 import { coerceFirstValue } from '../shared/coerce'
 import { isString } from '../shared/guards'
 import { generateConstructorErrorMessage, randomString } from '../shared/utils'
 import { isStage, isStageFromStage } from './guards'
-import { type IStage, type IStageConstructorArgs } from './types'
-import { validStageConstructorArgs } from './validators'
+import { type IStage, type IStageConstructorParams } from './types'
+import { validStageConstructorParams } from './validators'
 
 export class Stage implements IStage {
     type = 'stage' as const
@@ -46,12 +46,12 @@ export class Stage implements IStage {
     id: string
     stack: Instruction[] = []
 
-    constructor(from: IStageConstructorArgs) {
-        const [valid, error] = validStageConstructorArgs(from)
+    constructor(from: IStageConstructorParams) {
+        const [valid, error] = validStageConstructorParams(from)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('FROM', from, error))
 
-        if (isFromInstructionStringFromParameter(from)) from = { from }
+        if (isFromInstructionStringFromParam(from)) from = { from }
 
         if (isStage(from)) from = { from: from.id }
 
@@ -59,7 +59,7 @@ export class Stage implements IStage {
 
         this.id = coerceFirstValue<string>(from.as, randomString())
 
-        this.createFROM(from as FromInstructionParameters)
+        this.createFROM(from)
     }
 
     appendInstruction<T = Instruction>(instruction: T): T {
@@ -76,11 +76,11 @@ export class Stage implements IStage {
         return this.appendInstruction<AddInstruction>(new AddInstruction(...addParams))
     }
 
-    createARG(argParam: ArgInstructionParameters): IArgInstruction {
+    createARG(argParam: ArgInstructionParams): IArgInstruction {
         return this.appendInstruction<ArgInstruction>(new ArgInstruction(argParam))
     }
 
-    createCMD(...cmdParams: CmdInstructionParameters): ICmdInstruction {
+    createCMD(...cmdParams: CmdInstructionParams): ICmdInstruction {
         return this.appendInstruction<CmdInstruction>(new CmdInstruction(...cmdParams))
     }
 
@@ -88,19 +88,19 @@ export class Stage implements IStage {
         return this.appendInstruction<CopyInstruction>(new CopyInstruction(...copyInstructionParams))
     }
 
-    createFROM(from: FromInstructionParameters): IFromInstruction {
+    createFROM(from: FromInstructionParams): IFromInstruction {
         return this.appendInstruction<IFromInstruction>(new FromInstruction(from).setAs(this.id))
     }
 
-    createENTRYPOINT(...entrypointCmds: EntryPointInstructionParameters): IEntryPointInstruction {
+    createENTRYPOINT(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
         return this.appendInstruction<EntryPointInstruction>(new EntryPointInstruction(...entrypointCmds))
     }
 
-    createENV(envParam: EnvInstructionParameters): IEnvInstruction {
+    createENV(envParam: EnvInstructionParams): IEnvInstruction {
         return this.appendInstruction<EnvInstruction>(new EnvInstruction(envParam))
     }
 
-    createEXPOSE(...exposes: ExposeInstructionParameters): IExposeInstruction {
+    createEXPOSE(...exposes: ExposeInstructionParams): IExposeInstruction {
         return this.appendInstruction<ExposeInstruction>(new ExposeInstruction(...exposes))
     }
 
@@ -108,28 +108,28 @@ export class Stage implements IStage {
         return this.appendInstruction<HealthCheckInstruction>(new HealthCheckInstruction(healthcheck))
     }
 
-    createLABEL(labelParam: LabelInstructionArgs): ILabelInstruction {
+    createLABEL(labelParam: LabelInstructionParams): ILabelInstruction {
         return this.appendInstruction<LabelInstruction>(new LabelInstruction(labelParam))
     }
 
-    createRUN(instruction: RunInstructionParameters): IRunInstruction {
+    createRUN(instruction: RunInstructionParams): IRunInstruction {
         return this.appendInstruction<RunInstruction>(new RunInstruction(instruction))
     }
 
-    createSHELL(...shellParameters: ShellInstructionParameters): IShellInstruction {
-        return this.appendInstruction<ShellInstruction>(new ShellInstruction(...shellParameters))
+    createSHELL(...shellParams: ShellInstructionParams): IShellInstruction {
+        return this.appendInstruction<ShellInstruction>(new ShellInstruction(...shellParams))
     }
 
-    createSTOPSIGNAL(stopsignal: StopSignalInstructionParameters): IStopSignalInstruction {
+    createSTOPSIGNAL(stopsignal: StopSignalInstructionParams): IStopSignalInstruction {
         return this.appendInstruction<StopSignalInstruction>(new StopSignalInstruction(stopsignal))
     }
 
-    createUSER(...userInstructionParams: UserInstructionParameters): IUserInstruction {
+    createUSER(...userInstructionParams: UserInstructionParams): IUserInstruction {
         return this.appendInstruction<UserInstruction>(new UserInstruction(...userInstructionParams))
     }
 
-    createVOLUME(...volumeParameters: VolumeInstructionParameters): IVolumeInstruction {
-        return this.appendInstruction<VolumeInstruction>(new VolumeInstruction(...volumeParameters))
+    createVOLUME(...volumeParams: VolumeInstructionParams): IVolumeInstruction {
+        return this.appendInstruction<VolumeInstruction>(new VolumeInstruction(...volumeParams))
     }
 
     createWORKDIR(workdir: string): IWorkDirInstruction {

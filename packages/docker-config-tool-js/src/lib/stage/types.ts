@@ -1,27 +1,27 @@
 import { type z } from 'zod'
 
 import { type AddInstructionParams, type IAddInstruction } from '../instructions/add/types'
-import { type ArgInstructionParameters, type IArgInstruction } from '../instructions/arg/types'
-import { type CmdInstructionParameters, type ICmdInstruction } from '../instructions/cmd/types'
+import { type ArgInstructionParams, type IArgInstruction } from '../instructions/arg/types'
+import { type CmdInstructionParams, type ICmdInstruction } from '../instructions/cmd/types'
 import { type Instruction } from '../instructions/common/types'
 import { type CopyInstructionParams, type ICopyInstruction } from '../instructions/copy/types'
-import { type EntryPointInstructionParameters, type IEntryPointInstruction } from '../instructions/entrypoint/types'
-import { type EnvInstructionParameters, type IEnvInstruction } from '../instructions/env/types'
-import { type ExposeInstructionParameters, type IExposeInstruction } from '../instructions/expose/types'
+import { type EntryPointInstructionParams, type IEntryPointInstruction } from '../instructions/entrypoint/types'
+import { type EnvInstructionParams, type IEnvInstruction } from '../instructions/env/types'
+import { type ExposeInstructionParams, type IExposeInstruction } from '../instructions/expose/types'
 import {
-    type FromInstructionParameterObject,
-    type FromInstructionParameters,
+    type FromInstructionParamObject,
+    type FromInstructionParams,
     type IFromInstruction
 } from '../instructions/from/types'
 import { type HealthCheckParams, type IHealthCheckInstruction } from '../instructions/healthcheck/types'
-import { type ILabelInstruction, type LabelInstructionArgs } from '../instructions/label/types'
-import { type IRunInstruction, type RunInstructionParameters } from '../instructions/run/types'
-import { type IShellInstruction, type ShellInstructionParameters } from '../instructions/shell/types'
-import { type IStopSignalInstruction, type StopSignalInstructionParameters } from '../instructions/stopsignal/types'
-import { type IUserInstruction, type UserInstructionParameters } from '../instructions/user/types'
-import { type IVolumeInstruction, type VolumeInstructionParameters } from '../instructions/volume/types'
+import { type ILabelInstruction, type LabelInstructionParams } from '../instructions/label/types'
+import { type IRunInstruction, type RunInstructionParams } from '../instructions/run/types'
+import { type IShellInstruction, type ShellInstructionParams } from '../instructions/shell/types'
+import { type IStopSignalInstruction, type StopSignalInstructionParams } from '../instructions/stopsignal/types'
+import { type IUserInstruction, type UserInstructionParams } from '../instructions/user/types'
+import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
 import { type IWorkDirInstruction } from '../instructions/workdir/types'
-import { type zStageConstructorArgs } from './schema'
+import { type zStageConstructorParams } from './schema'
 
 export interface IStage {
     type: 'stage'
@@ -34,33 +34,33 @@ export interface IStage {
 
     createADD: (...addParams: AddInstructionParams) => IAddInstruction
 
-    createARG: (argParam: ArgInstructionParameters) => IArgInstruction
+    createARG: (argParam: ArgInstructionParams) => IArgInstruction
 
-    createCMD: (...cmdParams: CmdInstructionParameters) => ICmdInstruction
+    createCMD: (...cmdParams: CmdInstructionParams) => ICmdInstruction
 
     createCOPY: (...copyInstructionParams: CopyInstructionParams) => ICopyInstruction
 
-    createENTRYPOINT: (...entrypointCmds: EntryPointInstructionParameters) => IEntryPointInstruction
+    createENTRYPOINT: (...entrypointCmds: EntryPointInstructionParams) => IEntryPointInstruction
 
-    createENV: (envParam: EnvInstructionParameters) => IEnvInstruction
+    createENV: (envParam: EnvInstructionParams) => IEnvInstruction
 
-    createEXPOSE: (...exposes: ExposeInstructionParameters) => IExposeInstruction
+    createEXPOSE: (...exposes: ExposeInstructionParams) => IExposeInstruction
 
-    createFROM: (from: FromInstructionParameters) => IFromInstruction
+    createFROM: (from: FromInstructionParams) => IFromInstruction
 
     createHEALTHCHECK: (healthcheck: HealthCheckParams) => IHealthCheckInstruction
 
-    createLABEL: (labelParam: LabelInstructionArgs) => ILabelInstruction
+    createLABEL: (labelParam: LabelInstructionParams) => ILabelInstruction
 
-    createRUN: (runArgs: RunInstructionParameters) => IRunInstruction
+    createRUN: (runParams: RunInstructionParams) => IRunInstruction
 
-    createSHELL: (...shellParameters: ShellInstructionParameters) => IShellInstruction
+    createSHELL: (...shellParams: ShellInstructionParams) => IShellInstruction
 
-    createSTOPSIGNAL: (stopsignal: StopSignalInstructionParameters) => IStopSignalInstruction
+    createSTOPSIGNAL: (stopsignal: StopSignalInstructionParams) => IStopSignalInstruction
 
-    createUSER: (...userInstructionParams: UserInstructionParameters) => IUserInstruction
+    createUSER: (...userInstructionParams: UserInstructionParams) => IUserInstruction
 
-    createVOLUME: (...volumeParameters: VolumeInstructionParameters) => IVolumeInstruction
+    createVOLUME: (...volumeParams: VolumeInstructionParams) => IVolumeInstruction
 
     createWORKDIR: (workdir: string) => IWorkDirInstruction
 
@@ -69,10 +69,10 @@ export interface IStage {
     toString: () => string
 }
 
-export interface IStageFromStage extends Omit<FromInstructionParameterObject, 'from'> {
+export interface IStageFromStage extends Omit<FromInstructionParamObject, 'from'> {
     from: IStage
 }
 
-export type IStageConstructorArgs = IStage | FromInstructionParameters | IStageFromStage
+export type IStageConstructorParams = IStage | FromInstructionParams | IStageFromStage
 
-export type StageConstructorArgs = z.infer<typeof zStageConstructorArgs>
+export type StageConstructorParams = z.infer<typeof zStageConstructorParams>

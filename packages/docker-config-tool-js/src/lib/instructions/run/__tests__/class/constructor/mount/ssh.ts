@@ -1,5 +1,5 @@
 import { RunInstruction } from '../../../../class'
-import { type RunInstructionArgsObject } from '../../../../types'
+import { type RunInstructionParamsObject } from '../../../../types'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -10,7 +10,7 @@ describe('DCT', () => {
                         describe(`mount`, () => {
                             describe(`ssh`, () => {
                                 test(`create run instruction, with ssh mount options 'minimal'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh'
@@ -23,7 +23,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'id'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -39,7 +39,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'target'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -56,7 +56,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'required set false'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -74,7 +74,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'required set true'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -92,7 +92,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'numeric file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -110,7 +110,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'string file access mode'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -128,7 +128,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'uid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -146,7 +146,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',
@@ -164,7 +164,7 @@ describe('DCT', () => {
                                 })
 
                                 test(`create run instruction, with ssh mount options 'uid and gid'`, () => {
-                                    const testVal: RunInstructionArgsObject = {
+                                    const testVal: RunInstructionParamsObject = {
                                         commands: ['apt', 'update'],
                                         mount: {
                                             type: 'ssh',

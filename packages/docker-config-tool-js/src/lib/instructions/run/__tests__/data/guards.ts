@@ -11,9 +11,9 @@ export const RunInstructionBooleanFieldsTestData = ['rw', 'readwrite', 'ro', 're
 
 export const RunInstructionCacheSharingTypesTestData = ['shared', 'private', 'locked']
 
-export const RunInstructionNetworkRunArgTestData = ['default', 'none', 'host']
+export const RunInstructionNetworkRunParamTestData = ['default', 'none', 'host']
 
-export const RunInstructionSecurityRunArgTestData = ['sandbox', 'insecure']
+export const RunInstructionSecurityRunParamTestData = ['sandbox', 'insecure']
 
 export const RunInstructionsTestData = ['/bin/sh', '/bin/sh -c', ['/bin/sh'], ['/bin/sh -c'], ['/bin/sh', '-c']]
 
@@ -75,7 +75,7 @@ export const RunInstructionMountTypeSSHTestData = generateMap(MountTypeSSHBase, 
 
 export const RunInstructionMountTypeTmpFSTestData = [{ type: 'tmpfs', target: '/target', size: 1024 * 1024 }]
 
-export const RunInstructionMountRunArgTestData = [
+export const RunInstructionMountRunParamsTestData = [
     ...RunInstructionMountTypeBindCommonTestData,
     ...RunInstructionMountTypeCacheCommonTestData,
     ...RunInstructionMountTypeSecretTestData,
@@ -83,21 +83,21 @@ export const RunInstructionMountRunArgTestData = [
     ...RunInstructionMountTypeTmpFSTestData
 ]
 
-const ArgsObjectBase = {}
-const ArgsObjectVariants = RunInstructionsTestData.map((variantData) => ({
+const ParamsObjectBase = {}
+const ParamsObjectVariants = RunInstructionsTestData.map((variantData) => ({
     commands: variantData
 }))
 
-export const RunInstructionArgsObjectTestData = generateMap(ArgsObjectBase, ArgsObjectVariants)
+export const RunInstructionParamsObjectTestData = generateMap(ParamsObjectBase, ParamsObjectVariants)
 
-export const RunInstructionParametersTestData = [
+export const RunInstructionParamsTestData = [
     ...RunInstructionsTestData,
-    ...RunInstructionArgsObjectTestData,
-    ...RunInstructionArgsObjectTestData.reduce<Array<Record<string, unknown>>>((collector, baseArgObj) => {
+    ...RunInstructionParamsObjectTestData,
+    ...RunInstructionParamsObjectTestData.reduce<Array<Record<string, unknown>>>((collector, baseParamsObj) => {
         return collector.concat(
             generateMap(
-                baseArgObj,
-                RunInstructionMountRunArgTestData.map((mount) => ({ mount }))
+                baseParamsObj,
+                RunInstructionMountRunParamsTestData.map((mount) => ({ mount }))
             )
         )
     }, [])

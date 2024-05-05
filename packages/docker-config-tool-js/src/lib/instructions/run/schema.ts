@@ -99,14 +99,14 @@ export const zRunInstructionNetworkType = z.union([z.literal('default'), z.liter
 
 export const zRunInstructionSecurityType = z.union([z.literal('sandbox'), z.literal('insecure')])
 
-export const zRunInstructionArgsObject = z.object({
+export const zRunInstructionParamsObject = z.object({
     commands: zRunInstructions,
     mount: zRunInstructionMountType.optional(),
     network: zRunInstructionNetworkType.optional(),
     security: zRunInstructionSecurityType.optional()
 })
 
-export const zRunInstructionParameters = z.union([zRunInstructions, zRunInstructionArgsObject])
+export const zRunInstructionParams = z.union([zRunInstructions, zRunInstructionParamsObject])
 
 export const zRunInstructionBooleanFields = z.union([
     z.literal('rw'),
