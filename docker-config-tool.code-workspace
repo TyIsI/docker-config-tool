@@ -14,7 +14,15 @@
         }
     ],
     "settings": {
-        "[javascript][typescript]": {
+        "[javascript]": {
+            "editor.codeActionsOnSave": {
+                "source.fixAll.eslint": "explicit",
+                "source.fixAll.sonarlint": "explicit",
+                "source.fixAll.prettier": "explicit"
+            },
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
             "editor.codeActionsOnSave": {
                 "source.fixAll.eslint": "explicit",
                 "source.fixAll.sonarlint": "explicit",
