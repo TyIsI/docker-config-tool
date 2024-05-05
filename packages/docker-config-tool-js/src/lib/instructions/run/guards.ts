@@ -83,16 +83,16 @@ export const isRunInstructionMountTypeSSH = (value: unknown): value is RunInstru
 export const isRunInstructionMountTypeTmpFS = (value: unknown): value is RunInstructionMountTypeTmpFS =>
     zRunInstructionMountTypeTmpFS.safeParse(value).success
 
-export const isRunInstructionMountRunArg = (value: unknown): value is RunInstructionMountType =>
+export const isRunInstructionMountParam = (value: unknown): value is RunInstructionMountType =>
     zRunInstructionMountType.safeParse(value).success
 
-export const isRunInstructionNetworkRunArg = (value: unknown): value is RunInstructionNetworkType =>
+export const isRunInstructionNetworkParam = (value: unknown): value is RunInstructionNetworkType =>
     zRunInstructionNetworkType.safeParse(value).success
 
 export const isRunInstructionParams = (value: unknown): value is RunInstructionParams =>
     zRunInstructionParams.safeParse(value).success
 
-export const isRunInstructionSecurityRunArg = (value: unknown): value is RunInstructionSecurityType =>
+export const isRunInstructionSecurityParam = (value: unknown): value is RunInstructionSecurityType =>
     zRunInstructionSecurityType.safeParse(value).success
 
 export const isRunInstructions = (value: unknown): value is RunInstructions => zRunInstructions.safeParse(value).success

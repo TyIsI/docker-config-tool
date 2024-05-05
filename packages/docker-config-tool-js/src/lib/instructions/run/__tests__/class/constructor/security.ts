@@ -42,7 +42,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal], ['Invalid input']))
                             })
 
                             test(`don't create with a null security option`, () => {
@@ -56,7 +56,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal]))
                             })
                         })
                     })

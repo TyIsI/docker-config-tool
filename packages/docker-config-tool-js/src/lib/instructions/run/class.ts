@@ -1,12 +1,12 @@
 import { coerceString, coerceStringArray } from '../../shared/coerce'
-import { isString, isStringArray, isTrueBoolean } from '../../shared/guards'
+import { isStringArray, isTrueBoolean } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import {
     isRunInstructionBooleanFields,
-    isRunInstructionMountRunArg,
-    isRunInstructionNetworkRunArg,
+    isRunInstructionMountParam,
+    isRunInstructionNetworkParam,
     isRunInstructionParamsObject,
-    isRunInstructionSecurityRunArg
+    isRunInstructionSecurityParam
 } from './guards'
 import {
     type IRunInstruction,
@@ -26,42 +26,45 @@ export class RunInstruction implements IRunInstruction {
     network?: RunInstructionNetworkType
     security?: RunInstructionSecurityType
 
-    public constructor(runParams: RunInstructionParams) {
+    public constructor(...runParams: RunInstructionParams) {
         const [valid, result] = validateRunInstructionParams(runParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('RUN', runParams, result))
 
-        if (isString(runParams)) {
-            this.commands = [runParams]
-        } else if (isStringArray(runParams)) {
+        if (isStringArray(runParams)) {
             this.commands = runParams
-        } else if (isRunInstructionParamsObject(runParams)) {
-            this.commands = coerceStringArray(runParams.commands)
+        } else if (isStringArray(runParams[0])) {
+            this.commands = runParams[0]
+        } else if (isRunInstructionParamsObject(runParams[0])) {
+            const runParamObject = runParams[0]
 
-            if (runParams.mount != null && isRunInstructionMountRunArg(runParams.mount)) this.mount = runParams.mount
+            this.commands = coerceStringArray(runParamObject.commands)
 
-            if (runParams.network != null && isRunInstructionNetworkRunArg(runParams.network))
-                this.network = runParams.network
+            if (runParamObject.mount != null && isRunInstructionMountParam(runParamObject.mount))
+                this.mount = runParamObject.mount
 
-            if (runParams.security != null && isRunInstructionSecurityRunArg(runParams.security))
-                this.security = runParams.security
+            if (runParamObject.network != null && isRunInstructionNetworkParam(runParamObject.network))
+                this.network = runParamObject.network
+
+            if (runParamObject.security != null && isRunInstructionSecurityParam(runParamObject.security))
+                this.security = runParamObject.security
         }
     }
 
     setMount(mount: RunInstructionMountType): void {
-        if (!isRunInstructionMountRunArg(mount)) throw new Error('Invalid mount type')
+        if (!isRunInstructionMountParam(mount)) throw new Error('Invalid mount type')
 
         this.mount = mount
     }
 
     setNetwork(network: RunInstructionNetworkType): void {
-        if (!isRunInstructionNetworkRunArg(network)) throw new Error('Invalid network type')
+        if (!isRunInstructionNetworkParam(network)) throw new Error('Invalid network type')
 
         this.network = network
     }
 
     setSecurity(security: RunInstructionSecurityType): void {
-        if (!isRunInstructionSecurityRunArg(security)) throw new Error('Invalid security type')
+        if (!isRunInstructionSecurityParam(security)) throw new Error('Invalid security type')
 
         this.security = security
     }
@@ -69,7 +72,7 @@ export class RunInstruction implements IRunInstruction {
     public toString(): string {
         const result = ['RUN']
 
-        if (isRunInstructionMountRunArg(this.mount)) {
+        if (isRunInstructionMountParam(this.mount)) {
             const mountOpts = [`--mount=type=${this.mount.type}`]
 
             Object.entries(this.mount)
@@ -85,9 +88,9 @@ export class RunInstruction implements IRunInstruction {
             result.push(mountOpts.join(','))
         }
 
-        if (isRunInstructionNetworkRunArg(this.network)) result.push(`--network=${coerceString(this.network)}`)
+        if (isRunInstructionNetworkParam(this.network)) result.push(`--network=${coerceString(this.network)}`)
 
-        if (isRunInstructionSecurityRunArg(this.security)) result.push(`--security=${coerceString(this.security)}`)
+        if (isRunInstructionSecurityParam(this.security)) result.push(`--security=${coerceString(this.security)}`)
 
         return [...result, ...this.commands].join(' ')
     }

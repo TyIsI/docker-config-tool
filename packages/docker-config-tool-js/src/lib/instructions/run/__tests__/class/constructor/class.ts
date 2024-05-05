@@ -14,6 +14,12 @@ describe('DCT', () => {
                                 expect(runInstruction.toString()).toMatch('RUN apt update')
                             })
 
+                            test(`create from strings`, () => {
+                                const runInstruction = new RunInstruction('apt', 'update')
+
+                                expect(runInstruction.toString()).toMatch('RUN apt update')
+                            })
+
                             test(`create from string array`, () => {
                                 const runInstruction = new RunInstruction(['apt', 'update'])
 
@@ -40,7 +46,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal], ['Invalid input']))
                             })
 
                             test(`don't create with empty string argument`, () => {
@@ -50,7 +56,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal], ['Invalid string input']))
                             })
 
                             test(`don't create with empty array argument`, () => {
@@ -61,7 +67,13 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(
+                                    generateConstructorErrorMessage(
+                                        'RUN',
+                                        [[]],
+                                        ['Array must contain at least 1 element(s)']
+                                    )
+                                )
                             })
 
                             test(`don't create with array argument with empty string`, () => {
@@ -72,7 +84,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal]))
                             })
 
                             test(`don't create with empty object argument`, () => {
@@ -83,7 +95,7 @@ describe('DCT', () => {
                                     const runInstruction = new RunInstruction(testVal)
 
                                     runInstruction.toString()
-                                }).toThrow(generateConstructorErrorMessage('RUN', testVal))
+                                }).toThrow(generateConstructorErrorMessage('RUN', [testVal]))
                             })
                         })
                     })

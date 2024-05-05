@@ -6,12 +6,12 @@ describe('DCT', () => {
             describe(`RUN`, () => {
                 describe(`validators`, () => {
                     test(`run validateRunInstructionParams with simple string value`, () => {
-                        const testVal = 'echo test'
+                        const testVal: [string] = ['echo test']
 
                         const [valid, result] = validateRunInstructionParams(testVal)
 
                         expect(valid).toBeTruthy()
-                        expect(result).toMatch(testVal)
+                        expect(result).toMatchObject(testVal)
                     })
 
                     test(`run validateRunInstructionParams with simple string value`, () => {

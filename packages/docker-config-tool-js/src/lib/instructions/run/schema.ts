@@ -10,6 +10,14 @@ import {
     zUnixUserGroupNumericId
 } from '../../shared/schema'
 
+export const zRunInstructionBooleanFields = z.union([
+    z.literal('rw'),
+    z.literal('readwrite'),
+    z.literal('ro'),
+    z.literal('readonly'),
+    z.literal('required')
+])
+
 export const zRunInstructionCacheSharingTypes = z.union([
     z.literal('shared'),
     z.literal('private'),
@@ -106,12 +114,9 @@ export const zRunInstructionParamsObject = z.object({
     security: zRunInstructionSecurityType.optional()
 })
 
-export const zRunInstructionParams = z.union([zRunInstructions, zRunInstructionParamsObject])
-
-export const zRunInstructionBooleanFields = z.union([
-    z.literal('rw'),
-    z.literal('readwrite'),
-    z.literal('ro'),
-    z.literal('readonly'),
-    z.literal('required')
+export const zRunInstructionParams = z.union([
+    z.tuple([zRequiredString()]),
+    z.tuple([zRequiredString()]).rest(zRequiredString()),
+    z.tuple([z.array(zRequiredString()).nonempty()]),
+    z.tuple([zRunInstructionParamsObject])
 ])

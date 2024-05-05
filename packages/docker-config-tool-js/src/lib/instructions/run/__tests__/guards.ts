@@ -1,7 +1,7 @@
 import {
     isRunInstructionBooleanFields,
     isRunInstructionCacheSharingTypes,
-    isRunInstructionMountRunArg,
+    isRunInstructionMountParam,
     isRunInstructionMountTypeBind,
     isRunInstructionMountTypeBindCommon,
     isRunInstructionMountTypeBindRW,
@@ -13,10 +13,10 @@ import {
     isRunInstructionMountTypeSSH,
     isRunInstructionMountTypeSecret,
     isRunInstructionMountTypeTmpFS,
-    isRunInstructionNetworkRunArg,
+    isRunInstructionNetworkParam,
     isRunInstructionParams,
     isRunInstructionParamsObject,
-    isRunInstructionSecurityRunArg,
+    isRunInstructionSecurityParam,
     isRunInstructions
 } from '../guards'
 
@@ -147,25 +147,25 @@ describe('DCT', () => {
 
                     test(`isRunInstructionMountRunArg`, () => {
                         RunInstructionMountRunParamsTestData.forEach((testVal) => {
-                            expect(isRunInstructionMountRunArg(testVal)).toBe(true)
+                            expect(isRunInstructionMountParam(testVal)).toBe(true)
                         })
                     })
 
                     test(`isRunInstructionNetworkRunArg`, () => {
                         RunInstructionNetworkRunParamTestData.forEach((testVal) => {
-                            expect(isRunInstructionNetworkRunArg(testVal)).toBe(true)
+                            expect(isRunInstructionNetworkParam(testVal)).toBe(true)
                         })
                     })
 
                     test(`isRunInstructionParams`, () => {
                         RunInstructionParamsTestData.forEach((testVal) => {
-                            expect(isRunInstructionParams(testVal)).toBe(true)
+                            expect(isRunInstructionParams([testVal])).toBe(true)
                         })
                     })
 
                     test(`isRunInstructionSecurityRunArg`, () => {
                         RunInstructionSecurityRunParamTestData.forEach((testVal) => {
-                            expect(isRunInstructionSecurityRunArg(testVal)).toBe(true)
+                            expect(isRunInstructionSecurityParam(testVal)).toBe(true)
                         })
                     })
 
