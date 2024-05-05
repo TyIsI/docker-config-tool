@@ -32,7 +32,7 @@ import { type IUserInstruction, type UserInstructionParams } from '../instructio
 import { VolumeInstruction } from '../instructions/volume/class'
 import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
 import { WorkdirInstruction } from '../instructions/workdir/class'
-import { type IWorkDirInstruction } from '../instructions/workdir/types'
+import { type IWorkdirInstruction } from '../instructions/workdir/types'
 import { coerceFirstValue } from '../shared/coerce'
 import { isString } from '../shared/guards'
 import { generateConstructorErrorMessage, randomString } from '../shared/utils'
@@ -46,97 +46,97 @@ export class Stage implements IStage {
     id: string
     stack: Instruction[] = []
 
-    constructor(from: IStageConstructorParams) {
-        const [valid, error] = validStageConstructorParams(from)
+    public constructor(fromParam: IStageConstructorParams) {
+        const [valid, error] = validStageConstructorParams(fromParam)
 
-        if (!valid) throw new Error(generateConstructorErrorMessage('FROM', from, error))
+        if (!valid) throw new Error(generateConstructorErrorMessage('FROM', fromParam, error))
 
-        if (isFromInstructionStringFromParam(from)) from = { from }
+        if (isFromInstructionStringFromParam(fromParam)) fromParam = { from: fromParam }
 
-        if (isStage(from)) from = { from: from.id }
+        if (isStage(fromParam)) fromParam = { from: fromParam.id }
 
-        if (isStageFromStage(from)) from = { ...from, from: from.from.id }
+        if (isStageFromStage(fromParam)) fromParam = { ...fromParam, from: fromParam.from.id }
 
-        this.id = coerceFirstValue<string>(from.as, randomString())
+        this.id = coerceFirstValue<string>(fromParam.as, randomString())
 
-        this.createFROM(from)
+        this.appendFrom(fromParam)
     }
 
-    appendInstruction<T = Instruction>(instruction: T): T {
-        if (!isInstruction(instruction)) {
+    appendInstruction<T = Instruction>(instructionParam: T): T {
+        if (!isInstruction(instructionParam)) {
             throw new Error('Invalid Instruction')
         }
 
-        this.stack.push(instruction)
+        this.stack.push(instructionParam)
 
-        return instruction
+        return instructionParam
     }
 
-    createADD(...addParams: AddInstructionParams): IAddInstruction {
+    appendAdd(...addParams: AddInstructionParams): IAddInstruction {
         return this.appendInstruction<AddInstruction>(new AddInstruction(...addParams))
     }
 
-    createARG(argParam: ArgInstructionParams): IArgInstruction {
+    appendArg(argParam: ArgInstructionParams): IArgInstruction {
         return this.appendInstruction<ArgInstruction>(new ArgInstruction(argParam))
     }
 
-    createCMD(...cmdParams: CmdInstructionParams): ICmdInstruction {
+    appendCmd(...cmdParams: CmdInstructionParams): ICmdInstruction {
         return this.appendInstruction<CmdInstruction>(new CmdInstruction(...cmdParams))
     }
 
-    createCOPY(...copyInstructionParams: CopyInstructionParams): ICopyInstruction {
+    appendCopy(...copyInstructionParams: CopyInstructionParams): ICopyInstruction {
         return this.appendInstruction<CopyInstruction>(new CopyInstruction(...copyInstructionParams))
     }
 
-    createFROM(from: FromInstructionParams): IFromInstruction {
+    appendFrom(from: FromInstructionParams): IFromInstruction {
         return this.appendInstruction<IFromInstruction>(new FromInstruction(from).setAs(this.id))
     }
 
-    createENTRYPOINT(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
+    appendEntryPoint(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
         return this.appendInstruction<EntryPointInstruction>(new EntryPointInstruction(...entrypointCmds))
     }
 
-    createENV(envParam: EnvInstructionParams): IEnvInstruction {
+    appendEnv(envParam: EnvInstructionParams): IEnvInstruction {
         return this.appendInstruction<EnvInstruction>(new EnvInstruction(envParam))
     }
 
-    createEXPOSE(...exposes: ExposeInstructionParams): IExposeInstruction {
+    appendExpose(...exposes: ExposeInstructionParams): IExposeInstruction {
         return this.appendInstruction<ExposeInstruction>(new ExposeInstruction(...exposes))
     }
 
-    createHEALTHCHECK(healthcheck: HealthCheckParams): IHealthCheckInstruction {
+    appendHealthCheck(healthcheck: HealthCheckParams): IHealthCheckInstruction {
         return this.appendInstruction<HealthCheckInstruction>(new HealthCheckInstruction(healthcheck))
     }
 
-    createLABEL(labelParam: LabelInstructionParams): ILabelInstruction {
+    appendLabel(labelParam: LabelInstructionParams): ILabelInstruction {
         return this.appendInstruction<LabelInstruction>(new LabelInstruction(labelParam))
     }
 
-    createRUN(instruction: RunInstructionParams): IRunInstruction {
-        return this.appendInstruction<RunInstruction>(new RunInstruction(instruction))
+    appendRun(...runParams: RunInstructionParams): IRunInstruction {
+        return this.appendInstruction<RunInstruction>(new RunInstruction(...runParams))
     }
 
-    createSHELL(...shellParams: ShellInstructionParams): IShellInstruction {
+    appendShell(...shellParams: ShellInstructionParams): IShellInstruction {
         return this.appendInstruction<ShellInstruction>(new ShellInstruction(...shellParams))
     }
 
-    createSTOPSIGNAL(stopsignal: StopSignalInstructionParams): IStopSignalInstruction {
-        return this.appendInstruction<StopSignalInstruction>(new StopSignalInstruction(stopsignal))
+    appendStopSignal(stopsignalParam: StopSignalInstructionParams): IStopSignalInstruction {
+        return this.appendInstruction<StopSignalInstruction>(new StopSignalInstruction(stopsignalParam))
     }
 
-    createUSER(...userInstructionParams: UserInstructionParams): IUserInstruction {
+    appendUser(...userInstructionParams: UserInstructionParams): IUserInstruction {
         return this.appendInstruction<UserInstruction>(new UserInstruction(...userInstructionParams))
     }
 
-    createVOLUME(...volumeParams: VolumeInstructionParams): IVolumeInstruction {
+    appendVolume(...volumeParams: VolumeInstructionParams): IVolumeInstruction {
         return this.appendInstruction<VolumeInstruction>(new VolumeInstruction(...volumeParams))
     }
 
-    createWORKDIR(workdir: string): IWorkDirInstruction {
+    appendWorkdir(workdir: string): IWorkdirInstruction {
         return this.appendInstruction<WorkdirInstruction>(new WorkdirInstruction(workdir))
     }
 
-    setId(id: string): IStage {
+    setId(id: string): this {
         if (!isString(id)) throw new Error(`Invalid id argument: ${JSON.stringify(id)}`)
 
         this.id = id

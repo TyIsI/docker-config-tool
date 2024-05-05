@@ -5,23 +5,23 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createENTRYPOINT`, () => {
-                        test(`create a stage from string and append a valid instruction`, () => {
+                    describe(`appendVOLUME`, () => {
+                        test(`create a stage from string and append a valid volume instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createENTRYPOINT('/bin/sh')
+                            stage.appendVolume('/data')
 
                             expect(stage.toString()).toBeTruthy()
                         })
 
-                        test(`don't create a stage from string and append a invalid instruction`, () => {
+                        test(`don't create a stage from string and append an invalid volume instruction`, () => {
                             const testVal = undefined
 
                             expect(() => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createENTRYPOINT(testVal)
+                                stage.appendVolume(testVal)
 
                                 stage.toString()
                             }).toThrow()

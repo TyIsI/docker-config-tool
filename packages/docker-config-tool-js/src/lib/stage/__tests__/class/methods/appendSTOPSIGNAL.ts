@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createSHELL`, () => {
+                    describe(`appendSTOPSIGNAL`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createSHELL('/bin/ash')
+                            stage.appendStopSignal('SIGHUP')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createSHELL(testVal)
+                                stage.appendStopSignal(testVal)
 
                                 stage.toString()
                             }).toThrow()

@@ -9,7 +9,7 @@ export class ArgInstruction implements IArgInstruction {
     argName?: string
     argValue?: string
 
-    constructor(argParam: ArgInstructionParams) {
+    public constructor(argParam: ArgInstructionParams) {
         if (!isArgInstructionParams(argParam)) throw new Error(generateConstructorErrorMessage('ARG', argParam))
 
         if (isArgInstructionParamObject(argParam)) {

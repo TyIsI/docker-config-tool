@@ -1,16 +1,16 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type IWorkDirInstruction } from './types'
+import { type IWorkdirInstruction } from './types'
 
-export class WorkdirInstruction implements IWorkDirInstruction {
+export class WorkdirInstruction implements IWorkdirInstruction {
     type = 'instruction' as const
 
     workdir: string = ''
 
-    constructor(workdir: string) {
-        if (!isString(workdir)) throw new Error(generateConstructorErrorMessage('WORKDIR', workdir))
+    public constructor(workdirParam: string) {
+        if (!isString(workdirParam)) throw new Error(generateConstructorErrorMessage('WORKDIR', workdirParam))
 
-        this.workdir = workdir
+        this.workdir = workdirParam
     }
 
     toString(): string {

@@ -7,7 +7,7 @@ export class LabelInstruction implements ILabelInstruction {
 
     labels: Record<string, string> = {}
 
-    constructor(labelParam: LabelInstructionParams) {
+    public constructor(labelParam: LabelInstructionParams) {
         if (isPartialLabelVarArray(labelParam))
             labelParam.forEach((labelItem) => (this.labels[labelItem.split('=')[0]] = labelItem.split('=')[1]))
         else if (isPartialLabelVar(labelParam)) this.labels[labelParam.split('=')[0]] = labelParam.split('=')[1]

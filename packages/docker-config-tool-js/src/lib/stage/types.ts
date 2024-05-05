@@ -20,7 +20,7 @@ import { type IShellInstruction, type ShellInstructionParams } from '../instruct
 import { type IStopSignalInstruction, type StopSignalInstructionParams } from '../instructions/stopsignal/types'
 import { type IUserInstruction, type UserInstructionParams } from '../instructions/user/types'
 import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
-import { type IWorkDirInstruction } from '../instructions/workdir/types'
+import { type IWorkdirInstruction } from '../instructions/workdir/types'
 import { type zStageConstructorParams } from './schema'
 
 export interface IStage {
@@ -32,39 +32,39 @@ export interface IStage {
 
     appendInstruction: <T = Instruction>(instruction: T) => T
 
-    createADD: (...addParams: AddInstructionParams) => IAddInstruction
+    appendAdd: (...addParams: AddInstructionParams) => IAddInstruction
 
-    createARG: (argParam: ArgInstructionParams) => IArgInstruction
+    appendArg: (argParam: ArgInstructionParams) => IArgInstruction
 
-    createCMD: (...cmdParams: CmdInstructionParams) => ICmdInstruction
+    appendCmd: (...cmdParams: CmdInstructionParams) => ICmdInstruction
 
-    createCOPY: (...copyInstructionParams: CopyInstructionParams) => ICopyInstruction
+    appendCopy: (...copyInstructionParams: CopyInstructionParams) => ICopyInstruction
 
-    createENTRYPOINT: (...entrypointCmds: EntryPointInstructionParams) => IEntryPointInstruction
+    appendEntryPoint: (...entrypointParams: EntryPointInstructionParams) => IEntryPointInstruction
 
-    createENV: (envParam: EnvInstructionParams) => IEnvInstruction
+    appendEnv: (envParam: EnvInstructionParams) => IEnvInstruction
 
-    createEXPOSE: (...exposes: ExposeInstructionParams) => IExposeInstruction
+    appendExpose: (...exposeParams: ExposeInstructionParams) => IExposeInstruction
 
-    createFROM: (from: FromInstructionParams) => IFromInstruction
+    appendFrom: (fromParam: FromInstructionParams) => IFromInstruction
 
-    createHEALTHCHECK: (healthcheck: HealthCheckParams) => IHealthCheckInstruction
+    appendHealthCheck: (healthCheckParam: HealthCheckParams) => IHealthCheckInstruction
 
-    createLABEL: (labelParam: LabelInstructionParams) => ILabelInstruction
+    appendLabel: (labelParam: LabelInstructionParams) => ILabelInstruction
 
-    createRUN: (runParams: RunInstructionParams) => IRunInstruction
+    appendRun: (...runParams: RunInstructionParams) => IRunInstruction
 
-    createSHELL: (...shellParams: ShellInstructionParams) => IShellInstruction
+    appendShell: (...shellParams: ShellInstructionParams) => IShellInstruction
 
-    createSTOPSIGNAL: (stopsignal: StopSignalInstructionParams) => IStopSignalInstruction
+    appendStopSignal: (stopsignalParam: StopSignalInstructionParams) => IStopSignalInstruction
 
-    createUSER: (...userInstructionParams: UserInstructionParams) => IUserInstruction
+    appendUser: (...userInstructionParams: UserInstructionParams) => IUserInstruction
 
-    createVOLUME: (...volumeParams: VolumeInstructionParams) => IVolumeInstruction
+    appendVolume: (...volumeParams: VolumeInstructionParams) => IVolumeInstruction
 
-    createWORKDIR: (workdir: string) => IWorkDirInstruction
+    appendWorkdir: (workdirParam: string) => IWorkdirInstruction
 
-    setId: (id: string) => IStage
+    setId: (id: string) => this
 
     toString: () => string
 }

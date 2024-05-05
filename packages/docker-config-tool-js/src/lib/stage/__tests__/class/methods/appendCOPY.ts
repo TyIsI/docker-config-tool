@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createUSER`, () => {
+                    describe(`appendCOPY`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createUSER('test')
+                            stage.appendCopy('.', '.')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createUSER(testVal)
+                                stage.appendCopy(testVal)
 
                                 stage.toString()
                             }).toThrow()

@@ -14,5 +14,5 @@ export type FromInstructionParams = z.infer<typeof zFromInstructionParams>
 export type FromInstructionStringFromParam = z.infer<typeof zFromInstructionStringFromParam>
 
 export interface IFromInstruction extends Instruction {
-    setAs: (name: string) => this
+    setAs: (nameParam: string) => this
 }

@@ -100,7 +100,7 @@ describe('DCT', () => {
                         test(`create instruction with simple numeric parameter and then add an additional port`, () => {
                             const exposeInstruction = new ExposeInstruction(3000)
 
-                            exposeInstruction.addExposeArg(6001)
+                            exposeInstruction.addExposeParam(6001)
 
                             expect(exposeInstruction.toString()).toBe('EXPOSE 3000/tcp 6001/tcp')
                         })
@@ -108,7 +108,7 @@ describe('DCT', () => {
                         test(`create instruction with simple string parameter and then add an additional port`, () => {
                             const exposeInstruction = new ExposeInstruction('3000')
 
-                            exposeInstruction.addExposeArg('6001')
+                            exposeInstruction.addExposeParam('6001')
 
                             expect(exposeInstruction.toString()).toBe('EXPOSE 3000/tcp 6001/tcp')
                         })
@@ -116,7 +116,7 @@ describe('DCT', () => {
                         test(`create instruction with port and protocol string (tcp) parameter and then add an additional port`, () => {
                             const exposeInstruction = new ExposeInstruction('3000/tcp')
 
-                            exposeInstruction.addExposeArg('6001/tcp')
+                            exposeInstruction.addExposeParam('6001/tcp')
 
                             expect(exposeInstruction.toString()).toBe('EXPOSE 3000/tcp 6001/tcp')
                         })
@@ -124,7 +124,7 @@ describe('DCT', () => {
                         test(`create instruction with port and protocol string (udp) parameter and then add an additional port`, () => {
                             const exposeInstruction = new ExposeInstruction('3000/udp')
 
-                            exposeInstruction.addExposeArg('6001/udp')
+                            exposeInstruction.addExposeParam('6001/udp')
 
                             expect(exposeInstruction.toString()).toBe('EXPOSE 3000/udp 6001/udp')
                         })
@@ -238,7 +238,7 @@ describe('DCT', () => {
                                 const envInstruction = new ExposeInstruction(3000)
 
                                 // @ts-expect-error missing port
-                                envInstruction.addExposeArg()
+                                envInstruction.addExposeParam()
 
                                 envInstruction.toString()
                             }).toThrow(/^Invalid parameter value for addExposeArg/)
@@ -250,7 +250,7 @@ describe('DCT', () => {
                             expect(() => {
                                 const envInstruction = new ExposeInstruction(3000)
 
-                                envInstruction.addExposeArg(testVal)
+                                envInstruction.addExposeParam(testVal)
 
                                 envInstruction.toString()
                             }).toThrow(/^Invalid parameter value for addExposeArg/)
@@ -262,7 +262,7 @@ describe('DCT', () => {
                             expect(() => {
                                 const envInstruction = new ExposeInstruction(3000)
 
-                                envInstruction.addExposeArg(testVal)
+                                envInstruction.addExposeParam(testVal)
 
                                 envInstruction.toString()
                             }).toThrow(/^Invalid parameter value for addExposeArg/)
@@ -274,7 +274,7 @@ describe('DCT', () => {
                             expect(() => {
                                 const envInstruction = new ExposeInstruction(3000)
 
-                                envInstruction.addExposeArg(testVal)
+                                envInstruction.addExposeParam(testVal)
 
                                 envInstruction.toString()
                             }).toThrow(/^Invalid parameter value for addExposeArg/)

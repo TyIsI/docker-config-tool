@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createFROM`, () => {
+                    describe(`appendENV`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createFROM('scratch')
+                            stage.appendEnv('TEST=test')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createFROM(testVal)
+                                stage.appendEnv(testVal)
 
                                 stage.toString()
                             }).toThrow()

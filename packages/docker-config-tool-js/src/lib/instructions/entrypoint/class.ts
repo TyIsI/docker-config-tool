@@ -7,14 +7,14 @@ export class EntryPointInstruction implements IEntryPointInstruction {
 
     entrypointCmds: string[]
 
-    public constructor(...entrypointCmds: EntryPointInstructionParams) {
-        if (!isStringArray(entrypointCmds))
-            throw new Error(generateConstructorErrorMessage('ENTRYPOINT', entrypointCmds))
+    public constructor(...entrypointParams: EntryPointInstructionParams) {
+        if (!isStringArray(entrypointParams))
+            throw new Error(generateConstructorErrorMessage('ENTRYPOINT', entrypointParams))
 
         this.entrypointCmds =
-            entrypointCmds.length === 1 && entrypointCmds[0].includes(' ')
-                ? entrypointCmds[0].split(' ')
-                : entrypointCmds
+            entrypointParams.length === 1 && entrypointParams[0].includes(' ')
+                ? entrypointParams[0].split(' ')
+                : entrypointParams
     }
 
     public addEntrypointArg(entrypoint: string): this {

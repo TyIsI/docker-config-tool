@@ -7,16 +7,16 @@ export class CmdInstruction implements ICmdInstruction {
 
     commands: string[] = []
 
-    public constructor(...cmds: CmdInstructionParams) {
-        if (!isStringArray(cmds)) throw new Error(generateConstructorErrorMessage('CMD', cmds))
+    public constructor(...cmdParams: CmdInstructionParams) {
+        if (!isStringArray(cmdParams)) throw new Error(generateConstructorErrorMessage('CMD', cmdParams))
 
-        this.commands = cmds.length === 1 ? cmds[0].split(' ') : cmds
+        this.commands = cmdParams.length === 1 ? cmdParams[0].split(' ') : cmdParams
     }
 
-    public addCmd(cmd: string): this {
-        if (!isString(cmd)) throw new Error(`Invalid cmd argument: ${typeof cmd} ${JSON.stringify(cmd)}`)
+    public addCmd(cmdParam: string): this {
+        if (!isString(cmdParam)) throw new Error(`Invalid cmd argument: ${typeof cmdParam} ${JSON.stringify(cmdParam)}`)
 
-        this.commands.push(cmd)
+        this.commands.push(cmdParam)
 
         return this
     }

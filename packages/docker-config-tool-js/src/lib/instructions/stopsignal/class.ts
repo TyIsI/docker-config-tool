@@ -7,11 +7,11 @@ export class StopSignalInstruction implements IStopSignalInstruction {
 
     stopsignal: string | number
 
-    constructor(stopsignal: StopSignalInstructionParams) {
-        if (isStopSignalNumber(stopsignal)) this.stopsignal = stopsignal
-        else if (isStopSignalString(stopsignal))
-            this.stopsignal = stopsignal.startsWith('SIG') ? stopsignal : `SIG${stopsignal}`
-        else throw new Error(generateConstructorErrorMessage(`STOPSIGNAL`, stopsignal))
+    public constructor(stopsignalParam: StopSignalInstructionParams) {
+        if (isStopSignalNumber(stopsignalParam)) this.stopsignal = stopsignalParam
+        else if (isStopSignalString(stopsignalParam))
+            this.stopsignal = stopsignalParam.startsWith('SIG') ? stopsignalParam : `SIG${stopsignalParam}`
+        else throw new Error(generateConstructorErrorMessage(`STOPSIGNAL`, stopsignalParam))
     }
 
     toString(): string {

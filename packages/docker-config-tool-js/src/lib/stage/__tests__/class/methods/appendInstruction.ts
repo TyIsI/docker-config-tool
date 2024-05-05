@@ -10,9 +10,9 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            const createARG = new ArgInstruction('TEST')
+                            const testInstructionObj = new ArgInstruction('TEST')
 
-                            stage.appendInstruction(createARG)
+                            stage.appendInstruction(testInstructionObj)
 
                             expect(stage).toBeTruthy()
                         })

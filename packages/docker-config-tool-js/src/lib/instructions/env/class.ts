@@ -8,7 +8,7 @@ export class EnvInstruction implements IEnvInstruction {
 
     envs: Record<string, string> = {}
 
-    constructor(envParam: EnvInstructionParams) {
+    public constructor(envParam: EnvInstructionParams) {
         if (isEnvVar(envParam)) {
             const [envKey, envVal] = envParam.split('=')
 

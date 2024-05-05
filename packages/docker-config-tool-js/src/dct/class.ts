@@ -6,12 +6,12 @@ import { type IDockerConfigTool } from './types'
 export class DockerConfigTool implements IDockerConfigTool {
     stack: IStage[] = []
 
-    constructor(stack?: IStage[]) {
-        this.stack = stack ?? []
+    public constructor(stackParam?: IStage[]) {
+        this.stack = stackParam ?? []
     }
 
-    createStage(from: FromInstructionParams | IStageFromStage | IStage): IStage {
-        const stage: Stage = new Stage(from)
+    createStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage {
+        const stage: Stage = new Stage(fromParam)
 
         this.stack.push(stage)
 

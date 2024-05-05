@@ -10,25 +10,25 @@ export class FromInstruction implements IFromInstruction {
     platform?: string
     as?: string
 
-    constructor(from: FromInstructionParams) {
-        if (!isFromInstructionParams(from)) throw new Error(generateConstructorErrorMessage(`FROM`, from))
+    public constructor(fromParam: FromInstructionParams) {
+        if (!isFromInstructionParams(fromParam)) throw new Error(generateConstructorErrorMessage(`FROM`, fromParam))
 
-        if (isString(from)) this.from = from
+        if (isString(fromParam)) this.from = fromParam
 
-        if (isFromInstructionParamObject(from)) {
-            this.from = from.from
+        if (isFromInstructionParamObject(fromParam)) {
+            this.from = fromParam.from
 
-            if (isString(from.platform)) this.platform = from.platform
+            if (isString(fromParam.platform)) this.platform = fromParam.platform
 
-            if (isString(from.as)) this.as = from.as
+            if (isString(fromParam.as)) this.as = fromParam.as
         }
     }
 
-    setAs(name: string): this {
-        if (!isFromInstructionAsParam(name))
-            throw new Error(`Missing or invalid arguments for setAs: ${typeof name} ${JSON.stringify(name)}`)
+    setAs(nameParam: string): this {
+        if (!isFromInstructionAsParam(nameParam))
+            throw new Error(`Missing or invalid arguments for setAs: ${typeof nameParam} ${JSON.stringify(nameParam)}`)
 
-        this.as = name
+        this.as = nameParam
 
         return this
     }

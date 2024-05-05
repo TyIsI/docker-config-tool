@@ -10,7 +10,7 @@ export class UserInstruction implements IUserInstruction {
     uid?: UnixUserGroupId
     gid?: UnixUserGroupId
 
-    constructor(...userInstructionParams: UserInstructionParams) {
+    public constructor(...userInstructionParams: UserInstructionParams) {
         const [valid, result] = validateUserInstructionParams(userInstructionParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('USER', userInstructionParams, result))

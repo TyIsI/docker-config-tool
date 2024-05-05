@@ -15,27 +15,29 @@ export class HealthCheckInstruction implements IHealthCheckInstruction {
     startInterval: string | undefined
     retries: number | undefined
 
-    public constructor(healthcheck: HealthCheckParams) {
-        const [success, error] = validateHealthCheckParams(healthcheck)
+    public constructor(healthcheckParam: HealthCheckParams) {
+        const [success, error] = validateHealthCheckParams(healthcheckParam)
 
-        if (!success) throw new Error(generateConstructorErrorMessage('HEALTHCHECK', healthcheck, error))
+        if (!success) throw new Error(generateConstructorErrorMessage('HEALTHCHECK', healthcheckParam, error))
 
-        if (isString(healthcheck)) this.instruction = [healthcheck]
+        if (isString(healthcheckParam)) this.instruction = [healthcheckParam]
 
-        if (isStringArray(healthcheck)) this.instruction = healthcheck
+        if (isStringArray(healthcheckParam)) this.instruction = healthcheckParam
 
-        if (isHealthCheckParamsObject(healthcheck)) {
-            this.instruction = coerceStringArray(healthcheck.instruction)
+        if (isHealthCheckParamsObject(healthcheckParam)) {
+            this.instruction = coerceStringArray(healthcheckParam.instruction)
 
-            if (isHealthCheckDurationParam(healthcheck.interval)) this.interval = healthcheck.interval
+            if (isHealthCheckDurationParam(healthcheckParam.interval)) this.interval = healthcheckParam.interval
 
-            if (isHealthCheckDurationParam(healthcheck.timeout)) this.timeout = healthcheck.timeout
+            if (isHealthCheckDurationParam(healthcheckParam.timeout)) this.timeout = healthcheckParam.timeout
 
-            if (isHealthCheckDurationParam(healthcheck.startPeriod)) this.startPeriod = healthcheck.startPeriod
+            if (isHealthCheckDurationParam(healthcheckParam.startPeriod))
+                this.startPeriod = healthcheckParam.startPeriod
 
-            if (isHealthCheckDurationParam(healthcheck.startInterval)) this.startInterval = healthcheck.startInterval
+            if (isHealthCheckDurationParam(healthcheckParam.startInterval))
+                this.startInterval = healthcheckParam.startInterval
 
-            if (isHealthCheckRetriesParam(healthcheck.retries)) this.retries = healthcheck.retries
+            if (isHealthCheckRetriesParam(healthcheckParam.retries)) this.retries = healthcheckParam.retries
         }
     }
 

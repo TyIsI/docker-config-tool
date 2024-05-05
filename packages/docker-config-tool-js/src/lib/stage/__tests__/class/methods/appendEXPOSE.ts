@@ -5,19 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createADD`, () => {
+                    describe(`appendEXPOSE`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createADD('.', '.')
-
-                            expect(stage.toString()).toBeTruthy()
-                        })
-
-                        test(`create a stage from string and append a valid instruction`, () => {
-                            const stage = new Stage('scratch')
-
-                            stage.createADD('.', '.')
+                            stage.appendExpose(3000)
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -29,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createADD(testVal)
+                                stage.appendExpose(testVal)
 
                                 stage.toString()
                             }).toThrow()

@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createARG`, () => {
+                    describe(`appendADD`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createARG('TEST')
+                            stage.appendAdd('.', '.')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -17,15 +17,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createARG('TEST=test')
-
-                            expect(stage.toString()).toBeTruthy()
-                        })
-
-                        test(`create a stage from string and append a valid instruction`, () => {
-                            const stage = new Stage('scratch')
-
-                            stage.createARG({ name: 'TEST', value: 'test' })
+                            stage.appendAdd('.', '.')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -37,19 +29,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createARG(testVal)
-
-                                stage.toString()
-                            }).toThrow()
-                        })
-
-                        test(`don't create a stage from string and append a invalid instruction`, () => {
-                            const testVal = 'TEST='
-
-                            expect(() => {
-                                const stage = new Stage('scratch')
-
-                                stage.createARG(testVal)
+                                stage.appendAdd(testVal)
 
                                 stage.toString()
                             }).toThrow()

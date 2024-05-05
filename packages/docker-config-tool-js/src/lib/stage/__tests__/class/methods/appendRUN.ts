@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createRUN`, () => {
+                    describe(`appendRUN`, () => {
                         test(`create a stage from string and append a valid run instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN('/bin/sh')
+                            stage.appendRun('/bin/sh')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -17,7 +17,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a valid run instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN('/bin/sh -c')
+                            stage.appendRun('/bin/sh -c')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -25,7 +25,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a run instruction with an array`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN(['/bin/sh'])
+                            stage.appendRun(['/bin/sh'])
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -33,7 +33,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a run instruction with an array`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN(['/bin/sh -c'])
+                            stage.appendRun(['/bin/sh -c'])
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -41,7 +41,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a run instruction with an array`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN(['/bin/sh', '-c'])
+                            stage.appendRun(['/bin/sh', '-c'])
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -49,7 +49,7 @@ describe(`DCT`, () => {
                         test(`create a stage from string and append a run instruction with an object`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createRUN({
+                            stage.appendRun({
                                 commands: '/bin/sh -c'
                             })
 
@@ -63,7 +63,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createRUN(testVal)
+                                stage.appendRun(testVal)
 
                                 stage.toString()
                             }).toThrow()

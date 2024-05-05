@@ -7,10 +7,10 @@ export class VolumeInstruction implements IVolumeInstruction {
 
     commands: string[] = []
 
-    public constructor(...volumes: VolumeInstructionParams) {
-        if (!isStringArray(volumes)) throw new Error(generateConstructorErrorMessage('VOLUME', volumes))
+    public constructor(...volumeParams: VolumeInstructionParams) {
+        if (!isStringArray(volumeParams)) throw new Error(generateConstructorErrorMessage('VOLUME', volumeParams))
 
-        this.commands = volumes.length === 1 ? volumes[0].split(' ') : volumes
+        this.commands = volumeParams.length === 1 ? volumeParams[0].split(' ') : volumeParams
     }
 
     public addVolume(volume: string): this {

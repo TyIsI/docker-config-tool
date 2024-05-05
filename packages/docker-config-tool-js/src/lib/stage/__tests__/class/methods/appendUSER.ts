@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`createHEALTHCHECK`, () => {
+                    describe(`appendUSER`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.createHEALTHCHECK('TEST')
+                            stage.appendUser('test')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.createHEALTHCHECK(testVal)
+                                stage.appendUser(testVal)
 
                                 stage.toString()
                             }).toThrow()
