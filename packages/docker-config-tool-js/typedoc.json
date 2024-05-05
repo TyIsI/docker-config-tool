@@ -1,0 +1,20 @@
+{
+    "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+    "entryPoints": [
+        "./src/index.ts"
+    ],
+    "plugin": [
+        "@sisense/typedoc-plugin-markdown",
+        "typedoc-plugin-coverage",
+        "typedoc-plugin-zod",
+    ],
+    "out": "docs/",
+    "categorizeByGroup": true,
+    "defaultCategory": "Other",
+    "categoryOrder": [
+        "DCT",
+        "Stage",
+        "Instructions",
+        "Other"
+    ],
+}

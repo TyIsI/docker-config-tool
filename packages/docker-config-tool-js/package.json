@@ -23,8 +23,10 @@
     },
     "devDependencies": {
         "@jest/globals": "^29.7.0",
+        "@sisense/typedoc-plugin-markdown": "4.0.0-next.46",
         "@types/jest": "^29.5.12",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "concurrently": "^8.2.2",
         "esbuild": "^0.20.2",
         "eslint": "^8.57.0",
         "eslint-config-love": "^44.0.0",
@@ -39,6 +41,9 @@
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "tsup": "^8.0.2",
+        "typedoc": "^0.25.13",
+        "typedoc-plugin-coverage": "^3.1.1",
+        "typedoc-plugin-zod": "^1.1.2",
         "typescript": "^5.4.3",
         "typescript-eslint": "^7.5.0",
         "wireit": "^0.14.4"
@@ -46,6 +51,11 @@
     "scripts": {
         "build": "wireit",
         "compile": "wireit",
+        "docs": "wireit",
+        "docs:build": "wireit",
+        "docs:build:watch": "wireit",
+        "docs:live": "wireit",
+        "docs:serve": "wireit",
         "test": "wireit"
     },
     "wireit": {
@@ -99,6 +109,25 @@
                 "compile"
             ],
             "command": "jest --all --no-cache"
+        },
+        "docs": {
+            "dependencies": [
+                "docs:build"
+            ]
+        },
+        "docs:build": {
+            "command": "typedoc"
+        },
+        "docs:build:watch": {
+            "command": "typedoc --watch",
+            "service": true
+        },
+        "docs:live": {
+            "command": "concurrently \"pnpm run docs:serve\" \"pnpm run docs:build:watch\""
+        },
+        "docs:serve": {
+            "command": "pnpm dlx markserv@latest -p ${PORT:-10175} ./docs/",
+            "service": true
         }
     },
     "dependencies": {
