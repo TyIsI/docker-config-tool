@@ -1,13 +1,19 @@
 {
     "private": true,
     "name": "@tyisi/docker-config-tool",
-    "version": "1.0.0rc1",
-    "description": "",
-    "main": "index.js",
+    "version": "1.0.0rc2",
+    "description": "Multi language Dockerfile as Code library",
     "scripts": {},
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "keywords": [
+        "docker",
+        "dockerfile",
+        "infrastructure as code",
+        "iac",
+        "infrastructure",
+        "containerization"
+    ],
+    "author": "Ty Eggen",
+    "license": "GPL-3.0-only",
     "devDependencies": {
         "prettier": "^3.2.5",
         "prettier-plugin-sh": "^0.14.0"

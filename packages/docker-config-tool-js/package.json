@@ -1,6 +1,6 @@
 {
     "name": "@tyisi/docker-config-tool-js",
-    "version": "1.0.0rc1",
+    "version": "1.0.0rc2",
     "description": "Javascript/Typescript implementation of Docker Config Tool",
     "main": "./dist/index.js",
     "license": "GPL-3.0-only",
@@ -11,7 +11,9 @@
         "infrastructure as code",
         "iac",
         "infrastructure",
-        "containerization"
+        "containerization",
+        "javascript",
+        "typescript"
     ],
     "exports": {
         "import": "./dist/index.mjs",
