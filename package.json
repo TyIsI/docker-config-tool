@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@tyisi/docker-config-tool",
-    "version": "1.0.0rc2",
+    "version": "1.0.0rc3",
     "description": "Multi language Dockerfile as Code library",
     "scripts": {},
     "keywords": [
