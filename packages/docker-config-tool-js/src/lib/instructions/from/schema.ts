@@ -1,10 +1,9 @@
 import { z } from 'zod'
 
-export const zFromInstructionStringFromParam = z
-    .string()
-    .trim()
-    .min(3)
-    .regex(/^[\w/-]+(:[\w/-]+)?/)
+const FromInstructionURLRE =
+    /^((\$\{.+\})?[\w.-]*(:\d{1,5})?\/)?(([\w/-]+|(\$\{.+\}))\/)?([\w/-]+|(\$\{.+\}))(:([\w/-]+|\$\{.+\}))?(@(sha256:\w{64}|\$\{.+\}))?$/
+
+export const zFromInstructionStringFromParam = z.string().trim().min(3).regex(FromInstructionURLRE)
 
 export const zFromInstructionPlatformParam = z.string().trim().min(2)
 
