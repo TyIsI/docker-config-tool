@@ -5,13 +5,13 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendLABEL`, () => {
+                    describe(`withLabel`, () => {
                         test(`create a stage from string and append a simple string label`, () => {
                             const testVal = 'TEST'
 
                             const stage = new Stage('scratch')
 
-                            stage.appendLabel(testVal)
+                            stage.withLabel(testVal)
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
 
                             const stage = new Stage('scratch')
 
-                            stage.appendLabel(testVal)
+                            stage.withLabel(testVal)
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -31,7 +31,7 @@ describe(`DCT`, () => {
 
                             const stage = new Stage('scratch')
 
-                            stage.appendLabel(testVal)
+                            stage.withLabel(testVal)
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -41,7 +41,7 @@ describe(`DCT`, () => {
 
                             const stage = new Stage('scratch')
 
-                            stage.appendLabel(testVal).addLabel('com.example.debug=true')
+                            stage.withLabel(testVal).addLabel('com.example.debug=true')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -53,7 +53,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.appendLabel(testVal)
+                                stage.withLabel(testVal)
 
                                 stage.toString()
                             }).toThrow()

@@ -31,8 +31,8 @@ import { UserInstruction } from '../instructions/user/class'
 import { type IUserInstruction, type UserInstructionParams } from '../instructions/user/types'
 import { VolumeInstruction } from '../instructions/volume/class'
 import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
-import { WorkdirInstruction } from '../instructions/workdir/class'
-import { type IWorkdirInstruction } from '../instructions/workdir/types'
+import { WorkDirInstruction } from '../instructions/workdir/class'
+import { type IWorkDirInstruction } from '../instructions/workdir/types'
 import { coerceFirstValue } from '../shared/coerce'
 import { isString } from '../shared/guards'
 import { generateConstructorErrorMessage, randomString } from '../shared/utils'
@@ -59,10 +59,10 @@ export class Stage implements IStage {
 
         this.id = coerceFirstValue<string>(fromParam.as, randomString())
 
-        this.appendFrom(fromParam)
+        this.withFrom(fromParam)
     }
 
-    appendInstruction<T = Instruction>(instructionParam: T): T {
+    withInstruction<T = Instruction>(instructionParam: T): T {
         if (!isInstruction(instructionParam)) {
             throw new Error('Invalid Instruction')
         }
@@ -72,68 +72,68 @@ export class Stage implements IStage {
         return instructionParam
     }
 
-    appendAdd(...addParams: AddInstructionParams): IAddInstruction {
-        return this.appendInstruction<AddInstruction>(new AddInstruction(...addParams))
+    withAdd(...addParams: AddInstructionParams): IAddInstruction {
+        return this.withInstruction<AddInstruction>(new AddInstruction(...addParams))
     }
 
-    appendArg(argParam: ArgInstructionParams): IArgInstruction {
-        return this.appendInstruction<ArgInstruction>(new ArgInstruction(argParam))
+    withArg(argParam: ArgInstructionParams): IArgInstruction {
+        return this.withInstruction<ArgInstruction>(new ArgInstruction(argParam))
     }
 
-    appendCmd(...cmdParams: CmdInstructionParams): ICmdInstruction {
-        return this.appendInstruction<CmdInstruction>(new CmdInstruction(...cmdParams))
+    withCmd(...cmdParams: CmdInstructionParams): ICmdInstruction {
+        return this.withInstruction<CmdInstruction>(new CmdInstruction(...cmdParams))
     }
 
-    appendCopy(...copyInstructionParams: CopyInstructionParams): ICopyInstruction {
-        return this.appendInstruction<CopyInstruction>(new CopyInstruction(...copyInstructionParams))
+    withCopy(...copyInstructionParams: CopyInstructionParams): ICopyInstruction {
+        return this.withInstruction<CopyInstruction>(new CopyInstruction(...copyInstructionParams))
     }
 
-    appendFrom(from: FromInstructionParams): IFromInstruction {
-        return this.appendInstruction<IFromInstruction>(new FromInstruction(from).setAs(this.id))
+    withFrom(from: FromInstructionParams): IFromInstruction {
+        return this.withInstruction<IFromInstruction>(new FromInstruction(from).setAs(this.id))
     }
 
-    appendEntryPoint(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
-        return this.appendInstruction<EntryPointInstruction>(new EntryPointInstruction(...entrypointCmds))
+    withEntryPoint(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
+        return this.withInstruction<EntryPointInstruction>(new EntryPointInstruction(...entrypointCmds))
     }
 
-    appendEnv(envParam: EnvInstructionParams): IEnvInstruction {
-        return this.appendInstruction<EnvInstruction>(new EnvInstruction(envParam))
+    withEnv(envParam: EnvInstructionParams): IEnvInstruction {
+        return this.withInstruction<EnvInstruction>(new EnvInstruction(envParam))
     }
 
-    appendExpose(...exposes: ExposeInstructionParams): IExposeInstruction {
-        return this.appendInstruction<ExposeInstruction>(new ExposeInstruction(...exposes))
+    withExpose(...exposes: ExposeInstructionParams): IExposeInstruction {
+        return this.withInstruction<ExposeInstruction>(new ExposeInstruction(...exposes))
     }
 
-    appendHealthCheck(healthcheck: HealthCheckParams): IHealthCheckInstruction {
-        return this.appendInstruction<HealthCheckInstruction>(new HealthCheckInstruction(healthcheck))
+    withHealthCheck(healthcheck: HealthCheckParams): IHealthCheckInstruction {
+        return this.withInstruction<HealthCheckInstruction>(new HealthCheckInstruction(healthcheck))
     }
 
-    appendLabel(labelParam: LabelInstructionParams): ILabelInstruction {
-        return this.appendInstruction<LabelInstruction>(new LabelInstruction(labelParam))
+    withLabel(labelParam: LabelInstructionParams): ILabelInstruction {
+        return this.withInstruction<LabelInstruction>(new LabelInstruction(labelParam))
     }
 
-    appendRun(...runParams: RunInstructionParams): IRunInstruction {
-        return this.appendInstruction<RunInstruction>(new RunInstruction(...runParams))
+    withRun(...runParams: RunInstructionParams): IRunInstruction {
+        return this.withInstruction<RunInstruction>(new RunInstruction(...runParams))
     }
 
-    appendShell(...shellParams: ShellInstructionParams): IShellInstruction {
-        return this.appendInstruction<ShellInstruction>(new ShellInstruction(...shellParams))
+    withShell(...shellParams: ShellInstructionParams): IShellInstruction {
+        return this.withInstruction<ShellInstruction>(new ShellInstruction(...shellParams))
     }
 
-    appendStopSignal(stopsignalParam: StopSignalInstructionParams): IStopSignalInstruction {
-        return this.appendInstruction<StopSignalInstruction>(new StopSignalInstruction(stopsignalParam))
+    withStopSignal(stopsignalParam: StopSignalInstructionParams): IStopSignalInstruction {
+        return this.withInstruction<StopSignalInstruction>(new StopSignalInstruction(stopsignalParam))
     }
 
-    appendUser(...userInstructionParams: UserInstructionParams): IUserInstruction {
-        return this.appendInstruction<UserInstruction>(new UserInstruction(...userInstructionParams))
+    withUser(...userInstructionParams: UserInstructionParams): IUserInstruction {
+        return this.withInstruction<UserInstruction>(new UserInstruction(...userInstructionParams))
     }
 
-    appendVolume(...volumeParams: VolumeInstructionParams): IVolumeInstruction {
-        return this.appendInstruction<VolumeInstruction>(new VolumeInstruction(...volumeParams))
+    withVolume(...volumeParams: VolumeInstructionParams): IVolumeInstruction {
+        return this.withInstruction<VolumeInstruction>(new VolumeInstruction(...volumeParams))
     }
 
-    appendWorkdir(workdir: string): IWorkdirInstruction {
-        return this.appendInstruction<WorkdirInstruction>(new WorkdirInstruction(workdir))
+    withWorkDir(workdir: string): IWorkDirInstruction {
+        return this.withInstruction<WorkDirInstruction>(new WorkDirInstruction(workdir))
     }
 
     setId(id: string): this {

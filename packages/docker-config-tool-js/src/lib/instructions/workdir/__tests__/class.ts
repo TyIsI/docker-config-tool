@@ -1,5 +1,5 @@
 import { generateConstructorErrorMessage } from '../../../shared/utils'
-import { WorkdirInstruction } from '../class'
+import { WorkDirInstruction } from '../class'
 
 describe('DCT', () => {
     describe('lib', () => {
@@ -8,7 +8,7 @@ describe('DCT', () => {
                 describe(`class`, () => {
                     describe(`constructor`, () => {
                         test(`does thing`, () => {
-                            const workdirInstruction = new WorkdirInstruction('/workdir')
+                            const workdirInstruction = new WorkDirInstruction('/workdir')
 
                             expect(workdirInstruction.toString()).toMatch('WORKDIR /workdir')
                         })
@@ -18,7 +18,7 @@ describe('DCT', () => {
 
                             expect(() => {
                                 // @ts-expect-error undefined
-                                const workdirInstruction = new WorkdirInstruction(testVal)
+                                const workdirInstruction = new WorkDirInstruction(testVal)
 
                                 workdirInstruction.toString()
                             }).toThrow(generateConstructorErrorMessage('WORKDIR', testVal))

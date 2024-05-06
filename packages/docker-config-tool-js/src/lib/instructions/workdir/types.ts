@@ -1,3 +1,3 @@
 import { type Instruction } from '../common/types'
 
-export interface IWorkdirInstruction extends Instruction {}
+export interface IWorkDirInstruction extends Instruction {}

@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendFROM`, () => {
+                    describe(`withHealthcheck`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.appendFrom('scratch')
+                            stage.withHealthCheck('TEST')
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.appendFrom(testVal)
+                                stage.withHealthCheck(testVal)
 
                                 stage.toString()
                             }).toThrow()

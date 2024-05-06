@@ -5,23 +5,23 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendCOPY`, () => {
-                        test(`create a stage from string and append a valid instruction`, () => {
+                    describe(`withVolume`, () => {
+                        test(`create a stage from string and append a valid volume instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.appendCopy('.', '.')
+                            stage.withVolume('/data')
 
                             expect(stage.toString()).toBeTruthy()
                         })
 
-                        test(`don't create a stage from string and append a invalid instruction`, () => {
+                        test(`don't create a stage from string and append an invalid volume instruction`, () => {
                             const testVal = undefined
 
                             expect(() => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.appendCopy(testVal)
+                                stage.withVolume(testVal)
 
                                 stage.toString()
                             }).toThrow()

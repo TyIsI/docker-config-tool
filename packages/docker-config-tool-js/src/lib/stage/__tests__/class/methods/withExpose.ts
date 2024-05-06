@@ -5,11 +5,11 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendENTRYPOINT`, () => {
+                    describe(`withExpose`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.appendEntryPoint('/bin/sh')
+                            stage.withExpose(3000)
 
                             expect(stage.toString()).toBeTruthy()
                         })
@@ -21,7 +21,7 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.appendEntryPoint(testVal)
+                                stage.withExpose(testVal)
 
                                 stage.toString()
                             }).toThrow()

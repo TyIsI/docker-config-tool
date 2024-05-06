@@ -5,23 +5,23 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendCMD`, () => {
-                        test(`create a stage from string and append a valid instruction`, () => {
+                    describe(`withWorkDir`, () => {
+                        test(`create a stage from string and append a valid workdir instruction`, () => {
                             const stage = new Stage('scratch')
 
-                            stage.appendCmd('TEST')
+                            stage.withWorkDir('/data')
 
                             expect(stage.toString()).toBeTruthy()
                         })
 
-                        test(`don't create a stage from string and append a invalid instruction`, () => {
+                        test(`don't create a stage from string and append an invalid workdir instruction`, () => {
                             const testVal = undefined
 
                             expect(() => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.appendCmd(testVal)
+                                stage.withWorkDir(testVal)
 
                                 stage.toString()
                             }).toThrow()

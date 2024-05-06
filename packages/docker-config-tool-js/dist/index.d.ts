@@ -809,30 +809,30 @@ type VolumeInstructionParams = string[];
 interface IVolumeInstruction extends Instruction {
 }
 
-interface IWorkdirInstruction extends Instruction {
+interface IWorkDirInstruction extends Instruction {
 }
 
 interface IStage {
     type: 'stage';
     id: string;
     stack: Instruction[];
-    appendInstruction: <T = Instruction>(instruction: T) => T;
-    appendAdd: (...addParams: AddInstructionParams) => IAddInstruction;
-    appendArg: (argParam: ArgInstructionParams) => IArgInstruction;
-    appendCmd: (...cmdParams: CmdInstructionParams) => ICmdInstruction;
-    appendCopy: (...copyInstructionParams: CopyInstructionParams) => ICopyInstruction;
-    appendEntryPoint: (...entrypointParams: EntryPointInstructionParams) => IEntryPointInstruction;
-    appendEnv: (envParam: EnvInstructionParams) => IEnvInstruction;
-    appendExpose: (...exposeParams: ExposeInstructionParams) => IExposeInstruction;
-    appendFrom: (fromParam: FromInstructionParams) => IFromInstruction;
-    appendHealthCheck: (healthCheckParam: HealthCheckParams) => IHealthCheckInstruction;
-    appendLabel: (labelParam: LabelInstructionParams) => ILabelInstruction;
-    appendRun: (...runParams: RunInstructionParams) => IRunInstruction;
-    appendShell: (...shellParams: ShellInstructionParams) => IShellInstruction;
-    appendStopSignal: (stopsignalParam: StopSignalInstructionParams) => IStopSignalInstruction;
-    appendUser: (...userInstructionParams: UserInstructionParams) => IUserInstruction;
-    appendVolume: (...volumeParams: VolumeInstructionParams) => IVolumeInstruction;
-    appendWorkdir: (workdirParam: string) => IWorkdirInstruction;
+    withInstruction: <T = Instruction>(instructionParam: T) => T;
+    withAdd: (...addParams: AddInstructionParams) => IAddInstruction;
+    withArg: (argParam: ArgInstructionParams) => IArgInstruction;
+    withCmd: (...cmdParams: CmdInstructionParams) => ICmdInstruction;
+    withCopy: (...copyParams: CopyInstructionParams) => ICopyInstruction;
+    withEntryPoint: (...entryPointParams: EntryPointInstructionParams) => IEntryPointInstruction;
+    withEnv: (envParam: EnvInstructionParams) => IEnvInstruction;
+    withExpose: (...exposeParams: ExposeInstructionParams) => IExposeInstruction;
+    withFrom: (fromParam: FromInstructionParams) => IFromInstruction;
+    withHealthCheck: (healthCheckParam: HealthCheckParams) => IHealthCheckInstruction;
+    withLabel: (labelParam: LabelInstructionParams) => ILabelInstruction;
+    withRun: (...runParams: RunInstructionParams) => IRunInstruction;
+    withShell: (...shellParams: ShellInstructionParams) => IShellInstruction;
+    withStopSignal: (stopsignalParam: StopSignalInstructionParams) => IStopSignalInstruction;
+    withUser: (...userParams: UserInstructionParams) => IUserInstruction;
+    withVolume: (...volumeParams: VolumeInstructionParams) => IVolumeInstruction;
+    withWorkDir: (workdirParam: string) => IWorkDirInstruction;
     setId: (id: string) => this;
     toString: () => string;
 }
@@ -841,14 +841,14 @@ interface IStageFromStage extends Omit<FromInstructionParamObject, 'from'> {
 }
 
 interface IDockerConfigTool {
-    createStage: (from: FromInstructionParams | IStageFromStage | IStage) => IStage;
+    withStage: (from: FromInstructionParams | IStageFromStage | IStage) => IStage;
     toString: () => string;
 }
 
 declare class DockerConfigTool implements IDockerConfigTool {
     stack: IStage[];
     constructor(stackParam?: IStage[]);
-    createStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage;
+    withStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage;
     toString(): string;
 }
 
@@ -1010,11 +1010,11 @@ declare class VolumeInstruction implements IVolumeInstruction {
     toString(): string;
 }
 
-declare class WorkdirInstruction implements IWorkdirInstruction {
+declare class WorkDirInstruction implements IWorkDirInstruction {
     type: "instruction";
     workdir: string;
     constructor(workdirParam: string);
     toString(): string;
 }
 
-export { AddInstruction, ArgInstruction, CmdInstruction, CopyInstruction, DockerConfigTool, EntryPointInstruction, EnvInstruction, ExposeInstruction, FromInstruction, HealthCheckInstruction, LabelInstruction, RunInstruction, ShellInstruction, StopSignalInstruction, UserInstruction, VolumeInstruction, WorkdirInstruction };
+export { AddInstruction, ArgInstruction, CmdInstruction, CopyInstruction, DockerConfigTool, EntryPointInstruction, EnvInstruction, ExposeInstruction, FromInstruction, HealthCheckInstruction, LabelInstruction, RunInstruction, ShellInstruction, StopSignalInstruction, UserInstruction, VolumeInstruction, WorkDirInstruction };

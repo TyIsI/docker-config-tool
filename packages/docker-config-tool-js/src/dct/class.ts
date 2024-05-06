@@ -10,7 +10,7 @@ export class DockerConfigTool implements IDockerConfigTool {
         this.stack = stackParam ?? []
     }
 
-    createStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage {
+    withStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage {
         const stage: Stage = new Stage(fromParam)
 
         this.stack.push(stage)

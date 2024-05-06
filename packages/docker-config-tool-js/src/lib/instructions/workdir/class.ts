@@ -1,8 +1,8 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { type IWorkdirInstruction } from './types'
+import { type IWorkDirInstruction } from './types'
 
-export class WorkdirInstruction implements IWorkdirInstruction {
+export class WorkDirInstruction implements IWorkDirInstruction {
     type = 'instruction' as const
 
     workdir: string = ''

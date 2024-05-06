@@ -2,36 +2,32 @@ const { DockerConfigTool } = require('../dist/index.js')
 
 const dct = new DockerConfigTool()
 
-const workspaceStage = dct.createStage({ from: 'scratch', as: 'workspace' })
+const workspaceStage = dct.withStage({ from: 'scratch', as: 'workspace' })
 
-workspaceStage.appendCopy('.', '/workspace').setLinked()
+workspaceStage.withCopy('.', '/workspace').setLinked()
 
-const baseStage = dct.createStage({ from: 'node:lts-alpine', as: 'base' })
+const baseStage = dct.withStage({ from: 'node:lts-alpine', as: 'base' })
 
-baseStage.appendRun('apk add --no-cache libc6-compat vips vips-cpp')
+baseStage.withRun('apk add --no-cache libc6-compat vips vips-cpp')
 
-baseStage.appendCmd('npm', 'start')
+baseStage.withCmd('npm', 'start')
 
-const buildStage = dct.createStage({ from: baseStage, as: 'app-build' })
+const buildStage = dct.withStage({ from: baseStage, as: 'app-build' })
 
-buildStage.appendWorkdir('/build')
+buildStage.withWorkDir('/build')
 
-buildStage.appendUser(54321, 54321)
+buildStage.withUser(54321, 54321)
 
-buildStage
-    .appendCopy('/workspace/app/frontend', '/build')
-    .setFrom(workspaceStage)
-    .setLinked()
-    .setChown('runtime:runtime')
+buildStage.withCopy('/workspace/app/frontend', '/build').setFrom(workspaceStage).setLinked().setChown('runtime:runtime')
 
-// buildStage.appendRun(["pnpm", "run", "build"])
+// buildStage.withRun(["pnpm", "run", "build"])
 
-// const prodStage = dct.createStage({ from: 'nginx:stable', as: 'app-prod' })
-const prodStage = dct.createStage({ from: 'nginx:stable' })
+// const prodStage = dct.withStage({ from: 'nginx:stable', as: 'app-prod' })
+const prodStage = dct.withStage({ from: 'nginx:stable' })
 
-prodStage.appendExpose('3000')
+prodStage.withExpose('3000')
 
-prodStage.appendCopy('/build/dist/', '/usr/share/nginx/html/').setFrom(buildStage).setLinked()
+prodStage.withCopy('/build/dist/', '/usr/share/nginx/html/').setFrom(buildStage).setLinked()
 
 // ETC
 

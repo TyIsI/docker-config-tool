@@ -36,7 +36,7 @@ __export(src_exports, {
   StopSignalInstruction: () => StopSignalInstruction,
   UserInstruction: () => UserInstruction,
   VolumeInstruction: () => VolumeInstruction,
-  WorkdirInstruction: () => WorkdirInstruction
+  WorkDirInstruction: () => WorkDirInstruction
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -1175,7 +1175,7 @@ var VolumeInstruction = class {
 };
 
 // src/lib/instructions/workdir/class.ts
-var WorkdirInstruction = class {
+var WorkDirInstruction = class {
   type = "instruction";
   workdir = "";
   constructor(workdirParam) {
@@ -1228,62 +1228,62 @@ var Stage = class {
     if (isStageFromStage(fromParam))
       fromParam = { ...fromParam, from: fromParam.from.id };
     this.id = coerceFirstValue(fromParam.as, randomString());
-    this.appendFrom(fromParam);
+    this.withFrom(fromParam);
   }
-  appendInstruction(instructionParam) {
+  withInstruction(instructionParam) {
     if (!isInstruction(instructionParam)) {
       throw new Error("Invalid Instruction");
     }
     this.stack.push(instructionParam);
     return instructionParam;
   }
-  appendAdd(...addParams) {
-    return this.appendInstruction(new AddInstruction(...addParams));
+  withAdd(...addParams) {
+    return this.withInstruction(new AddInstruction(...addParams));
   }
-  appendArg(argParam) {
-    return this.appendInstruction(new ArgInstruction(argParam));
+  withArg(argParam) {
+    return this.withInstruction(new ArgInstruction(argParam));
   }
-  appendCmd(...cmdParams) {
-    return this.appendInstruction(new CmdInstruction(...cmdParams));
+  withCmd(...cmdParams) {
+    return this.withInstruction(new CmdInstruction(...cmdParams));
   }
-  appendCopy(...copyInstructionParams) {
-    return this.appendInstruction(new CopyInstruction(...copyInstructionParams));
+  withCopy(...copyInstructionParams) {
+    return this.withInstruction(new CopyInstruction(...copyInstructionParams));
   }
-  appendFrom(from) {
-    return this.appendInstruction(new FromInstruction(from).setAs(this.id));
+  withFrom(from) {
+    return this.withInstruction(new FromInstruction(from).setAs(this.id));
   }
-  appendEntryPoint(...entrypointCmds) {
-    return this.appendInstruction(new EntryPointInstruction(...entrypointCmds));
+  withEntryPoint(...entrypointCmds) {
+    return this.withInstruction(new EntryPointInstruction(...entrypointCmds));
   }
-  appendEnv(envParam) {
-    return this.appendInstruction(new EnvInstruction(envParam));
+  withEnv(envParam) {
+    return this.withInstruction(new EnvInstruction(envParam));
   }
-  appendExpose(...exposes) {
-    return this.appendInstruction(new ExposeInstruction(...exposes));
+  withExpose(...exposes) {
+    return this.withInstruction(new ExposeInstruction(...exposes));
   }
-  appendHealthCheck(healthcheck) {
-    return this.appendInstruction(new HealthCheckInstruction(healthcheck));
+  withHealthCheck(healthcheck) {
+    return this.withInstruction(new HealthCheckInstruction(healthcheck));
   }
-  appendLabel(labelParam) {
-    return this.appendInstruction(new LabelInstruction(labelParam));
+  withLabel(labelParam) {
+    return this.withInstruction(new LabelInstruction(labelParam));
   }
-  appendRun(...runParams) {
-    return this.appendInstruction(new RunInstruction(...runParams));
+  withRun(...runParams) {
+    return this.withInstruction(new RunInstruction(...runParams));
   }
-  appendShell(...shellParams) {
-    return this.appendInstruction(new ShellInstruction(...shellParams));
+  withShell(...shellParams) {
+    return this.withInstruction(new ShellInstruction(...shellParams));
   }
-  appendStopSignal(stopsignalParam) {
-    return this.appendInstruction(new StopSignalInstruction(stopsignalParam));
+  withStopSignal(stopsignalParam) {
+    return this.withInstruction(new StopSignalInstruction(stopsignalParam));
   }
-  appendUser(...userInstructionParams) {
-    return this.appendInstruction(new UserInstruction(...userInstructionParams));
+  withUser(...userInstructionParams) {
+    return this.withInstruction(new UserInstruction(...userInstructionParams));
   }
-  appendVolume(...volumeParams) {
-    return this.appendInstruction(new VolumeInstruction(...volumeParams));
+  withVolume(...volumeParams) {
+    return this.withInstruction(new VolumeInstruction(...volumeParams));
   }
-  appendWorkdir(workdir) {
-    return this.appendInstruction(new WorkdirInstruction(workdir));
+  withWorkDir(workdir) {
+    return this.withInstruction(new WorkDirInstruction(workdir));
   }
   setId(id) {
     if (!isString(id))
@@ -1302,7 +1302,7 @@ var DockerConfigTool = class {
   constructor(stackParam) {
     this.stack = stackParam ?? [];
   }
-  createStage(fromParam) {
+  withStage(fromParam) {
     const stage = new Stage(fromParam);
     this.stack.push(stage);
     return stage;
@@ -1331,5 +1331,5 @@ var DockerConfigTool = class {
   StopSignalInstruction,
   UserInstruction,
   VolumeInstruction,
-  WorkdirInstruction
+  WorkDirInstruction
 });

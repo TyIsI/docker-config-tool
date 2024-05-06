@@ -6,13 +6,13 @@ describe(`DCT`, () => {
         describe(`stage`, () => {
             describe(`class`, () => {
                 describe(`methods`, () => {
-                    describe(`appendInstruction`, () => {
+                    describe(`withInstruction`, () => {
                         test(`create a stage from string and append a valid instruction`, () => {
                             const stage = new Stage('scratch')
 
                             const testInstructionObj = new ArgInstruction('TEST')
 
-                            stage.appendInstruction(testInstructionObj)
+                            stage.withInstruction(testInstructionObj)
 
                             expect(stage).toBeTruthy()
                         })
@@ -22,7 +22,7 @@ describe(`DCT`, () => {
                             const stage = new Stage('scratch')
 
                             expect(() => {
-                                stage.appendInstruction(testVal)
+                                stage.withInstruction(testVal)
                             }).toThrow()
                         })
 
@@ -31,7 +31,7 @@ describe(`DCT`, () => {
 
                             expect(() => {
                                 // @ts-expect-error missing
-                                stage.appendInstruction()
+                                stage.withInstruction()
                             }).toThrow('Invalid Instruction')
                         })
                     })

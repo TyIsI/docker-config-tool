@@ -7,7 +7,7 @@ describe(`DCT`, () => {
                 test(`print it`, () => {
                     const dct = new DockerConfigTool()
 
-                    const stage = dct.createStage('scratch')
+                    const stage = dct.withStage('scratch')
 
                     expect(dct.toString().trim()).toBe(`FROM scratch AS ${stage.id}`)
                 })
