@@ -49,7 +49,7 @@ export class Stage implements IStage {
     public constructor(fromParam: IStageConstructorParams) {
         const [valid, error] = validStageConstructorParams(fromParam)
 
-        if (!valid) throw new Error(generateConstructorErrorMessage('FROM', fromParam, error))
+        if (!valid) throw new Error(generateConstructorErrorMessage('STAGE', fromParam, error))
 
         if (isFromInstructionStringFromParam(fromParam)) fromParam = { from: fromParam }
 
