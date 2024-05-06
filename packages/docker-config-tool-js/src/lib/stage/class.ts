@@ -57,9 +57,15 @@ export class Stage implements IStage {
 
         if (isStageFromStage(fromParam)) fromParam = { ...fromParam, from: fromParam.from.id }
 
-        this.id = coerceFirstValue<string>(fromParam.as, randomString())
+        this.id = coerceFirstValue<string>(fromParam.as, this.getRandomId())
 
         this.withFrom(fromParam)
+    }
+
+    getRandomId(): string {
+        const result = randomString()
+
+        return /^\d/.test(result) ? this.getRandomId() : result
     }
 
     withInstruction<T = Instruction>(instructionParam: T): T {
