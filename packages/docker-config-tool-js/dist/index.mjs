@@ -1,6 +1,3 @@
-// src/lib/shared/coerce.ts
-import { z as z3 } from "zod";
-
 // src/lib/shared/guards.ts
 import { z as z2 } from "zod";
 
@@ -48,28 +45,6 @@ var isPartialLabelVar = (value) => zPartialLabelVar.safeParse(value).success;
 var isPartialLabelVarArray = (value) => zPartialLabelVarArray.safeParse(value).success;
 var isStringRecord = (value) => zStringRecord.safeParse(value).success;
 
-// src/lib/shared/coerce.ts
-var coerceString = (value) => {
-  const result = z3.coerce.string().safeParse(value);
-  return result.success ? result.data : "";
-};
-var coerceStringArray = (value) => {
-  if (isStringArray(value))
-    return value;
-  if (isString(value))
-    return [value];
-  throw new Error("Invalid string array");
-};
-var coerceFirstValue = (...value) => {
-  const result = z3.array(z3.unknown()).nonempty().safeParse(value);
-  if (!result.success)
-    throw new Error("Not a valid array");
-  const validMatches = value.filter((e) => e != null);
-  if (validMatches.length === 0)
-    throw new Error("No non null array elements");
-  return validMatches[0];
-};
-
 // src/lib/shared/utils.ts
 var generateConstructorErrorMessage = (cmdId, ...args) => {
   if (cmdId == null)
@@ -95,18 +70,82 @@ var reduceZodErrors = (error) => {
   }, []);
 };
 
-// src/lib/instructions/add/schema.ts
+// src/lib/instructions/arg/schema.ts
+import { z as z3 } from "zod";
+var zArgInstructionParamsObject = z3.object({
+  name: z3.string().trim().min(2),
+  value: z3.string().trim().min(2).optional()
+});
+var zArgInstructionParams = z3.union([z3.string().trim().min(2), zArgInstructionParamsObject]);
+
+// src/lib/instructions/arg/guards.ts
+var isArgInstructionParamObject = (value) => {
+  return zArgInstructionParamsObject.safeParse(value).success;
+};
+var isArgInstructionParams = (value) => zArgInstructionParams.safeParse(value).success;
+
+// src/lib/instructions/arg/class.ts
+var ArgInstruction = class {
+  type = "instruction";
+  argName;
+  argValue;
+  constructor(argParam) {
+    if (!isArgInstructionParams(argParam))
+      throw new Error(generateConstructorErrorMessage("ARG", argParam));
+    if (isArgInstructionParamObject(argParam)) {
+      const { name, value } = argParam;
+      this.argName = name;
+      if (isString(value))
+        this.argValue = value;
+    }
+    if (isString(argParam)) {
+      const [name, value] = argParam.split("=");
+      this.argName = name;
+      if (typeof value === "string" && value === "")
+        throw new Error(generateConstructorErrorMessage(`ARG`, argParam));
+      this.argValue = value;
+    }
+  }
+  toString() {
+    return `ARG ${[this.argName, this.argValue].filter((e) => e != null && e !== "").join("=")}`;
+  }
+};
+
+// src/lib/shared/coerce.ts
 import { z as z4 } from "zod";
-var zAddInstructionSources = z4.union([z4.string(), z4.array(z4.string())]);
-var zAddInstructionDestination = z4.string();
-var zAddInstructionKeepGitDir = z4.boolean();
-var zAddInstructionChecksum = z4.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
-var zAddInstructionChown = z4.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
-var zAddInstructionChmod = z4.string().regex(/^[0-7]{3,4}$/).transform(Number);
-var zAddInstructionLink = z4.boolean();
-var zAddInstructionExclude = z4.string().regex(/^[/.a-z0-9_-]+/);
-var zAddInstructionExcludes = z4.array(zAddInstructionExclude);
-var zAddInstructionParamObject = z4.object({
+var coerceString = (value) => {
+  const result = z4.coerce.string().safeParse(value);
+  return result.success ? result.data : "";
+};
+var coerceStringArray = (value) => {
+  if (isStringArray(value))
+    return value;
+  if (isString(value))
+    return [value];
+  throw new Error("Invalid string array");
+};
+var coerceFirstValue = (...value) => {
+  const result = z4.array(z4.unknown()).nonempty().safeParse(value);
+  if (!result.success)
+    throw new Error("Not a valid array");
+  const validMatches = value.filter((e) => e != null);
+  if (validMatches.length === 0)
+    throw new Error("No non null array elements");
+  return validMatches[0];
+};
+
+// src/lib/instructions/add/schema.ts
+import { z as z5 } from "zod";
+var zAddInstructionSources = z5.union([z5.string(), z5.array(z5.string())]);
+var zAddInstructionDestination = z5.string();
+var zAddInstructionKeepGitDir = z5.boolean();
+var zAddInstructionChecksum = z5.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
+var zAddInstructionChown = z5.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
+var zAddInstructionChmod = z5.string().regex(/^[0-7]{3,4}$/).transform(Number);
+var zAddInstructionLink = z5.boolean();
+var zAddInstructionExclude = z5.string().regex(/^[/.a-z0-9_-]+/);
+var zAddInstructionExcludes = z5.array(zAddInstructionExclude);
+var zAddInstructionParamObject = z5.object({
   sources: zAddInstructionSources,
   destination: zAddInstructionDestination,
   keepGitDir: zAddInstructionKeepGitDir.optional(),
@@ -117,10 +156,10 @@ var zAddInstructionParamObject = z4.object({
   exclude: zAddInstructionExclude.optional(),
   excludes: zAddInstructionExcludes.optional()
 });
-var zAddInstructionParams = z4.union(
+var zAddInstructionParams = z5.union(
   [
-    z4.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
-    z4.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
+    z5.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
+    z5.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
   ],
   { invalid_type_error: "Invalid Add Instruction param" }
 );
@@ -249,47 +288,6 @@ var AddInstruction = class {
     this.sources.forEach((s) => result.push(s));
     result.push(this.destination);
     return result.join(" ");
-  }
-};
-
-// src/lib/instructions/arg/schema.ts
-import { z as z5 } from "zod";
-var zArgInstructionParamsObject = z5.object({
-  name: z5.string().trim().min(2),
-  value: z5.string().trim().min(2).optional()
-});
-var zArgInstructionParams = z5.union([z5.string().trim().min(2), zArgInstructionParamsObject]);
-
-// src/lib/instructions/arg/guards.ts
-var isArgInstructionParamObject = (value) => {
-  return zArgInstructionParamsObject.safeParse(value).success;
-};
-var isArgInstructionParams = (value) => zArgInstructionParams.safeParse(value).success;
-
-// src/lib/instructions/arg/class.ts
-var ArgInstruction = class {
-  type = "instruction";
-  argName;
-  argValue;
-  constructor(argParam) {
-    if (!isArgInstructionParams(argParam))
-      throw new Error(generateConstructorErrorMessage("ARG", argParam));
-    if (isArgInstructionParamObject(argParam)) {
-      const { name, value } = argParam;
-      this.argName = name;
-      if (isString(value))
-        this.argValue = value;
-    }
-    if (isString(argParam)) {
-      const [name, value] = argParam.split("=");
-      this.argName = name;
-      if (typeof value === "string" && value === "")
-        throw new Error(generateConstructorErrorMessage(`ARG`, argParam));
-      this.argValue = value;
-    }
-  }
-  toString() {
-    return `ARG ${[this.argName, this.argValue].filter((e) => e != null && e !== "").join("=")}`;
   }
 };
 
@@ -625,7 +623,8 @@ var ExposeInstruction = class {
 
 // src/lib/instructions/from/schema.ts
 import { z as z9 } from "zod";
-var zFromInstructionStringFromParam = z9.string().trim().min(3).regex(/^[\w/-]+(:[\w/-]+)?/);
+var FromInstructionURLRE = /^((\$\{.+\})?[\w.-]*(:\d{1,5})?\/)?(([\w/-]+|(\$\{.+\}))\/)?([\w/-]+|(\$\{.+\}))(:([\w/-]+|\$\{.+\}))?(@(sha256:\w{64}|\$\{.+\}))?$/;
+var zFromInstructionStringFromParam = z9.string().trim().min(3).regex(FromInstructionURLRE);
 var zFromInstructionPlatformParam = z9.string().trim().min(2);
 var zFromInstructionAsParam = z9.string().min(2);
 var zFromInstructionObjectParam = z9.object({
@@ -1178,7 +1177,7 @@ var Stage = class {
   constructor(fromParam) {
     const [valid, error] = validStageConstructorParams(fromParam);
     if (!valid)
-      throw new Error(generateConstructorErrorMessage("FROM", fromParam, error));
+      throw new Error(generateConstructorErrorMessage("STAGE", fromParam, error));
     if (isFromInstructionStringFromParam(fromParam))
       fromParam = { from: fromParam };
     if (isStage(fromParam))
@@ -1256,9 +1255,15 @@ var Stage = class {
 
 // src/dct/class.ts
 var DockerConfigTool = class {
+  args = [];
   stack = [];
   constructor(stackParam) {
     this.stack = stackParam ?? [];
+  }
+  withArg(arg) {
+    const argInstruction = new ArgInstruction(arg);
+    this.args.push(argInstruction);
+    return this;
   }
   withStage(fromParam) {
     const stage = new Stage(fromParam);
@@ -1268,7 +1273,7 @@ var DockerConfigTool = class {
   toString() {
     if (this.stack.length === 0)
       throw new Error("Empty stack. Nothing to print.");
-    return this.stack.map((e) => e.toString()).join("\n");
+    return [...this.args, "", ...this.stack].map((e) => e.toString()).join("\n");
   }
 };
 export {

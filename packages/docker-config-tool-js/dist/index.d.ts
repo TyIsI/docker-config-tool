@@ -5,6 +5,22 @@ interface Instruction {
     toString: () => string;
 }
 
+interface ArgInstructionParamsObject {
+    name: string;
+    value?: string;
+}
+type ArgInstructionParams = string | ArgInstructionParamsObject;
+interface IArgInstruction extends Instruction {
+}
+
+declare class ArgInstruction implements IArgInstruction {
+    type: "instruction";
+    argName?: string;
+    argValue?: string;
+    constructor(argParam: ArgInstructionParams);
+    toString(): string;
+}
+
 declare const zFromInstructionObjectParam: z.ZodObject<{
     from: z.ZodString;
     platform: z.ZodOptional<z.ZodString>;
@@ -78,14 +94,6 @@ interface IAddInstruction extends Instruction {
     setChmod: (chmod: string) => this;
     setLink: (link?: boolean) => this;
     addExclude: (exclude: string) => this;
-}
-
-interface ArgInstructionParamsObject {
-    name: string;
-    value?: string;
-}
-type ArgInstructionParams = string | ArgInstructionParamsObject;
-interface IArgInstruction extends Instruction {
 }
 
 type CmdInstructionParams = string[];
@@ -200,8 +208,8 @@ interface ILabelInstruction extends Instruction {
 }
 
 declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
-    from: z.ZodOptional<z.ZodString>;
     type: z.ZodLiteral<"bind">;
+    from: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     readwrite: z.ZodBoolean;
@@ -218,8 +226,8 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     from?: string | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
-    from: z.ZodOptional<z.ZodString>;
     type: z.ZodLiteral<"bind">;
+    from: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     rw: z.ZodBoolean;
@@ -251,10 +259,10 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     from?: string | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
-    from: z.ZodOptional<z.ZodString>;
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
+    from: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     id: z.ZodOptional<z.ZodString>;
@@ -265,9 +273,9 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "cache";
     readonly: boolean;
     target: string;
-    from?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    from?: string | undefined;
     source?: string | undefined;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
@@ -276,18 +284,18 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "cache";
     readonly: boolean;
     target: string;
-    from?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    from?: string | undefined;
     source?: string | undefined;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>, z.ZodObject<{
-    from: z.ZodOptional<z.ZodString>;
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
+    from: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     id: z.ZodOptional<z.ZodString>;
@@ -298,9 +306,9 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "cache";
     ro: boolean;
     target: string;
-    from?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    from?: string | undefined;
     source?: string | undefined;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
@@ -309,9 +317,9 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "cache";
     ro: boolean;
     target: string;
-    from?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    from?: string | undefined;
     source?: string | undefined;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
@@ -412,8 +420,8 @@ declare const zRunInstructionSecurityType: z.ZodUnion<[z.ZodLiteral<"sandbox">, 
 declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>, z.ZodTuple<[z.ZodString], z.ZodString>, z.ZodTuple<[z.ZodArray<z.ZodString, "atleastone">], null>, z.ZodTuple<[z.ZodObject<{
     commands: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
     mount: z.ZodOptional<z.ZodUnion<[z.ZodObject<{
-        from: z.ZodOptional<z.ZodString>;
         type: z.ZodLiteral<"bind">;
+        from: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         readwrite: z.ZodBoolean;
@@ -430,8 +438,8 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         from?: string | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
-        from: z.ZodOptional<z.ZodString>;
         type: z.ZodLiteral<"bind">;
+        from: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         rw: z.ZodBoolean;
@@ -463,10 +471,10 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         from?: string | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
-        from: z.ZodOptional<z.ZodString>;
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
+        from: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         id: z.ZodOptional<z.ZodString>;
@@ -477,9 +485,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         readonly: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -488,18 +496,18 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         readonly: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     }>, z.ZodObject<{
-        from: z.ZodOptional<z.ZodString>;
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
+        from: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         id: z.ZodOptional<z.ZodString>;
@@ -510,9 +518,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         ro: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -521,9 +529,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         ro: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -644,9 +652,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         readonly: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -655,9 +663,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         ro: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -718,9 +726,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         readonly: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -729,9 +737,9 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "cache";
         ro: boolean;
         target: string;
-        from?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        from?: string | undefined;
         source?: string | undefined;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
@@ -841,13 +849,16 @@ interface IStageFromStage extends Omit<FromInstructionParamObject, 'from'> {
 }
 
 interface IDockerConfigTool {
+    withArg: (arg: ArgInstructionParams) => this;
     withStage: (from: FromInstructionParams | IStageFromStage | IStage) => IStage;
     toString: () => string;
 }
 
 declare class DockerConfigTool implements IDockerConfigTool {
+    args: ArgInstruction[];
     stack: IStage[];
     constructor(stackParam?: IStage[]);
+    withArg(arg: ArgInstructionParams): this;
     withStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage;
     toString(): string;
 }
@@ -870,14 +881,6 @@ declare class AddInstruction implements IAddInstruction {
     setChmod(chmod: string): this;
     setLink(link?: boolean): this;
     addExclude(exclude: string): this;
-    toString(): string;
-}
-
-declare class ArgInstruction implements IArgInstruction {
-    type: "instruction";
-    argName?: string;
-    argValue?: string;
-    constructor(argParam: ArgInstructionParams);
     toString(): string;
 }
 

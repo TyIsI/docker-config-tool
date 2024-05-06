@@ -40,9 +40,6 @@ __export(src_exports, {
 });
 module.exports = __toCommonJS(src_exports);
 
-// src/lib/shared/coerce.ts
-var import_zod3 = require("zod");
-
 // src/lib/shared/guards.ts
 var import_zod2 = require("zod");
 
@@ -90,28 +87,6 @@ var isPartialLabelVar = (value) => zPartialLabelVar.safeParse(value).success;
 var isPartialLabelVarArray = (value) => zPartialLabelVarArray.safeParse(value).success;
 var isStringRecord = (value) => zStringRecord.safeParse(value).success;
 
-// src/lib/shared/coerce.ts
-var coerceString = (value) => {
-  const result = import_zod3.z.coerce.string().safeParse(value);
-  return result.success ? result.data : "";
-};
-var coerceStringArray = (value) => {
-  if (isStringArray(value))
-    return value;
-  if (isString(value))
-    return [value];
-  throw new Error("Invalid string array");
-};
-var coerceFirstValue = (...value) => {
-  const result = import_zod3.z.array(import_zod3.z.unknown()).nonempty().safeParse(value);
-  if (!result.success)
-    throw new Error("Not a valid array");
-  const validMatches = value.filter((e) => e != null);
-  if (validMatches.length === 0)
-    throw new Error("No non null array elements");
-  return validMatches[0];
-};
-
 // src/lib/shared/utils.ts
 var generateConstructorErrorMessage = (cmdId, ...args) => {
   if (cmdId == null)
@@ -137,18 +112,82 @@ var reduceZodErrors = (error) => {
   }, []);
 };
 
-// src/lib/instructions/add/schema.ts
+// src/lib/instructions/arg/schema.ts
+var import_zod3 = require("zod");
+var zArgInstructionParamsObject = import_zod3.z.object({
+  name: import_zod3.z.string().trim().min(2),
+  value: import_zod3.z.string().trim().min(2).optional()
+});
+var zArgInstructionParams = import_zod3.z.union([import_zod3.z.string().trim().min(2), zArgInstructionParamsObject]);
+
+// src/lib/instructions/arg/guards.ts
+var isArgInstructionParamObject = (value) => {
+  return zArgInstructionParamsObject.safeParse(value).success;
+};
+var isArgInstructionParams = (value) => zArgInstructionParams.safeParse(value).success;
+
+// src/lib/instructions/arg/class.ts
+var ArgInstruction = class {
+  type = "instruction";
+  argName;
+  argValue;
+  constructor(argParam) {
+    if (!isArgInstructionParams(argParam))
+      throw new Error(generateConstructorErrorMessage("ARG", argParam));
+    if (isArgInstructionParamObject(argParam)) {
+      const { name, value } = argParam;
+      this.argName = name;
+      if (isString(value))
+        this.argValue = value;
+    }
+    if (isString(argParam)) {
+      const [name, value] = argParam.split("=");
+      this.argName = name;
+      if (typeof value === "string" && value === "")
+        throw new Error(generateConstructorErrorMessage(`ARG`, argParam));
+      this.argValue = value;
+    }
+  }
+  toString() {
+    return `ARG ${[this.argName, this.argValue].filter((e) => e != null && e !== "").join("=")}`;
+  }
+};
+
+// src/lib/shared/coerce.ts
 var import_zod4 = require("zod");
-var zAddInstructionSources = import_zod4.z.union([import_zod4.z.string(), import_zod4.z.array(import_zod4.z.string())]);
-var zAddInstructionDestination = import_zod4.z.string();
-var zAddInstructionKeepGitDir = import_zod4.z.boolean();
-var zAddInstructionChecksum = import_zod4.z.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
-var zAddInstructionChown = import_zod4.z.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
-var zAddInstructionChmod = import_zod4.z.string().regex(/^[0-7]{3,4}$/).transform(Number);
-var zAddInstructionLink = import_zod4.z.boolean();
-var zAddInstructionExclude = import_zod4.z.string().regex(/^[/.a-z0-9_-]+/);
-var zAddInstructionExcludes = import_zod4.z.array(zAddInstructionExclude);
-var zAddInstructionParamObject = import_zod4.z.object({
+var coerceString = (value) => {
+  const result = import_zod4.z.coerce.string().safeParse(value);
+  return result.success ? result.data : "";
+};
+var coerceStringArray = (value) => {
+  if (isStringArray(value))
+    return value;
+  if (isString(value))
+    return [value];
+  throw new Error("Invalid string array");
+};
+var coerceFirstValue = (...value) => {
+  const result = import_zod4.z.array(import_zod4.z.unknown()).nonempty().safeParse(value);
+  if (!result.success)
+    throw new Error("Not a valid array");
+  const validMatches = value.filter((e) => e != null);
+  if (validMatches.length === 0)
+    throw new Error("No non null array elements");
+  return validMatches[0];
+};
+
+// src/lib/instructions/add/schema.ts
+var import_zod5 = require("zod");
+var zAddInstructionSources = import_zod5.z.union([import_zod5.z.string(), import_zod5.z.array(import_zod5.z.string())]);
+var zAddInstructionDestination = import_zod5.z.string();
+var zAddInstructionKeepGitDir = import_zod5.z.boolean();
+var zAddInstructionChecksum = import_zod5.z.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
+var zAddInstructionChown = import_zod5.z.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
+var zAddInstructionChmod = import_zod5.z.string().regex(/^[0-7]{3,4}$/).transform(Number);
+var zAddInstructionLink = import_zod5.z.boolean();
+var zAddInstructionExclude = import_zod5.z.string().regex(/^[/.a-z0-9_-]+/);
+var zAddInstructionExcludes = import_zod5.z.array(zAddInstructionExclude);
+var zAddInstructionParamObject = import_zod5.z.object({
   sources: zAddInstructionSources,
   destination: zAddInstructionDestination,
   keepGitDir: zAddInstructionKeepGitDir.optional(),
@@ -159,10 +198,10 @@ var zAddInstructionParamObject = import_zod4.z.object({
   exclude: zAddInstructionExclude.optional(),
   excludes: zAddInstructionExcludes.optional()
 });
-var zAddInstructionParams = import_zod4.z.union(
+var zAddInstructionParams = import_zod5.z.union(
   [
-    import_zod4.z.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
-    import_zod4.z.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
+    import_zod5.z.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
+    import_zod5.z.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
   ],
   { invalid_type_error: "Invalid Add Instruction param" }
 );
@@ -291,47 +330,6 @@ var AddInstruction = class {
     this.sources.forEach((s) => result.push(s));
     result.push(this.destination);
     return result.join(" ");
-  }
-};
-
-// src/lib/instructions/arg/schema.ts
-var import_zod5 = require("zod");
-var zArgInstructionParamsObject = import_zod5.z.object({
-  name: import_zod5.z.string().trim().min(2),
-  value: import_zod5.z.string().trim().min(2).optional()
-});
-var zArgInstructionParams = import_zod5.z.union([import_zod5.z.string().trim().min(2), zArgInstructionParamsObject]);
-
-// src/lib/instructions/arg/guards.ts
-var isArgInstructionParamObject = (value) => {
-  return zArgInstructionParamsObject.safeParse(value).success;
-};
-var isArgInstructionParams = (value) => zArgInstructionParams.safeParse(value).success;
-
-// src/lib/instructions/arg/class.ts
-var ArgInstruction = class {
-  type = "instruction";
-  argName;
-  argValue;
-  constructor(argParam) {
-    if (!isArgInstructionParams(argParam))
-      throw new Error(generateConstructorErrorMessage("ARG", argParam));
-    if (isArgInstructionParamObject(argParam)) {
-      const { name, value } = argParam;
-      this.argName = name;
-      if (isString(value))
-        this.argValue = value;
-    }
-    if (isString(argParam)) {
-      const [name, value] = argParam.split("=");
-      this.argName = name;
-      if (typeof value === "string" && value === "")
-        throw new Error(generateConstructorErrorMessage(`ARG`, argParam));
-      this.argValue = value;
-    }
-  }
-  toString() {
-    return `ARG ${[this.argName, this.argValue].filter((e) => e != null && e !== "").join("=")}`;
   }
 };
 
@@ -667,7 +665,8 @@ var ExposeInstruction = class {
 
 // src/lib/instructions/from/schema.ts
 var import_zod9 = require("zod");
-var zFromInstructionStringFromParam = import_zod9.z.string().trim().min(3).regex(/^[\w/-]+(:[\w/-]+)?/);
+var FromInstructionURLRE = /^((\$\{.+\})?[\w.-]*(:\d{1,5})?\/)?(([\w/-]+|(\$\{.+\}))\/)?([\w/-]+|(\$\{.+\}))(:([\w/-]+|\$\{.+\}))?(@(sha256:\w{64}|\$\{.+\}))?$/;
+var zFromInstructionStringFromParam = import_zod9.z.string().trim().min(3).regex(FromInstructionURLRE);
 var zFromInstructionPlatformParam = import_zod9.z.string().trim().min(2);
 var zFromInstructionAsParam = import_zod9.z.string().min(2);
 var zFromInstructionObjectParam = import_zod9.z.object({
@@ -1220,7 +1219,7 @@ var Stage = class {
   constructor(fromParam) {
     const [valid, error] = validStageConstructorParams(fromParam);
     if (!valid)
-      throw new Error(generateConstructorErrorMessage("FROM", fromParam, error));
+      throw new Error(generateConstructorErrorMessage("STAGE", fromParam, error));
     if (isFromInstructionStringFromParam(fromParam))
       fromParam = { from: fromParam };
     if (isStage(fromParam))
@@ -1298,9 +1297,15 @@ var Stage = class {
 
 // src/dct/class.ts
 var DockerConfigTool = class {
+  args = [];
   stack = [];
   constructor(stackParam) {
     this.stack = stackParam ?? [];
+  }
+  withArg(arg) {
+    const argInstruction = new ArgInstruction(arg);
+    this.args.push(argInstruction);
+    return this;
   }
   withStage(fromParam) {
     const stage = new Stage(fromParam);
@@ -1310,7 +1315,7 @@ var DockerConfigTool = class {
   toString() {
     if (this.stack.length === 0)
       throw new Error("Empty stack. Nothing to print.");
-    return this.stack.map((e) => e.toString()).join("\n");
+    return [...this.args, "", ...this.stack].map((e) => e.toString()).join("\n");
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
