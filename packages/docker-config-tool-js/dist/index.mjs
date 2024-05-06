@@ -1184,8 +1184,12 @@ var Stage = class {
       fromParam = { from: fromParam.id };
     if (isStageFromStage(fromParam))
       fromParam = { ...fromParam, from: fromParam.from.id };
-    this.id = coerceFirstValue(fromParam.as, randomString());
+    this.id = coerceFirstValue(fromParam.as, this.getRandomId());
     this.withFrom(fromParam);
+  }
+  getRandomId() {
+    const result = randomString();
+    return /^\d/.test(result) ? this.getRandomId() : result;
   }
   withInstruction(instructionParam) {
     if (!isInstruction(instructionParam)) {
