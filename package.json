@@ -15,6 +15,7 @@
     "author": "Ty Eggen",
     "license": "GPL-3.0-only",
     "devDependencies": {
+        "@changesets/cli": "^2.27.1",
         "prettier": "^3.2.5",
         "prettier-plugin-sh": "^0.14.0"
     }
