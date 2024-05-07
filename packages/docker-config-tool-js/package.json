@@ -1,6 +1,7 @@
 {
+    "private": false,
     "name": "@tyisi/docker-config-tool-js",
-    "version": "1.0.0rc3",
+    "version": "1.0.0rc4",
     "description": "Javascript/Typescript implementation of Docker Config Tool",
     "main": "./dist/index.js",
     "license": "GPL-3.0-only",
@@ -92,5 +93,8 @@
     },
     "dependencies": {
         "zod": "^3.22.5"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
