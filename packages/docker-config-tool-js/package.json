@@ -16,10 +16,11 @@
         "typescript"
     ],
     "exports": {
-        "import": "./dist/index.mjs",
-        "require": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
     },
     "devDependencies": {
         "@jest/globals": "^29.7.0",
@@ -53,7 +54,7 @@
             "command": "node_modules/.bin/tsc"
         },
         "build:cjs": {
-            "command": "node_modules/.bin/tsup --format cjs -d dist src/index.ts",
+            "command": "node_modules/.bin/tsup --format cjs -d dist src/index.ts --dts",
             "output": [
                 "dist/index.js"
             ],
@@ -63,19 +64,8 @@
                 "test"
             ]
         },
-        "build:dts": {
-            "command": "node_modules/.bin/tsup -d dist src/index.ts --dts-only",
-            "output": [
-                "dist/index.d.ts"
-            ],
-            "clean": true,
-            "dependencies": [
-                "compile",
-                "test"
-            ]
-        },
         "build:esm": {
-            "command": "node_modules/.bin/tsup --format esm --target esnext -d dist src/index.ts",
+            "command": "node_modules/.bin/tsup --format esm --target esnext -d dist src/index.ts --dts",
             "output": [
                 "dist/index.mjs"
             ],
@@ -90,7 +80,6 @@
                 "compile",
                 "test",
                 "build:cjs",
-                "build:dts",
                 "build:esm"
             ]
         },

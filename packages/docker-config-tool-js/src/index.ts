@@ -1,4 +1,5 @@
 export * from './dct/class'
+
 export * from './lib/instructions/add/class'
 export * from './lib/instructions/arg/class'
 export * from './lib/instructions/cmd/class'
@@ -15,3 +16,7 @@ export * from './lib/instructions/stopsignal/class'
 export * from './lib/instructions/user/class'
 export * from './lib/instructions/volume/class'
 export * from './lib/instructions/workdir/class'
+
+export * from './lib/stage/class'
+
+export * from './types'
