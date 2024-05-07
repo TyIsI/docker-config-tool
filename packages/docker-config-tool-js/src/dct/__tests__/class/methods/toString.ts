@@ -19,7 +19,7 @@ describe(`DCT`, () => {
 
                     const stage = dct.withStage('scratch')
 
-                    expect(dct.toString().trim()).toMatch(`ARG TESTARG\nFROM scratch AS ${stage.id}`)
+                    expect(dct.toString().trim()).toMatch(`ARG TESTARG\n\nFROM scratch AS ${stage.id}`)
                 })
 
                 test(`don't print it if the stack is empty`, () => {
