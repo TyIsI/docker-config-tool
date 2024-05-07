@@ -1,0 +1,12 @@
+{
+    "name": "@tyisi/prettier-config-dct",
+    "version": "1.0.0",
+    "description": "",
+    "main": "prettier.config.js",
+    "keywords": [],
+    "author": "Ty Eggen",
+    "license": "ISC",
+    "peerDependencies": {
+        "@tyisi/eslint-config-dct": "workspace:*"
+    }
+}
