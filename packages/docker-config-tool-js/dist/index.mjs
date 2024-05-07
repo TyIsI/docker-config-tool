@@ -1294,6 +1294,7 @@ export {
   LabelInstruction,
   RunInstruction,
   ShellInstruction,
+  Stage,
   StopSignalInstruction,
   UserInstruction,
   VolumeInstruction,
