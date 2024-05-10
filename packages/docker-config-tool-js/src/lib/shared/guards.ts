@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+    zDockerImageReference,
     zEnvVar,
     zEnvVarArray,
     zFileAccessMode,
@@ -29,6 +30,7 @@ import {
     zUnixUserGroupStringId
 } from './schema'
 import {
+    type DockerImageReference,
     type EnvVar,
     type EnvVarArray,
     type FileAccessMode,
@@ -55,6 +57,9 @@ import {
     type UnixUserGroupNumericId,
     type UnixUserGroupStringId
 } from './types'
+
+export const isDockerImageReference = (value: unknown): value is DockerImageReference =>
+    zDockerImageReference.safeParse(value).success
 
 export const isTrueBoolean = (value: unknown): value is true => z.literal(true).safeParse(value).success
 

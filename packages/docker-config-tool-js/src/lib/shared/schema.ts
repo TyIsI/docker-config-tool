@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DockerImageReferenceRE } from './matching'
 
 export const zRequiredString = (message?: string | { message: string }): z.ZodString =>
     z
@@ -70,3 +71,7 @@ export const zNetworkProtocolTCP = z.literal('tcp')
 export const zNetworkProtocolUDP = z.literal('udp')
 
 export const zNetworkProtocols = z.union([zNetworkProtocolTCP, zNetworkProtocolUDP])
+
+export const zDockerImageReference = zRequiredString('Empty docker image resource location')
+    .min(2, 'Docker image reference should be at least 2 characters')
+    .regex(DockerImageReferenceRE, 'Invalid docker image reference')

@@ -1,6 +1,7 @@
 import { type z } from 'zod'
 
 import {
+    type zDockerImageReference,
     type zEnvVar,
     type zEnvVarArray,
     type zFileAccessMode,
@@ -36,6 +37,7 @@ export interface UnixUserGroupIdOpt {
 export type ResultTuple<T = unknown> = [true, T] | [false, string[]]
 export type ResultOptionalTuple<T = unknown> = [true, T | undefined] | [false, string[]]
 
+export type DockerImageReference = z.infer<typeof zDockerImageReference>
 export type EnvVar = z.infer<typeof zEnvVar>
 export type EnvVarArray = z.infer<typeof zEnvVarArray>
 export type FileAccessMode = z.input<typeof zFileAccessMode>
