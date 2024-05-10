@@ -16,23 +16,39 @@ const testVariants = {
 
 const testCases = ['scratch', 'alpine:3']
 
+testVariants.tags.forEach((tag) => {
+    testVariants.images.forEach((image) => {
+        testVariants.paths.forEach((path) => {
+            testVariants.server.forEach((server) => {
+                const data = []
+
+                if (server !== '') data.push(server, '/')
+                if (path !== '') data.push(path, '/')
+
+                data.push(image)
+
+                if (tag !== '') data.push(':', tag)
+
+                testCases.push(data.join(''))
+            })
+        })
+    })
+})
+
 testVariants.hashes.forEach((hash) => {
-    testVariants.tags.forEach((tag) => {
-        testVariants.images.forEach((image) => {
-            testVariants.paths.forEach((path) => {
-                testVariants.server.forEach((server) => {
-                    const data = []
+    testVariants.images.forEach((image) => {
+        testVariants.paths.forEach((path) => {
+            testVariants.server.forEach((server) => {
+                const data = []
 
-                    if (server !== '') data.push(server, '/')
-                    if (path !== '') data.push(path, '/')
+                if (server !== '') data.push(server, '/')
+                if (path !== '') data.push(path, '/')
 
-                    data.push(image)
+                data.push(image)
 
-                    if (tag !== '') data.push(':', tag)
-                    if (hash !== '') data.push('@', hash)
+                if (hash !== '') data.push('@', hash)
 
-                    testCases.push(data.join(''))
-                })
+                testCases.push(data.join(''))
             })
         })
     })

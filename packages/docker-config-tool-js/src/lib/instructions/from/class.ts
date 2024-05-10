@@ -1,6 +1,6 @@
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
-import { isFromInstructionAsParam, isFromInstructionParamObject, isFromInstructionParams } from './guards'
+import { isFromInstructionAsParam, isFromInstructionObjectParam, isFromInstructionParams } from './guards'
 import { type FromInstructionParams, type IFromInstruction } from './types'
 
 export class FromInstruction implements IFromInstruction {
@@ -15,7 +15,7 @@ export class FromInstruction implements IFromInstruction {
 
         if (isString(fromParam)) this.from = fromParam
 
-        if (isFromInstructionParamObject(fromParam)) {
+        if (isFromInstructionObjectParam(fromParam)) {
             this.from = fromParam.from
 
             if (isString(fromParam.platform)) this.platform = fromParam.platform

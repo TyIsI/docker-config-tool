@@ -1,3 +1,4 @@
+import { Stage } from '../../../../../../stage/class'
 import { RunInstruction } from '../../../../class'
 import { type RunInstructionParamsObject } from '../../../../types'
 
@@ -310,6 +311,26 @@ describe('DCT', () => {
 
                                     expect(runInstruction.toString()).toMatch(
                                         'RUN --mount=type=cache,target=/cache,uid=12345,gid=12345 apt update'
+                                    )
+                                })
+
+                                test(`create run instruction, with bind mount options, with stage from`, () => {
+                                    const workspaceStage = new Stage({ from: 'scratch', as: 'workspace' })
+
+                                    const testVal: RunInstructionParamsObject = {
+                                        commands: ['apt', 'update'],
+                                        mount: {
+                                            type: 'cache',
+                                            target: '/cache',
+                                            from: workspaceStage,
+                                            source: '/cache'
+                                        }
+                                    }
+
+                                    const runInstruction = new RunInstruction(testVal)
+
+                                    expect(runInstruction.toString()).toMatch(
+                                        'RUN --mount=type=cache,target=/cache,from=workspace,source=/cache apt update'
                                     )
                                 })
                             })

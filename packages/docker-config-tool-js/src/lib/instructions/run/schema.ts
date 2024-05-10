@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+    zDockerImageReference,
     zFileAccessMode,
     zROOpt,
     zRWOpt,
@@ -9,6 +10,7 @@ import {
     zRequiredString,
     zUnixUserGroupNumericId
 } from '../../shared/schema'
+import { zStage } from '../../stage/schema'
 
 export const zRunInstructionBooleanFields = z.union([
     z.literal('rw'),
@@ -26,10 +28,12 @@ export const zRunInstructionCacheSharingTypes = z.union([
 
 export const zRunInstructions = z.union([zRequiredString(), z.array(zRequiredString()).nonempty()])
 
+export const zRunInstructionMountFrom = z.union([zDockerImageReference, zStage])
+
 export const zRunInstructionMountTypeBindCommon = z.object({
     type: z.literal('bind'),
     target: z.string().min(3),
-    from: z.string().min(3).optional(),
+    from: zRunInstructionMountFrom.optional(),
     source: z.string().min(3).optional()
 })
 
@@ -48,7 +52,7 @@ export const zRunInstructionMountTypeCacheCommon = z.object({
     target: zRequiredString(),
     id: z.string().optional(),
     sharing: zRunInstructionCacheSharingTypes.optional(),
-    from: zRequiredString().optional(),
+    from: zRunInstructionMountFrom.optional(),
     source: zRequiredString().optional(),
     mode: zFileAccessMode.optional(),
     uid: zUnixUserGroupNumericId.optional(),

@@ -33,11 +33,11 @@ describe('DCT', () => {
 
                                 test(`create instruction from object with a url and digest`, () => {
                                     const fromInstruction = new FromInstruction({
-                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
+                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
                                     })
 
                                     expect(fromInstruction.toString()).toBe(
-                                        'FROM private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
+                                        'FROM private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
                                     )
                                 })
 
@@ -97,12 +97,12 @@ describe('DCT', () => {
 
                                 test(`create instruction from object with a url with digest`, () => {
                                     const fromInstruction = new FromInstruction({
-                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f',
+                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f',
                                         platform: 'x86_64'
                                     })
 
                                     expect(fromInstruction.toString()).toBe(
-                                        'FROM --platform=x86_64 private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
+                                        'FROM --platform=x86_64 private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f'
                                     )
                                 })
                             })
@@ -133,12 +133,12 @@ describe('DCT', () => {
 
                                 test(`create instruction from object with a url with digest and as`, () => {
                                     const fromInstruction = new FromInstruction({
-                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f',
+                                        from: 'private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f',
                                         as: 'base'
                                     })
 
                                     expect(fromInstruction.toString()).toBe(
-                                        'FROM private-registry.example.com:443/project1/sub-project1/docker-image:busybox-x86_64@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f AS base'
+                                        'FROM private-registry.example.com:443/project1/sub-project1/docker-image@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f AS base'
                                     )
                                 })
                             })

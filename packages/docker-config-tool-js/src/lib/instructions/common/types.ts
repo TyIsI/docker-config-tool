@@ -3,3 +3,5 @@ export interface Instruction {
 
     toString: () => string
 }
+
+export type Instructions = Instruction[]

@@ -1,6 +1,7 @@
 import { coerceStringArray } from '../../shared/coerce'
 import { isObjectWithProperty, isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
+import { isStageParam } from '../../stage/guards'
 import { type IStage } from '../../stage/types'
 import {
     isCopyInstructionChmod,
@@ -55,7 +56,8 @@ export class CopyInstruction implements ICopyInstruction {
 
         if (isCopyInstructionDestination(copyParams.destination)) this.destination = copyParams.destination
 
-        if (isCopyInstructionFrom(copyParams.from)) this.from = copyParams.from
+        if (isCopyInstructionFrom(copyParams.from))
+            this.from = isStageParam(copyParams.from) ? copyParams.from.id : copyParams.from
 
         if (isCopyInstructionChown(copyParams.chown)) this.chown = copyParams.chown
 

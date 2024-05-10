@@ -1,12 +1,13 @@
 import { z } from 'zod'
 
-import { zRequiredString } from '../../shared/schema'
+import { zDockerImageReference, zRequiredString } from '../../shared/schema'
+import { zStage } from '../../stage/schema'
 
 export const zCopyInstructionSources = z.union([zRequiredString(), z.array(zRequiredString()).nonempty()])
 
 export const zCopyInstructionDestination = zRequiredString()
 
-export const zCopyInstructionFrom = zRequiredString().min(2)
+export const zCopyInstructionFrom = z.union([zDockerImageReference, zStage])
 
 export const zCopyInstructionChown = zRequiredString()
     .min(2)

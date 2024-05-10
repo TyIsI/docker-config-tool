@@ -1,22 +1,10 @@
-import {
-    zFromInstructionAsParam,
-    zFromInstructionObjectParam,
-    zFromInstructionParams,
-    zFromInstructionStringFromParam
-} from './schema'
-import {
-    type FromInstructionParamObject,
-    type FromInstructionParams,
-    type FromInstructionStringFromParam
-} from './types'
-
-export const isFromInstructionStringFromParam = (value: unknown): value is FromInstructionStringFromParam =>
-    zFromInstructionStringFromParam.safeParse(value).success
+import { zFromInstructionAsParam, zFromInstructionObjectParam, zFromInstructionParams } from './schema'
+import { type FromInstructionObjectParam, type FromInstructionParams } from './types'
 
 export const isFromInstructionParams = (value: unknown): value is FromInstructionParams =>
     zFromInstructionParams.safeParse(value).success
 
-export const isFromInstructionParamObject = (value: unknown): value is FromInstructionParamObject =>
+export const isFromInstructionObjectParam = (value: unknown): value is FromInstructionObjectParam =>
     zFromInstructionObjectParam.safeParse(value).success
 
 export const isFromInstructionAsParam = (value: unknown): value is string =>

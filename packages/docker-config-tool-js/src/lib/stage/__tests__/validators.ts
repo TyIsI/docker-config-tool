@@ -1,5 +1,5 @@
 import { Stage } from '../class'
-import { validStageConstructorParams } from '../validators'
+import { validStageParams } from '../validators'
 
 describe(`DCT`, () => {
     describe(`lib`, () => {
@@ -9,7 +9,7 @@ describe(`DCT`, () => {
                     test(`pass - default`, () => {
                         const testVal = 'scratch'
 
-                        const [valid, result] = validStageConstructorParams(testVal)
+                        const [valid, result] = validStageParams(testVal)
 
                         expect(valid).toBeTruthy()
                         expect(result).toMatch(testVal)
@@ -18,7 +18,7 @@ describe(`DCT`, () => {
                     test(`pass - object`, () => {
                         const testVal = { from: 'scratch' }
 
-                        const [valid, result] = validStageConstructorParams(testVal)
+                        const [valid, result] = validStageParams(testVal)
 
                         expect(valid).toBeTruthy()
                         expect(result).toMatchObject(testVal)
@@ -27,7 +27,7 @@ describe(`DCT`, () => {
                     test(`pass - object with other params`, () => {
                         const testVal = { from: 'scratch', platform: 'x64', as: 'x64' }
 
-                        const [valid, result] = validStageConstructorParams(testVal)
+                        const [valid, result] = validStageParams(testVal)
 
                         expect(valid).toBeTruthy()
                         expect(result).toMatchObject(testVal)
@@ -36,7 +36,7 @@ describe(`DCT`, () => {
                     test(`pass - object with stage from`, () => {
                         const stage = new Stage({ from: 'scratch', as: 'stage' })
 
-                        const [valid, result] = validStageConstructorParams({ from: stage })
+                        const [valid, result] = validStageParams({ from: stage })
 
                         expect(valid).toBeTruthy()
                         expect(result).toBeTruthy()
@@ -45,7 +45,7 @@ describe(`DCT`, () => {
                     test(`pass - object with stage from and other params`, () => {
                         const stage = new Stage({ from: 'scratch', as: 'stage' })
 
-                        const [valid, result] = validStageConstructorParams({ from: stage, platform: 'x64', as: 'x64' })
+                        const [valid, result] = validStageParams({ from: stage, platform: 'x64', as: 'x64' })
 
                         expect(valid).toBeTruthy()
                         expect(result).toBeTruthy()
@@ -53,7 +53,7 @@ describe(`DCT`, () => {
 
                     test(`fail - undefined value`, () => {
                         // @ts-expect-error undefined
-                        const [valid, result] = validStageConstructorParams(undefined)
+                        const [valid, result] = validStageParams(undefined)
 
                         expect(valid).toBeFalsy()
                         expect(result).toBeTruthy()
@@ -61,7 +61,7 @@ describe(`DCT`, () => {
 
                     test(`fail - empty object`, () => {
                         // @ts-expect-error undefined
-                        const [valid, result] = validStageConstructorParams({})
+                        const [valid, result] = validStageParams({})
 
                         expect(valid).toBeFalsy()
                         expect(result).toBeTruthy()
@@ -70,7 +70,7 @@ describe(`DCT`, () => {
                     test(`fail - object with empty from`, () => {
                         const testVal = { from: '' }
 
-                        const [valid, result] = validStageConstructorParams(testVal)
+                        const [valid, result] = validStageParams(testVal)
 
                         expect(valid).toBeFalsy()
                         expect(result).toBeTruthy()

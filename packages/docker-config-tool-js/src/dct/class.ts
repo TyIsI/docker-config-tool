@@ -2,7 +2,7 @@ import { ArgInstruction } from '../lib/instructions/arg/class'
 import { type ArgInstructionParams } from '../lib/instructions/arg/types'
 import { type FromInstructionParams } from '../lib/instructions/from/types'
 import { Stage } from '../lib/stage/class'
-import { type IStage, type IStageFromStage } from '../lib/stage/types'
+import { type IStage, type StageFromInstructionObjectParam } from '../lib/stage/types'
 import { type IDockerConfigTool } from './types'
 
 export class DockerConfigTool implements IDockerConfigTool {
@@ -21,7 +21,7 @@ export class DockerConfigTool implements IDockerConfigTool {
         return this
     }
 
-    withStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage {
+    withStage(fromParam: FromInstructionParams | StageFromInstructionObjectParam | IStage): IStage {
         const stage: Stage = new Stage(fromParam)
 
         this.stack.push(stage)

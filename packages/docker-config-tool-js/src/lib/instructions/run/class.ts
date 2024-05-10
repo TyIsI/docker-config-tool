@@ -1,6 +1,7 @@
 import { coerceString, coerceStringArray } from '../../shared/coerce'
 import { isStringArray, isTrueBoolean } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
+import { coerceRunInstructionMountParam } from './coerce'
 import {
     isRunInstructionBooleanFields,
     isRunInstructionMountParam,
@@ -41,7 +42,7 @@ export class RunInstruction implements IRunInstruction {
             this.commands = coerceStringArray(runParamObject.commands)
 
             if (runParamObject.mount != null && isRunInstructionMountParam(runParamObject.mount))
-                this.mount = runParamObject.mount
+                this.mount = coerceRunInstructionMountParam(runParamObject.mount)
 
             if (runParamObject.network != null && isRunInstructionNetworkParam(runParamObject.network))
                 this.network = runParamObject.network
@@ -54,7 +55,7 @@ export class RunInstruction implements IRunInstruction {
     setMount(mount: RunInstructionMountType): void {
         if (!isRunInstructionMountParam(mount)) throw new Error('Invalid mount type')
 
-        this.mount = mount
+        this.mount = coerceRunInstructionMountParam(mount)
     }
 
     setNetwork(network: RunInstructionNetworkType): void {

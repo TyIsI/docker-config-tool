@@ -15,7 +15,6 @@ import { type EnvInstructionParams, type IEnvInstruction } from '../instructions
 import { ExposeInstruction } from '../instructions/expose/class'
 import { type ExposeInstructionParams, type IExposeInstruction } from '../instructions/expose/types'
 import { FromInstruction } from '../instructions/from/class'
-import { isFromInstructionStringFromParam } from '../instructions/from/guards'
 import { type FromInstructionParams, type IFromInstruction } from '../instructions/from/types'
 import { HealthCheckInstruction } from '../instructions/healthcheck/class'
 import { type HealthCheckParams, type IHealthCheckInstruction } from '../instructions/healthcheck/types'
@@ -33,33 +32,29 @@ import { VolumeInstruction } from '../instructions/volume/class'
 import { type IVolumeInstruction, type VolumeInstructionParams } from '../instructions/volume/types'
 import { WorkDirInstruction } from '../instructions/workdir/class'
 import { type IWorkDirInstruction } from '../instructions/workdir/types'
-import { coerceFirstValue } from '../shared/coerce'
 import { isString } from '../shared/guards'
 import { generateConstructorErrorMessage, randomString } from '../shared/utils'
-import { isStage, isStageFromStage } from './guards'
-import { type IStage, type IStageConstructorParams } from './types'
-import { validStageConstructorParams } from './validators'
+import { coerceStageFromInstructionObjectParam } from './coerce'
+import { type IStage, type StageParams } from './types'
+import { validStageParams } from './validators'
 
 export class Stage implements IStage {
     type = 'stage' as const
 
-    id: string
+    id: string = this.getRandomId()
+
     stack: Instruction[] = []
 
-    public constructor(fromParam: IStageConstructorParams) {
-        const [valid, error] = validStageConstructorParams(fromParam)
+    public constructor(stageParam: StageParams) {
+        const [valid, result] = validStageParams(stageParam)
 
-        if (!valid) throw new Error(generateConstructorErrorMessage('STAGE', fromParam, error))
+        if (!valid) throw new Error(generateConstructorErrorMessage('STAGE', stageParam, result))
 
-        if (isFromInstructionStringFromParam(fromParam)) fromParam = { from: fromParam }
+        stageParam = coerceStageFromInstructionObjectParam(stageParam)
 
-        if (isStage(fromParam)) fromParam = { from: fromParam.id }
+        if (stageParam.as != null) this.id = stageParam.as
 
-        if (isStageFromStage(fromParam)) fromParam = { ...fromParam, from: fromParam.from.id }
-
-        this.id = coerceFirstValue<string>(fromParam.as, this.getRandomId())
-
-        this.withFrom(fromParam)
+        this.withFrom(stageParam)
     }
 
     getRandomId(): string {

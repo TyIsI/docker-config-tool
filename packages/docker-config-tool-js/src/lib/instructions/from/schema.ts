@@ -1,18 +1,14 @@
 import { z } from 'zod'
+import { zDockerImageReference, zRequiredString } from '../../shared/schema'
 
-const FromInstructionURLRE =
-    /^((\$\{.+\})?[\w.-]*(:\d{1,5})?\/)?(([\w/-]+|(\$\{.+\}))\/)?([\w/-]+|(\$\{.+\}))(:([\w/-]+|\$\{.+\}))?(@(sha256:\w{64}|\$\{.+\}))?$/
+export const zFromInstructionPlatformParam = zRequiredString().min(2)
 
-export const zFromInstructionStringFromParam = z.string().trim().min(3).regex(FromInstructionURLRE)
-
-export const zFromInstructionPlatformParam = z.string().trim().min(2)
-
-export const zFromInstructionAsParam = z.string().min(2)
+export const zFromInstructionAsParam = zRequiredString().min(2)
 
 export const zFromInstructionObjectParam = z.object({
-    from: zFromInstructionStringFromParam,
+    from: zDockerImageReference,
     platform: zFromInstructionPlatformParam.optional(),
     as: zFromInstructionAsParam.optional()
 })
 
-export const zFromInstructionParams = z.union([zFromInstructionStringFromParam, zFromInstructionObjectParam])
+export const zFromInstructionParams = z.union([zDockerImageReference, zFromInstructionObjectParam])
