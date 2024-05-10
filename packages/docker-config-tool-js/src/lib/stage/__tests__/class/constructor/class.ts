@@ -8,25 +8,25 @@ describe(`DCT`, () => {
                     test(`create a stage from string`, () => {
                         const stage = new Stage('scratch')
 
-                        expect(stage).toBeTruthy()
+                        expect(stage.toString()).toMatch('FROM scratch')
                     })
 
                     test(`create a stage from object`, () => {
                         const stage = new Stage({ from: 'scratch' })
 
-                        expect(stage).toBeTruthy()
+                        expect(stage.toString()).toMatch('FROM scratch')
                     })
 
                     test(`create a stage from object with a name`, () => {
-                        const stage = new Stage({ from: 'scratch', as: 'scratch' })
+                        const stage = new Stage({ from: 'scratch', as: 'workspace' })
 
-                        expect(stage).toBeTruthy()
+                        expect(stage.toString()).toMatch('FROM scratch AS workspace')
                     })
 
                     test(`create a stage from object with a name and platform`, () => {
-                        const stage = new Stage({ from: 'scratch', platform: 'x64', as: 'scratch' })
+                        const stage = new Stage({ from: 'scratch', platform: 'x64', as: 'workspace' })
 
-                        expect(stage).toBeTruthy()
+                        expect(stage.toString()).toMatch('FROM --platform=x64 scratch AS workspace')
                     })
 
                     test(`create a stage from another stage`, () => {

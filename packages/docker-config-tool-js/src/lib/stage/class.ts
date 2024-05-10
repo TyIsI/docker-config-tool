@@ -52,7 +52,9 @@ export class Stage implements IStage {
 
         stageParam = coerceStageFromInstructionObjectParam(stageParam)
 
+        // Sync id
         if (stageParam.as != null) this.id = stageParam.as
+        else stageParam.as = this.id
 
         this.withFrom(stageParam)
     }
@@ -90,7 +92,7 @@ export class Stage implements IStage {
     }
 
     withFrom(from: FromInstructionParams): IFromInstruction {
-        return this.withInstruction<IFromInstruction>(new FromInstruction(from).setAs(this.id))
+        return this.withInstruction<IFromInstruction>(new FromInstruction(from))
     }
 
     withEntryPoint(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction {
