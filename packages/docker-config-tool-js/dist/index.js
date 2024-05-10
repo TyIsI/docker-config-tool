@@ -1252,6 +1252,8 @@ var Stage = class {
     stageParam = coerceStageFromInstructionObjectParam(stageParam);
     if (stageParam.as != null)
       this.id = stageParam.as;
+    else
+      stageParam.as = this.id;
     this.withFrom(stageParam);
   }
   getRandomId() {
@@ -1278,7 +1280,7 @@ var Stage = class {
     return this.withInstruction(new CopyInstruction(...copyInstructionParams));
   }
   withFrom(from) {
-    return this.withInstruction(new FromInstruction(from).setAs(this.id));
+    return this.withInstruction(new FromInstruction(from));
   }
   withEntryPoint(...entrypointCmds) {
     return this.withInstruction(new EntryPointInstruction(...entrypointCmds));
