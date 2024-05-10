@@ -4,6 +4,7 @@ interface Instruction {
     type: 'instruction';
     toString: () => string;
 }
+type Instructions = Instruction[];
 
 interface ArgInstructionParamsObject {
     name: string;
@@ -21,7 +22,6 @@ declare class ArgInstruction implements IArgInstruction {
     toString(): string;
 }
 
-declare const zFromInstructionStringFromParam: z.ZodString;
 declare const zFromInstructionObjectParam: z.ZodObject<{
     from: z.ZodString;
     platform: z.ZodOptional<z.ZodString>;
@@ -49,9 +49,8 @@ declare const zFromInstructionParams: z.ZodUnion<[z.ZodString, z.ZodObject<{
     as?: string | undefined;
 }>]>;
 
-type FromInstructionParamObject = z.infer<typeof zFromInstructionObjectParam>;
+type FromInstructionObjectParam = z.infer<typeof zFromInstructionObjectParam>;
 type FromInstructionParams = z.infer<typeof zFromInstructionParams>;
-type FromInstructionStringFromParam = z.infer<typeof zFromInstructionStringFromParam>;
 interface IFromInstruction extends Instruction {
     setAs: (nameParam: string) => this;
 }
@@ -137,7 +136,16 @@ interface ICmdInstruction extends Instruction {
 
 declare const zCopyInstructionSources: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
 declare const zCopyInstructionDestination: z.ZodString;
-declare const zCopyInstructionFrom: z.ZodString;
+declare const zCopyInstructionFrom: z.ZodUnion<[z.ZodString, z.ZodObject<{
+    type: z.ZodLiteral<"stage">;
+    id: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    type: "stage";
+    id: string;
+}, {
+    type: "stage";
+    id: string;
+}>]>;
 declare const zCopyInstructionChown: z.ZodString;
 declare const zCopyInstructionChmod: z.ZodString;
 declare const zCopyInstructionLink: z.ZodBoolean;
@@ -147,7 +155,16 @@ declare const zCopyInstructionExcludes: z.ZodArray<z.ZodString, "many">;
 declare const zCopyInstructionParamObject: z.ZodObject<{
     sources: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
     destination: z.ZodString;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     chown: z.ZodOptional<z.ZodString>;
     chmod: z.ZodOptional<z.ZodString>;
     link: z.ZodOptional<z.ZodBoolean>;
@@ -157,7 +174,10 @@ declare const zCopyInstructionParamObject: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     sources: (string | [string, ...string[]]) & (string | [string, ...string[]] | undefined);
     destination: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     chown?: string | undefined;
     chmod?: string | undefined;
     link?: boolean | undefined;
@@ -167,7 +187,10 @@ declare const zCopyInstructionParamObject: z.ZodObject<{
 }, {
     sources: (string | [string, ...string[]]) & (string | [string, ...string[]] | undefined);
     destination: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     chown?: string | undefined;
     chmod?: string | undefined;
     link?: boolean | undefined;
@@ -178,7 +201,16 @@ declare const zCopyInstructionParamObject: z.ZodObject<{
 declare const zCopyInstructionParams: z.ZodTuple<[z.ZodUnion<[z.ZodString, z.ZodObject<{
     sources: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
     destination: z.ZodString;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     chown: z.ZodOptional<z.ZodString>;
     chmod: z.ZodOptional<z.ZodString>;
     link: z.ZodOptional<z.ZodBoolean>;
@@ -188,7 +220,10 @@ declare const zCopyInstructionParams: z.ZodTuple<[z.ZodUnion<[z.ZodString, z.Zod
 }, "strip", z.ZodTypeAny, {
     sources: (string | [string, ...string[]]) & (string | [string, ...string[]] | undefined);
     destination: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     chown?: string | undefined;
     chmod?: string | undefined;
     link?: boolean | undefined;
@@ -198,7 +233,10 @@ declare const zCopyInstructionParams: z.ZodTuple<[z.ZodUnion<[z.ZodString, z.Zod
 }, {
     sources: (string | [string, ...string[]]) & (string | [string, ...string[]] | undefined);
     destination: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     chown?: string | undefined;
     chmod?: string | undefined;
     link?: boolean | undefined;
@@ -330,22 +368,46 @@ declare const zRunInstructions: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString,
 declare const zRunInstructionMountTypeBindCommon: z.ZodObject<{
     type: z.ZodLiteral<"bind">;
     target: z.ZodString;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>;
 declare const zRunInstructionMountTypeBindReadWrite: z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     readwrite: z.ZodBoolean;
@@ -353,18 +415,33 @@ declare const zRunInstructionMountTypeBindReadWrite: z.ZodObject<{
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>;
 declare const zRunInstructionMountTypeBindRW: z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     rw: z.ZodBoolean;
@@ -372,18 +449,33 @@ declare const zRunInstructionMountTypeBindRW: z.ZodObject<{
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>;
 declare const zRunInstructionMountTypeBind: z.ZodUnion<[z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     readwrite: z.ZodBoolean;
@@ -391,17 +483,32 @@ declare const zRunInstructionMountTypeBind: z.ZodUnion<[z.ZodObject<{
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     rw: z.ZodBoolean;
@@ -409,28 +516,49 @@ declare const zRunInstructionMountTypeBind: z.ZodUnion<[z.ZodObject<{
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"bind">;
     target: z.ZodString;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>]>;
 declare const zRunInstructionMountTypeCacheCommon: z.ZodObject<{
@@ -438,7 +566,16 @@ declare const zRunInstructionMountTypeCacheCommon: z.ZodObject<{
     target: z.ZodString;
     id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
@@ -448,7 +585,10 @@ declare const zRunInstructionMountTypeCacheCommon: z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | undefined;
     uid?: number | undefined;
@@ -458,7 +598,10 @@ declare const zRunInstructionMountTypeCacheCommon: z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | number | undefined;
     uid?: number | undefined;
@@ -468,10 +611,19 @@ declare const zRunInstructionMountTypeCacheReadOnly: z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     readonly: z.ZodBoolean;
@@ -481,9 +633,12 @@ declare const zRunInstructionMountTypeCacheReadOnly: z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -492,9 +647,12 @@ declare const zRunInstructionMountTypeCacheReadOnly: z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>;
@@ -502,10 +660,19 @@ declare const zRunInstructionMountTypeCacheRO: z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     ro: z.ZodBoolean;
@@ -515,9 +682,12 @@ declare const zRunInstructionMountTypeCacheRO: z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -526,9 +696,12 @@ declare const zRunInstructionMountTypeCacheRO: z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>;
@@ -536,10 +709,19 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     readonly: z.ZodBoolean;
@@ -549,9 +731,12 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -560,19 +745,31 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     ro: z.ZodBoolean;
@@ -582,9 +779,12 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -593,9 +793,12 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>, z.ZodObject<{
@@ -603,7 +806,16 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: z.ZodString;
     id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
@@ -613,7 +825,10 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | undefined;
     uid?: number | undefined;
@@ -623,7 +838,10 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | number | undefined;
     uid?: number | undefined;
@@ -694,7 +912,16 @@ declare const zRunInstructionMountTypeTmpFS: z.ZodObject<{
 }>;
 declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     readwrite: z.ZodBoolean;
@@ -702,17 +929,32 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     readwrite: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"bind">;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
     rw: z.ZodBoolean;
@@ -720,37 +962,67 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     rw: boolean;
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"bind">;
     target: z.ZodString;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }, {
     type: "bind";
     target: string;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     readonly: z.ZodBoolean;
@@ -760,9 +1032,12 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -771,19 +1046,31 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"cache">;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
+    id: z.ZodOptional<z.ZodString>;
     target: z.ZodString;
     source: z.ZodOptional<z.ZodString>;
-    id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     ro: z.ZodBoolean;
@@ -793,9 +1080,12 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | undefined;
 }, {
@@ -804,9 +1094,12 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     uid?: number | undefined;
     gid?: number | undefined;
-    from?: string | undefined;
-    source?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     id?: string | undefined;
+    source?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
     mode?: string | number | undefined;
 }>, z.ZodObject<{
@@ -814,7 +1107,16 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: z.ZodString;
     id: z.ZodOptional<z.ZodString>;
     sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
-    from: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>]>>;
     source: z.ZodOptional<z.ZodString>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
@@ -824,7 +1126,10 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | undefined;
     uid?: number | undefined;
@@ -834,7 +1139,10 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     target: string;
     id?: string | undefined;
     sharing?: "shared" | "private" | "locked" | undefined;
-    from?: string | undefined;
+    from?: string | {
+        type: "stage";
+        id: string;
+    } | undefined;
     source?: string | undefined;
     mode?: string | number | undefined;
     uid?: number | undefined;
@@ -906,7 +1214,16 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
     commands: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
     mount: z.ZodOptional<z.ZodUnion<[z.ZodObject<{
         type: z.ZodLiteral<"bind">;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         readwrite: z.ZodBoolean;
@@ -914,17 +1231,32 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"bind">;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         rw: z.ZodBoolean;
@@ -932,37 +1264,67 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"bind">;
         target: z.ZodString;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         source: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
+        id: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
-        id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         readonly: z.ZodBoolean;
@@ -972,9 +1334,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     }, {
@@ -983,19 +1348,31 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
+        id: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
-        id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         ro: z.ZodBoolean;
@@ -1005,9 +1382,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     }, {
@@ -1016,9 +1396,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     }>, z.ZodObject<{
@@ -1026,7 +1409,16 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: z.ZodString;
         id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         source: z.ZodOptional<z.ZodString>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         uid: z.ZodOptional<z.ZodNumber>;
@@ -1036,7 +1428,10 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | undefined;
         uid?: number | undefined;
@@ -1046,7 +1441,10 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | number | undefined;
         uid?: number | undefined;
@@ -1120,18 +1518,27 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "cache";
@@ -1139,9 +1546,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     } | {
@@ -1150,9 +1560,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     } | {
@@ -1160,7 +1573,10 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | undefined;
         uid?: number | undefined;
@@ -1194,18 +1610,27 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "cache";
@@ -1213,9 +1638,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     } | {
@@ -1224,9 +1652,12 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     } | {
@@ -1234,7 +1665,10 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | number | undefined;
         uid?: number | undefined;
@@ -1267,7 +1701,16 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
     commands: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "atleastone">]>;
     mount: z.ZodOptional<z.ZodUnion<[z.ZodObject<{
         type: z.ZodLiteral<"bind">;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         readwrite: z.ZodBoolean;
@@ -1275,17 +1718,32 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"bind">;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
         rw: z.ZodBoolean;
@@ -1293,37 +1751,67 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"bind">;
         target: z.ZodString;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         source: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }, {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
+        id: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
-        id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         readonly: z.ZodBoolean;
@@ -1333,9 +1821,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     }, {
@@ -1344,19 +1835,31 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"cache">;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
+        id: z.ZodOptional<z.ZodString>;
         target: z.ZodString;
         source: z.ZodOptional<z.ZodString>;
-        id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         ro: z.ZodBoolean;
@@ -1366,9 +1869,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     }, {
@@ -1377,9 +1883,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     }>, z.ZodObject<{
@@ -1387,7 +1896,16 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: z.ZodString;
         id: z.ZodOptional<z.ZodString>;
         sharing: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<"shared">, z.ZodLiteral<"private">, z.ZodLiteral<"locked">]>>;
-        from: z.ZodOptional<z.ZodString>;
+        from: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            type: z.ZodLiteral<"stage">;
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            type: "stage";
+            id: string;
+        }, {
+            type: "stage";
+            id: string;
+        }>]>>;
         source: z.ZodOptional<z.ZodString>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         uid: z.ZodOptional<z.ZodNumber>;
@@ -1397,7 +1915,10 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | undefined;
         uid?: number | undefined;
@@ -1407,7 +1928,10 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | number | undefined;
         uid?: number | undefined;
@@ -1481,18 +2005,27 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "cache";
@@ -1500,9 +2033,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     } | {
@@ -1511,9 +2047,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | undefined;
     } | {
@@ -1521,7 +2060,10 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | undefined;
         uid?: number | undefined;
@@ -1555,18 +2097,27 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         type: "bind";
         readwrite: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         rw: boolean;
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "bind";
         target: string;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
     } | {
         type: "cache";
@@ -1574,9 +2125,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     } | {
@@ -1585,9 +2139,12 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         uid?: number | undefined;
         gid?: number | undefined;
-        from?: string | undefined;
-        source?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         id?: string | undefined;
+        source?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
         mode?: string | number | undefined;
     } | {
@@ -1595,7 +2152,10 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         target: string;
         id?: string | undefined;
         sharing?: "shared" | "private" | "locked" | undefined;
-        from?: string | undefined;
+        from?: string | {
+            type: "stage";
+            id: string;
+        } | undefined;
         source?: string | undefined;
         mode?: string | number | undefined;
         uid?: number | undefined;
@@ -1688,7 +2248,7 @@ interface IVolumeInstruction extends Instruction {
 interface IWorkDirInstruction extends Instruction {
 }
 
-declare const zStageConstructorParams: z.ZodUnion<[z.ZodObject<{
+declare const zStage: z.ZodObject<{
     type: z.ZodLiteral<"stage">;
     id: z.ZodString;
 }, "strip", z.ZodTypeAny, {
@@ -1697,7 +2257,36 @@ declare const zStageConstructorParams: z.ZodUnion<[z.ZodObject<{
 }, {
     type: "stage";
     id: string;
-}>, z.ZodString, z.ZodUnion<[z.ZodString, z.ZodObject<{
+}>;
+declare const zStageFromInstructionObjectParam: z.ZodObject<{
+    platform: z.ZodOptional<z.ZodString>;
+    as: z.ZodOptional<z.ZodString>;
+    from: z.ZodObject<{
+        type: z.ZodLiteral<"stage">;
+        id: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        type: "stage";
+        id: string;
+    }, {
+        type: "stage";
+        id: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    from: {
+        type: "stage";
+        id: string;
+    };
+    platform?: string | undefined;
+    as?: string | undefined;
+}, {
+    from: {
+        type: "stage";
+        id: string;
+    };
+    platform?: string | undefined;
+    as?: string | undefined;
+}>;
+declare const zStageParams: z.ZodUnion<[z.ZodString, z.ZodObject<{
     from: z.ZodString;
     platform: z.ZodOptional<z.ZodString>;
     as: z.ZodOptional<z.ZodString>;
@@ -1709,7 +2298,16 @@ declare const zStageConstructorParams: z.ZodUnion<[z.ZodObject<{
     from: string;
     platform?: string | undefined;
     as?: string | undefined;
-}>]>, z.ZodObject<{
+}>, z.ZodObject<{
+    type: z.ZodLiteral<"stage">;
+    id: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    type: "stage";
+    id: string;
+}, {
+    type: "stage";
+    id: string;
+}>, z.ZodObject<{
     platform: z.ZodOptional<z.ZodString>;
     as: z.ZodOptional<z.ZodString>;
     from: z.ZodObject<{
@@ -1741,7 +2339,7 @@ declare const zStageConstructorParams: z.ZodUnion<[z.ZodObject<{
 interface IStage {
     type: 'stage';
     id: string;
-    stack: Instruction[];
+    stack: Instructions;
     withInstruction: <T = Instruction>(instructionParam: T) => T;
     withAdd: (...addParams: AddInstructionParams) => IAddInstruction;
     withArg: (argParam: ArgInstructionParams) => IArgInstruction;
@@ -1750,7 +2348,6 @@ interface IStage {
     withEntryPoint: (...entryPointParams: EntryPointInstructionParams) => IEntryPointInstruction;
     withEnv: (envParam: EnvInstructionParams) => IEnvInstruction;
     withExpose: (...exposeParams: ExposeInstructionParams) => IExposeInstruction;
-    withFrom: (fromParam: FromInstructionParams) => IFromInstruction;
     withHealthCheck: (healthCheckParam: HealthCheckParams) => IHealthCheckInstruction;
     withLabel: (labelParam: LabelInstructionParams) => ILabelInstruction;
     withRun: (...runParams: RunInstructionParams) => IRunInstruction;
@@ -1762,15 +2359,13 @@ interface IStage {
     setId: (id: string) => this;
     toString: () => string;
 }
-interface IStageFromStage extends Omit<FromInstructionParamObject, 'from'> {
-    from: IStage;
-}
-type IStageConstructorParams = IStage | FromInstructionParams | IStageFromStage;
-type StageConstructorParams = z.infer<typeof zStageConstructorParams>;
+type StageFromInstructionObjectParam = z.infer<typeof zStageFromInstructionObjectParam>;
+type StageParam = z.infer<typeof zStage>;
+type StageParams = z.infer<typeof zStageParams>;
 
 interface IDockerConfigTool {
     withArg: (arg: ArgInstructionParams) => this;
-    withStage: (from: FromInstructionParams | IStageFromStage | IStage) => IStage;
+    withStage: (from: FromInstructionParams | StageFromInstructionObjectParam | IStage) => IStage;
     toString: () => string;
 }
 
@@ -1779,7 +2374,7 @@ declare class DockerConfigTool implements IDockerConfigTool {
     stack: IStage[];
     constructor(stackParam?: IStage[]);
     withArg(arg: ArgInstructionParams): this;
-    withStage(fromParam: FromInstructionParams | IStageFromStage | IStage): IStage;
+    withStage(fromParam: FromInstructionParams | StageFromInstructionObjectParam | IStage): IStage;
     toString(): string;
 }
 
@@ -1944,7 +2539,7 @@ declare class Stage implements IStage {
     type: "stage";
     id: string;
     stack: Instruction[];
-    constructor(fromParam: IStageConstructorParams);
+    constructor(stageParam: StageParams);
     getRandomId(): string;
     withInstruction<T = Instruction>(instructionParam: T): T;
     withAdd(...addParams: AddInstructionParams): IAddInstruction;
@@ -1967,4 +2562,4 @@ declare class Stage implements IStage {
     toString(): string;
 }
 
-export { AddInstruction, type AddInstructionParamObject, type AddInstructionParams, ArgInstruction, type ArgInstructionParams, type ArgInstructionParamsObject, CmdInstruction, type CmdInstructionParams, CopyInstruction, type CopyInstructionChmod, type CopyInstructionChown, type CopyInstructionDestination, type CopyInstructionExclude, type CopyInstructionExcludes, type CopyInstructionFrom, type CopyInstructionLink, type CopyInstructionParamObject, type CopyInstructionParams, type CopyInstructionParents, type CopyInstructionSources, DockerConfigTool, EntryPointInstruction, type EntryPointInstructionParams, EnvInstruction, type EnvInstructionParams, type EnvInstructionParamsObject, ExposeInstruction, type ExposeInstructionParam, type ExposeInstructionParams, type ExposePortDefinition, type ExposePortDefinitionTuple, FromInstruction, type FromInstructionParamObject, type FromInstructionParams, type FromInstructionStringFromParam, type HealthCheckCmdsNone, type HealthCheckCmdsParam, type HealthCheckCmdsString, type HealthCheckCmdsStringArray, type HealthCheckDurationParam, HealthCheckInstruction, type HealthCheckParams, type HealthCheckParamsObject, type HealthCheckRetriesParam, type IAddInstruction, type IArgInstruction, type ICmdInstruction, type ICopyInstruction, type IDockerConfigTool, type IEntryPointInstruction, type IEnvInstruction, type IExposeInstruction, type IFromInstruction, type IHealthCheckInstruction, type ILabelInstruction, type IRunInstruction, type IShellInstruction, type IStage, type IStageConstructorParams, type IStageFromStage, type IStopSignalInstruction, type IUserInstruction, type IVolumeInstruction, type IWorkDirInstruction, LabelInstruction, type LabelInstructionParams, type LabelInstructionParamsObject, RunInstruction, type RunInstructionBooleanFields, type RunInstructionCacheSharingTypes, type RunInstructionMountType, type RunInstructionMountTypeBind, type RunInstructionMountTypeBindCommon, type RunInstructionMountTypeBindRW, type RunInstructionMountTypeBindReadWrite, type RunInstructionMountTypeCache, type RunInstructionMountTypeCacheCommon, type RunInstructionMountTypeCacheRO, type RunInstructionMountTypeCacheReadOnly, type RunInstructionMountTypeSSH, type RunInstructionMountTypeSecret, type RunInstructionMountTypeTmpFS, type RunInstructionNetworkType, type RunInstructionParams, type RunInstructionParamsObject, type RunInstructionSecurityType, type RunInstructions, ShellInstruction, type ShellInstructionParams, Stage, type StageConstructorParams, StopSignalInstruction, type StopSignalInstructionParams, type StopSignalNumber, type StopSignalString, UserInstruction, type UserInstructionParams, type UserInstructionPrimaryParam, VolumeInstruction, type VolumeInstructionParams, WorkDirInstruction };
+export { AddInstruction, type AddInstructionParamObject, type AddInstructionParams, ArgInstruction, type ArgInstructionParams, type ArgInstructionParamsObject, CmdInstruction, type CmdInstructionParams, CopyInstruction, type CopyInstructionChmod, type CopyInstructionChown, type CopyInstructionDestination, type CopyInstructionExclude, type CopyInstructionExcludes, type CopyInstructionFrom, type CopyInstructionLink, type CopyInstructionParamObject, type CopyInstructionParams, type CopyInstructionParents, type CopyInstructionSources, DockerConfigTool, EntryPointInstruction, type EntryPointInstructionParams, EnvInstruction, type EnvInstructionParams, type EnvInstructionParamsObject, ExposeInstruction, type ExposeInstructionParam, type ExposeInstructionParams, type ExposePortDefinition, type ExposePortDefinitionTuple, FromInstruction, type FromInstructionObjectParam, type FromInstructionParams, type HealthCheckCmdsNone, type HealthCheckCmdsParam, type HealthCheckCmdsString, type HealthCheckCmdsStringArray, type HealthCheckDurationParam, HealthCheckInstruction, type HealthCheckParams, type HealthCheckParamsObject, type HealthCheckRetriesParam, type IAddInstruction, type IArgInstruction, type ICmdInstruction, type ICopyInstruction, type IDockerConfigTool, type IEntryPointInstruction, type IEnvInstruction, type IExposeInstruction, type IFromInstruction, type IHealthCheckInstruction, type ILabelInstruction, type IRunInstruction, type IShellInstruction, type IStage, type IStopSignalInstruction, type IUserInstruction, type IVolumeInstruction, type IWorkDirInstruction, LabelInstruction, type LabelInstructionParams, type LabelInstructionParamsObject, RunInstruction, type RunInstructionBooleanFields, type RunInstructionCacheSharingTypes, type RunInstructionMountType, type RunInstructionMountTypeBind, type RunInstructionMountTypeBindCommon, type RunInstructionMountTypeBindRW, type RunInstructionMountTypeBindReadWrite, type RunInstructionMountTypeCache, type RunInstructionMountTypeCacheCommon, type RunInstructionMountTypeCacheRO, type RunInstructionMountTypeCacheReadOnly, type RunInstructionMountTypeSSH, type RunInstructionMountTypeSecret, type RunInstructionMountTypeTmpFS, type RunInstructionNetworkType, type RunInstructionParams, type RunInstructionParamsObject, type RunInstructionSecurityType, type RunInstructions, ShellInstruction, type ShellInstructionParams, Stage, type StageFromInstructionObjectParam, type StageParam, type StageParams, StopSignalInstruction, type StopSignalInstructionParams, type StopSignalNumber, type StopSignalString, UserInstruction, type UserInstructionParams, type UserInstructionPrimaryParam, VolumeInstruction, type VolumeInstructionParams, WorkDirInstruction };
