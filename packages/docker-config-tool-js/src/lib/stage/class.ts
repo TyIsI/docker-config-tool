@@ -144,6 +144,11 @@ export class Stage implements IStage {
 
         this.id = id
 
+        if (!('setAs' in this.stack[0]) || typeof this.stack[0].setAs !== 'function')
+            throw new Error(`First instruction is not FROM`)
+
+        this.stack[0].setAs(id)
+
         return this
     }
 

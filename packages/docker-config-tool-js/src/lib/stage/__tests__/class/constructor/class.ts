@@ -34,7 +34,7 @@ describe(`DCT`, () => {
 
                         const stage2 = new Stage(stage1)
 
-                        expect(stage2).toBeTruthy()
+                        expect(stage2.toString()).toMatch(`FROM ${stage1.id} AS ${stage2.id}`)
                     })
 
                     test(`create a stage from another stage as an object`, () => {
@@ -42,7 +42,7 @@ describe(`DCT`, () => {
 
                         const stage2 = new Stage({ from: stage1 })
 
-                        expect(stage2).toBeTruthy()
+                        expect(stage2.toString()).toMatch(`FROM ${stage1.id} AS ${stage2.id}`)
                     })
 
                     test(`create a stage from another stage as an object with a name`, () => {
@@ -50,15 +50,17 @@ describe(`DCT`, () => {
 
                         const stage2 = new Stage({ from: stage1, as: 'stage2' })
 
-                        expect(stage2).toBeTruthy()
+                        expect(stage2.toString()).toMatch(`FROM ${stage1.id} AS stage2`)
                     })
 
                     test(`create a stage and set id`, () => {
                         const stage = new Stage('scratch')
 
+                        expect(stage.toString()).toMatch('FROM scratch')
+
                         stage.setId('stage')
 
-                        expect(stage).toBeTruthy()
+                        expect(stage.toString()).toMatch('FROM scratch AS stage')
                     })
 
                     test(`don't create with empty argument`, () => {

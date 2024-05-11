@@ -9,7 +9,9 @@ describe(`DCT`, () => {
 
                     const stage = dct.withStage('scratch')
 
-                    expect(stage).toBeTruthy()
+                    stage.toString()
+
+                    expect(dct.toString()).toMatch('FROM scratch')
                 })
             })
         })

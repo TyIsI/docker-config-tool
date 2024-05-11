@@ -11,7 +11,7 @@ describe(`DCT`, () => {
 
                     const stage = dct.withStage('scratch')
 
-                    expect(stage).toBeTruthy()
+                    expect(dct.toString()).toMatch(`ARG TESTARG\n\nFROM scratch AS ${stage.id}`)
                 })
             })
         })
