@@ -1276,6 +1276,9 @@ var Stage = class {
     if (!isString(id))
       throw new Error(`Invalid id argument: ${JSON.stringify(id)}`);
     this.id = id;
+    if (!("setAs" in this.stack[0]) || typeof this.stack[0].setAs !== "function")
+      throw new Error(`First instruction is not FROM`);
+    this.stack[0].setAs(id);
     return this;
   }
   toString() {
