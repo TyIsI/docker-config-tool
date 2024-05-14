@@ -14,7 +14,7 @@ const ImageRefRegExParts =
     `(${substVar}|[\\w.-]+)` + // Image
     // Tag OR Digest
     '(' +
-    '(:[\\w/-]+)' + // Tag
+    '(:[\\w/.-]+)' + // Tag
     '|' +
     `(@sha\\d{3}:[\\w/.-]+)` + // Digest
     '|' +
