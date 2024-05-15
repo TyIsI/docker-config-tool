@@ -17,3 +17,6 @@
 
 !jest.config.ts
 !tsconfig.json
+
+!CHANGELOG.md
+!README.md
