@@ -49,7 +49,7 @@ var import_zod = require("zod");
 
 // src/lib/shared/matching.ts
 var substVar = "\\$\\{.+\\}";
-var ImageRefRegExParts = "^((" + substVar + `|([\\w-]+(\\.[\\w-]+)*(:\\d{1,5})?))\\/)?(${substVar}\\/|([\\w-]+\\/)*)?(${substVar}|[\\w.-]+)((:[\\w/-]+)|(@sha\\d{3}:[\\w/.-]+)|([:@]${substVar}))?$`;
+var ImageRefRegExParts = "^((" + substVar + `|([\\w-]+(\\.[\\w-]+)*(:\\d{1,5})?))\\/)?(${substVar}\\/|([\\w-]+\\/)*)?(${substVar}|[\\w.-]+)((:[\\w/.-]+)|(@sha\\d{3}:[\\w/.-]+)|([:@]${substVar}))?$`;
 var DockerImageReferenceRE = new RegExp(ImageRefRegExParts);
 
 // src/lib/shared/schema.ts
