@@ -23,7 +23,7 @@ export class RunInstruction implements IRunInstruction {
     type = 'instruction' as const
 
     commands: string[] = []
-    mount?: RunInstructionMountType
+    mountOpts: RunInstructionMountType[] = []
     network?: RunInstructionNetworkType
     security?: RunInstructionSecurityType
 
@@ -42,7 +42,7 @@ export class RunInstruction implements IRunInstruction {
             this.commands = coerceStringArray(runParamObject.commands)
 
             if (runParamObject.mount != null && isRunInstructionMountParam(runParamObject.mount))
-                this.mount = coerceRunInstructionMountParam(runParamObject.mount)
+                this.mountOpts.push(coerceRunInstructionMountParam(runParamObject.mount))
 
             if (runParamObject.network != null && isRunInstructionNetworkParam(runParamObject.network))
                 this.network = runParamObject.network
@@ -55,7 +55,7 @@ export class RunInstruction implements IRunInstruction {
     setMount(mount: RunInstructionMountType): void {
         if (!isRunInstructionMountParam(mount)) throw new Error('Invalid mount type')
 
-        this.mount = coerceRunInstructionMountParam(mount)
+        this.mountOpts.push(coerceRunInstructionMountParam(mount))
     }
 
     setNetwork(network: RunInstructionNetworkType): void {
@@ -73,20 +73,22 @@ export class RunInstruction implements IRunInstruction {
     public toString(): string {
         const result = ['RUN']
 
-        if (isRunInstructionMountParam(this.mount)) {
-            const mountOpts = [`--mount=type=${this.mount.type}`]
+        if (this.mountOpts.length > 0 && this.mountOpts.every((mountOpt) => isRunInstructionMountParam(mountOpt))) {
+            this.mountOpts.forEach((mountOpt) => {
+                const mountOptsArray = [`--mount=type=${mountOpt.type}`]
 
-            Object.entries(this.mount)
-                .filter(([k, v]) => k !== 'type')
-                .forEach(([k, v]) => {
-                    if (isRunInstructionBooleanFields(k)) {
-                        if (isTrueBoolean(v)) mountOpts.push(k in mapMountOptions ? mapMountOptions[k] : k)
-                    } else {
-                        mountOpts.push(`${k}=${coerceString(v)}`)
-                    }
-                })
+                Object.entries(mountOpt)
+                    .filter(([k, v]) => k !== 'type')
+                    .forEach(([k, v]) => {
+                        if (isRunInstructionBooleanFields(k)) {
+                            if (isTrueBoolean(v)) mountOptsArray.push(k in mapMountOptions ? mapMountOptions[k] : k)
+                        } else {
+                            mountOptsArray.push(`${k}=${coerceString(v)}`)
+                        }
+                    })
 
-            result.push(mountOpts.join(','))
+                result.push(mountOptsArray.join(','))
+            })
         }
 
         if (isRunInstructionNetworkParam(this.network)) result.push(`--network=${coerceString(this.network)}`)
