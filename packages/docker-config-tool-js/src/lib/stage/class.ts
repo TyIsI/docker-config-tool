@@ -33,10 +33,12 @@ import { type IVolumeInstruction, type VolumeInstructionParams } from '../instru
 import { WorkDirInstruction } from '../instructions/workdir/class'
 import { type IWorkDirInstruction } from '../instructions/workdir/types'
 import { isString } from '../shared/guards'
-import { generateConstructorErrorMessage, randomString } from '../shared/utils'
+import { generateConstructorErrorMessage, getCommonPath, randomString } from '../shared/utils'
 import { coerceStageFromInstructionObjectParam } from './coerce'
 import { type IStage, type StageParams } from './types'
 import { validStageParams } from './validators'
+
+import { createHash } from 'node:crypto'
 
 export class Stage implements IStage {
     type = 'stage' as const
@@ -59,10 +61,41 @@ export class Stage implements IStage {
         this.withFrom(stageParam)
     }
 
-    getRandomId(): string {
-        const result = randomString()
+    private getRandomId(): string {
+        const stack = new Error('getRandomId').stack
 
-        return /^\d/.test(result) ? this.getRandomId() : result
+        if (stack != null) {
+            const cwd = process.cwd()
+
+            const parsedStack = stack
+                ?.split('\n')
+                .slice(5)
+                .filter((e) => !/node:internal|node_modules|at new Promise/.test(e))
+                .map((e) => (/\(.+\)/.test(e) ? e.replace(/.+\((.+)\)/, '$1') : e))
+                .map((e) => e.replace(/^\s+at\s/, ''))
+                .map((e) => e.replace(/file:\/\//, ''))
+                .map((e) => e.replace(getCommonPath(cwd, e.substring(0, e.indexOf(':'))), ''))
+
+            if (parsedStack.length > 0) {
+                const hash = createHash('sha256')
+
+                parsedStack.forEach((e) => hash.update(e))
+
+                return `stage-${hash.digest('hex').substring(0, 8)}`
+            } else {
+                return this.forceRandomId()
+            }
+        } else {
+            return this.forceRandomId()
+        }
+    }
+
+    private forceRandomId(): string {
+        let result = randomString()
+
+        while (/^\d/.test(result)) result = randomString()
+
+        return result
     }
 
     withInstruction<T = Instruction>(instructionParam: T): T {

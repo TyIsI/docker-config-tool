@@ -39,3 +39,11 @@ export const reduceZodErrors = (error: ZodError): string[] => {
         return c
     }, [])
 }
+
+export const getCommonPath = (cwd: string, testPath: string): string => {
+    for (let i = 0; i < cwd.length; i++) {
+        if (cwd.at(i) !== testPath.at(i)) return testPath.substring(0, i)
+    }
+
+    return testPath
+}
