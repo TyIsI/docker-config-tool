@@ -1,4 +1,4 @@
-const { DockerConfigTool } = require('../dist/index.js')
+const { DockerConfigTool } = require('../../dist/index.js')
 
 const dct = new DockerConfigTool()
 
@@ -20,10 +20,9 @@ buildStage.withUser(54321, 54321)
 
 buildStage.withCopy('/workspace/app/frontend', '/build').setFrom(workspaceStage).setLinked().setChown('runtime:runtime')
 
-// buildStage.withRun(["pnpm", "run", "build"])
+buildStage.withRun(['pnpm', 'run', 'build'])
 
-// const prodStage = dct.withStage({ from: 'nginx:stable', as: 'app-prod' })
-const prodStage = dct.withStage({ from: 'nginx:stable' })
+const prodStage = dct.withStage({ from: 'nginx:stable', as: 'app-prod' })
 
 prodStage.withExpose('3000')
 

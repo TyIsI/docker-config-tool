@@ -1,4 +1,4 @@
-import { DockerConfigTool } from '../dist/index.mjs'
+import { DockerConfigTool } from '../../dist/index.mjs'
 
 const dct = new DockerConfigTool()
 
