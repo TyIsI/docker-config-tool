@@ -1,5 +1,11 @@
 # @tyisi/docker-config-tool-js
 
+## 1.1.0
+
+### Minor Changes
+
+- Persistent stage ids and improved examples
+
 ## 1.0.2
 
 ### Patch Changes

@@ -2487,7 +2487,7 @@ declare class LabelInstruction implements ILabelInstruction {
 declare class RunInstruction implements IRunInstruction {
     type: "instruction";
     commands: string[];
-    mount?: RunInstructionMountType;
+    mountOpts: RunInstructionMountType[];
     network?: RunInstructionNetworkType;
     security?: RunInstructionSecurityType;
     constructor(...runParams: RunInstructionParams);
@@ -2540,7 +2540,8 @@ declare class Stage implements IStage {
     id: string;
     stack: Instruction[];
     constructor(stageParam: StageParams);
-    getRandomId(): string;
+    private getRandomId;
+    private forceRandomId;
     withInstruction<T = Instruction>(instructionParam: T): T;
     withAdd(...addParams: AddInstructionParams): IAddInstruction;
     withArg(argParam: ArgInstructionParams): IArgInstruction;

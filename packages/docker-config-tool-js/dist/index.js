@@ -121,6 +121,13 @@ var reduceZodErrors = (error) => {
     return c;
   }, []);
 };
+var getCommonPath = (cwd, testPath) => {
+  for (let i = 0; i < cwd.length; i++) {
+    if (cwd.at(i) !== testPath.at(i))
+      return testPath.substring(0, i);
+  }
+  return testPath;
+};
 
 // src/lib/instructions/arg/schema.ts
 var import_zod3 = require("zod");
@@ -994,7 +1001,7 @@ var validateRunInstructionParams = (value) => {
 var RunInstruction = class {
   type = "instruction";
   commands = [];
-  mount;
+  mountOpts = [];
   network;
   security;
   constructor(...runParams) {
@@ -1009,7 +1016,7 @@ var RunInstruction = class {
       const runParamObject = runParams[0];
       this.commands = coerceStringArray(runParamObject.commands);
       if (runParamObject.mount != null && isRunInstructionMountParam(runParamObject.mount))
-        this.mount = coerceRunInstructionMountParam(runParamObject.mount);
+        this.mountOpts.push(coerceRunInstructionMountParam(runParamObject.mount));
       if (runParamObject.network != null && isRunInstructionNetworkParam(runParamObject.network))
         this.network = runParamObject.network;
       if (runParamObject.security != null && isRunInstructionSecurityParam(runParamObject.security))
@@ -1019,7 +1026,7 @@ var RunInstruction = class {
   setMount(mount) {
     if (!isRunInstructionMountParam(mount))
       throw new Error("Invalid mount type");
-    this.mount = coerceRunInstructionMountParam(mount);
+    this.mountOpts.push(coerceRunInstructionMountParam(mount));
   }
   setNetwork(network) {
     if (!isRunInstructionNetworkParam(network))
@@ -1033,17 +1040,19 @@ var RunInstruction = class {
   }
   toString() {
     const result = ["RUN"];
-    if (isRunInstructionMountParam(this.mount)) {
-      const mountOpts = [`--mount=type=${this.mount.type}`];
-      Object.entries(this.mount).filter(([k, v]) => k !== "type").forEach(([k, v]) => {
-        if (isRunInstructionBooleanFields(k)) {
-          if (isTrueBoolean(v))
-            mountOpts.push(k in mapMountOptions ? mapMountOptions[k] : k);
-        } else {
-          mountOpts.push(`${k}=${coerceString(v)}`);
-        }
+    if (this.mountOpts.length > 0 && this.mountOpts.every((mountOpt) => isRunInstructionMountParam(mountOpt))) {
+      this.mountOpts.forEach((mountOpt) => {
+        const mountOptsArray = [`--mount=type=${mountOpt.type}`];
+        Object.entries(mountOpt).filter(([k, v]) => k !== "type").forEach(([k, v]) => {
+          if (isRunInstructionBooleanFields(k)) {
+            if (isTrueBoolean(v))
+              mountOptsArray.push(k in mapMountOptions ? mapMountOptions[k] : k);
+          } else {
+            mountOptsArray.push(`${k}=${coerceString(v)}`);
+          }
+        });
+        result.push(mountOptsArray.join(","));
       });
-      result.push(mountOpts.join(","));
     }
     if (isRunInstructionNetworkParam(this.network))
       result.push(`--network=${coerceString(this.network)}`);
@@ -1241,6 +1250,7 @@ var validStageParams = (value) => {
 };
 
 // src/lib/stage/class.ts
+var import_node_crypto = require("crypto");
 var Stage = class {
   type = "stage";
   id = this.getRandomId();
@@ -1257,8 +1267,26 @@ var Stage = class {
     this.withFrom(stageParam);
   }
   getRandomId() {
-    const result = randomString();
-    return /^\d/.test(result) ? this.getRandomId() : result;
+    const stack = new Error("getRandomId").stack;
+    if (stack != null) {
+      const cwd = process.cwd();
+      const parsedStack = stack?.split("\n").slice(5).filter((e) => !/node:internal|node_modules|at new Promise/.test(e)).map((e) => /\(.+\)/.test(e) ? e.replace(/.+\((.+)\)/, "$1") : e).map((e) => e.replace(/^\s+at\s/, "")).map((e) => e.replace(/file:\/\//, "")).map((e) => e.replace(getCommonPath(cwd, e.substring(0, e.indexOf(":"))), ""));
+      if (parsedStack.length > 0) {
+        const hash = (0, import_node_crypto.createHash)("sha256");
+        parsedStack.forEach((e) => hash.update(e));
+        return `stage-${hash.digest("hex").substring(0, 8)}`;
+      } else {
+        return this.forceRandomId();
+      }
+    } else {
+      return this.forceRandomId();
+    }
+  }
+  forceRandomId() {
+    let result = randomString();
+    while (/^\d/.test(result))
+      result = randomString();
+    return result;
   }
   withInstruction(instructionParam) {
     if (!isInstruction(instructionParam)) {
