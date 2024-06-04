@@ -42,7 +42,7 @@ export class ArgInstruction extends AbstractBuildableInstruction implements IArg
 
         if (this.onBuild) output.unshift('ONBUILD')
 
-        if (this.argName == null || this.argName === '')
+        if (typeof this.argName !== 'string' || this.argName === '')
             throw new Error(generateInvalidArgumentErrorMessage('ARG', 'Invalid argname'))
 
         output.push(
