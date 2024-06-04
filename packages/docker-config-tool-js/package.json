@@ -49,6 +49,7 @@
     },
     "scripts": {
         "build": "wireit",
+        "commit": "git-cz --scope=docker-config-tool-js",
         "compile": "wireit",
         "test": "wireit"
     },
