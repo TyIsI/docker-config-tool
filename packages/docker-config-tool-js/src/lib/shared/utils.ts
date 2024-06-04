@@ -47,5 +47,5 @@ export const getCommonPath = (cwd: string, testPath: string): string => {
         if (cwd.at(i) !== testPath.at(i)) return testPath.substring(0, i)
     }
 
-    return testPath
+    return cwd
 }
