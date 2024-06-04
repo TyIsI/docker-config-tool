@@ -64,38 +64,28 @@ export class Stage implements IStage {
     private getRandomId(): string {
         const stack = new Error('getRandomId').stack
 
-        if (stack != null) {
-            const cwd = process.cwd()
+        if (stack == null) return this.forceRandomId()
 
-            const parsedStack = stack
-                ?.split('\n')
-                .slice(5)
-                .filter((e) => !/node:internal|node_modules|at new Promise/.test(e))
-                .map((e) => (/\(.+\)/.test(e) ? e.replace(/.+\((.+)\)/, '$1') : e))
-                .map((e) => e.replace(/^\s+at\s/, ''))
-                .map((e) => e.replace(/file:\/\//, ''))
-                .map((e) => e.replace(getCommonPath(cwd, e.substring(0, e.indexOf(':'))), ''))
+        const cwd = process.cwd()
 
-            if (parsedStack.length > 0) {
-                const hash = createHash('sha256')
+        const parsedStack = stack
+            ?.split('\n')
+            .slice(1)
+            .filter((e) => !/node:internal|node_modules|at new Promise/.test(e))
+            .map((e) => (/\(.+\)/.test(e) ? e.replace(/.+\((.+)\)/, '$1') : e))
+            .map((e) => e.replace(/^\s+at\s/, ''))
+            .map((e) => e.replace(/file:\/\//, ''))
+            .map((e) => e.replace(`${getCommonPath(cwd, e)}/`, ''))
 
-                parsedStack.forEach((e) => hash.update(e))
+        const hash = createHash('sha256')
 
-                return `stage-${hash.digest('hex').substring(0, 8)}`
-            } else {
-                return this.forceRandomId()
-            }
-        } else {
-            return this.forceRandomId()
-        }
+        parsedStack.forEach((e) => hash.update(e))
+
+        return `stage-${hash.digest('hex').substring(0, 8)}`
     }
 
     private forceRandomId(): string {
-        let result = randomString()
-
-        while (/^\d/.test(result)) result = randomString()
-
-        return result
+        return `stage-${randomString()}`
     }
 
     withInstruction<T = Instruction>(instructionParam: T): T {
