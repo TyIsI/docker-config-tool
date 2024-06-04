@@ -69,5 +69,3 @@ module.exports = {
         }
     }
 }
-
-console.log(JSON.stringify(Object.keys(module.exports.types)))
