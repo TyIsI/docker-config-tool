@@ -92,7 +92,7 @@ describe('DCT', () => {
                         })
 
                         test(`isHealthCheckParamsObject should return expected output`, () => {
-                            const retValue = isHealthCheckParamsObject({ instruction: 'run' })
+                            const retValue = isHealthCheckParamsObject({ cmds: 'run' })
 
                             expect(retValue).toBeTruthy()
                         })

@@ -34,7 +34,7 @@ import {
     RunInstructionParamsTestData,
     RunInstructionSecurityRunParamTestData,
     RunInstructionsTestData
-} from './data/guards'
+} from './__fixtures__/guards'
 
 describe('DCT', () => {
     describe('lib', () => {

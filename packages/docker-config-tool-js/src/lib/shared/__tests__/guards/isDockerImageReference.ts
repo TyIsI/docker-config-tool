@@ -1,16 +1,16 @@
 import { generateTestImages } from '../../../../__utils__/images'
-import { DockerImageReferenceRE } from '../../matching'
+import { isDockerImageReference } from '../../guards'
 
 describe(`DCT`, () => {
     describe(`lib`, () => {
         describe(`shared`, () => {
-            describe(`matching`, () => {
-                describe(`DockerImageReferenceRE`, () => {
+            describe(`guards`, () => {
+                describe(`isDockerImageReference`, () => {
                     test(`pass - all`, () => {
                         const testCases = generateTestImages()
 
                         testCases.forEach((testCase) => {
-                            expect(DockerImageReferenceRE.test(testCase)).toBeTruthy()
+                            expect(isDockerImageReference(testCase)).toBeTruthy()
                         })
                     })
                 })

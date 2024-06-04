@@ -234,7 +234,7 @@ describe('DCT', () => {
                                         mount: {
                                             type: 'cache',
                                             target: '/cache',
-                                            mode: '755'
+                                            mode: 755
                                         }
                                     }
 

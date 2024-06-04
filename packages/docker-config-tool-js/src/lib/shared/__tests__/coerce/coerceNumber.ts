@@ -11,6 +11,12 @@ describe(`DCT`, () => {
                         expect(coerceNumber(testVal)).toBe(testVal)
                     })
 
+                    test(`pass - string`, () => {
+                        const testVal = 1777
+
+                        expect(coerceNumber(testVal.toString())).toBe(testVal)
+                    })
+
                     test(`edge case - undefined`, () => {
                         const testVal = undefined
 
