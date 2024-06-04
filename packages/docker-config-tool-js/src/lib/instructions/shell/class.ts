@@ -13,11 +13,9 @@ export class ShellInstruction extends AbstractBuildableInstruction implements IS
     public constructor(...shellParams: ShellInstructionParams) {
         super()
 
-        if (isStringArray(shellParams)) {
-            this.commands = shellParams.length === 1 ? shellParams[0].split(' ') : shellParams
-        } else {
-            throw new Error(generateConstructorErrorMessage('SHELL', shellParams))
-        }
+        if (!isStringArray(shellParams)) throw new Error(generateConstructorErrorMessage('SHELL', shellParams))
+
+        this.commands = shellParams.length === 1 ? shellParams[0].split(' ') : shellParams
     }
 
     public addShell(shellParam: string): this {
