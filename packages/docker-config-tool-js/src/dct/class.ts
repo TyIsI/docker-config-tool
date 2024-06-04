@@ -32,6 +32,10 @@ export class DockerConfigTool implements IDockerConfigTool {
     toString(): string {
         if (this.stack.length === 0) throw new Error('Empty stack. Nothing to print.')
 
-        return [...this.args, '', ...this.stack].map((e) => e.toString()).join('\n')
+        return (this.args.length > 0 ? [...this.args, ...this.stack] : this.stack)
+            .map((e) => {
+                return e.toString()
+            })
+            .join('\n\n')
     }
 }
