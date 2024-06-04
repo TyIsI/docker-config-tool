@@ -10,5 +10,10 @@ module.exports = {
     htmlWhitespaceSensitivity: 'css',
     embeddedLanguageFormatting: 'auto',
     singleAttributePerLine: false,
-    plugins: ['prettier-plugin-sh']
+    plugins: ['prettier-plugin-sh'],
+    overrides: [
+        {
+            files: ['*.sh', 'git-config', '.editorconfig', 'Dockerfile', 'Dockerfile.*']
+        }
+    ]
 }
