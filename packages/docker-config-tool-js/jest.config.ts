@@ -21,18 +21,19 @@ const config: JestConfigWithTsJest = {
 
     coverageDirectory: 'coverage',
 
-    coveragePathIgnorePatterns: ['src/lib/instructions/common/', '/node_modules/', '/vendor/'],
+    coveragePathIgnorePatterns: ['/node_modules/', '/vendor/'],
 
-    coverageProvider: 'v8',
+    // Fix to babel due to coverage issues
+    coverageProvider: 'babel',
 
     coverageReporters: ['json', 'text', 'lcov', 'clover', 'html', 'html-spa'],
 
     coverageThreshold: {
         global: {
-            branches: 85,
-            functions: 85,
-            lines: 85,
-            statements: -150
+            branches: 95,
+            functions: 95,
+            lines: 99,
+            statements: -25
         }
     },
 
@@ -52,11 +53,9 @@ const config: JestConfigWithTsJest = {
 
     testEnvironment: 'node',
 
-    testMatch: [
-        `${process.cwd()}/src/**/__tests__/**/*.ts`,
-        `!${process.cwd()}/src/**/__tests__/data/*`,
-        `${process.cwd()}/src/**/*.(spec|test).ts`
-    ],
+    testMatch: [`${process.cwd()}/src/**/__tests__/**/*.ts`, `${process.cwd()}/src/**/*.(spec|test).ts`],
+
+    testPathIgnorePatterns: ['/__fixtures__/', '/__utils__/'],
 
     transform: {
         ...tsjPreset.transform
