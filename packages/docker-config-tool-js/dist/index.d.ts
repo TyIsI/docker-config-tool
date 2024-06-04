@@ -1,26 +1,135 @@
 import { z } from 'zod';
 
-interface Instruction {
-    type: 'instruction';
-    toString: () => string;
+declare const zValidInstructions: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+declare const zBaseInstruction: z.ZodObject<{
+    type: z.ZodLiteral<"instruction">;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+}>;
+
+interface BaseInstruction extends z.infer<typeof zBaseInstruction> {
 }
-type Instructions = Instruction[];
+type ValidInstructions = z.infer<typeof zValidInstructions>;
+
+declare abstract class AbstractBaseInstruction implements BaseInstruction {
+    type: "instruction";
+    abstract instruction: ValidInstructions;
+    output: string[];
+    abstract toString(): string;
+}
+
+declare const zBuildableInstruction: z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"instruction">;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    buildable: z.ZodLiteral<true>;
+    setOnBuild: z.ZodFunction<z.ZodTuple<[z.ZodOptional<z.ZodBoolean>], z.ZodUnknown>, z.ZodVoid>;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: true;
+    setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: true;
+    setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
+}>;
+
+interface BuildableInstruction extends Omit<z.infer<typeof zBuildableInstruction>, 'setOnBuild'> {
+    setOnBuild: (onBuild?: boolean) => void;
+}
+
+declare abstract class AbstractBuildableInstruction extends AbstractBaseInstruction implements BuildableInstruction {
+    buildable: true;
+    onBuild: boolean;
+    setOnBuild(onBuild?: boolean): void;
+}
 
 interface ArgInstructionParamsObject {
     name: string;
     value?: string;
 }
 type ArgInstructionParams = string | ArgInstructionParamsObject;
-interface IArgInstruction extends Instruction {
+interface IArgInstruction extends BuildableInstruction {
+    instruction: 'ARG';
 }
 
-declare class ArgInstruction implements IArgInstruction {
+declare class ArgInstruction extends AbstractBuildableInstruction implements IArgInstruction {
     type: "instruction";
+    instruction: "ARG";
     argName?: string;
     argValue?: string;
     constructor(argParam: ArgInstructionParams);
     toString(): string;
 }
+
+declare const zInstruction: z.ZodUnion<[z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"instruction">;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    buildable: z.ZodLiteral<false>;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: false;
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: false;
+}>, z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"instruction">;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    buildable: z.ZodLiteral<true>;
+    setOnBuild: z.ZodFunction<z.ZodTuple<[z.ZodOptional<z.ZodBoolean>], z.ZodUnknown>, z.ZodVoid>;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: true;
+    setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: true;
+    setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
+}>]>;
+
+declare const zGenericInstruction: z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"instruction">;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    buildable: z.ZodLiteral<false>;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: false;
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "instruction";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    buildable: false;
+}>;
+
+type GenericInstruction = z.infer<typeof zGenericInstruction>;
+
+type Instruction = z.infer<typeof zInstruction>;
+type Instructions = Instruction[];
 
 declare const zFromInstructionObjectParam: z.ZodObject<{
     from: z.ZodString;
@@ -51,10 +160,13 @@ declare const zFromInstructionParams: z.ZodUnion<[z.ZodString, z.ZodObject<{
 
 type FromInstructionObjectParam = z.infer<typeof zFromInstructionObjectParam>;
 type FromInstructionParams = z.infer<typeof zFromInstructionParams>;
-interface IFromInstruction extends Instruction {
+interface IFromInstruction extends GenericInstruction {
+    instruction: 'FROM';
     setAs: (nameParam: string) => this;
 }
 
+declare const zAddInstructionExclude: z.ZodString;
+declare const zAddInstructionExcludes: z.ZodArray<z.ZodString, "many">;
 declare const zAddInstructionParamObject: z.ZodObject<{
     sources: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>;
     destination: z.ZodString;
@@ -120,7 +232,10 @@ declare const zAddInstructionParams: z.ZodUnion<[z.ZodArray<z.ZodString, "many">
 
 type AddInstructionParamObject = z.input<typeof zAddInstructionParamObject>;
 type AddInstructionParams = z.input<typeof zAddInstructionParams>;
-interface IAddInstruction extends Instruction {
+type AddInstructionExclude = z.infer<typeof zAddInstructionExclude>;
+type AddInstructionExcludes = z.infer<typeof zAddInstructionExcludes>;
+interface IAddInstruction extends BuildableInstruction {
+    instruction: 'ADD';
     setKeepGitDir: (keepGitDir?: boolean) => this;
     setChecksum: (checksum: string) => this;
     setChown: (chown: string) => this;
@@ -130,7 +245,8 @@ interface IAddInstruction extends Instruction {
 }
 
 type CmdInstructionParams = string[];
-interface ICmdInstruction extends Instruction {
+interface ICmdInstruction extends BuildableInstruction {
+    instruction: 'CMD';
     addCmd: (cmd: string) => ICmdInstruction;
 }
 
@@ -256,7 +372,8 @@ type CopyInstructionExclude = z.infer<typeof zCopyInstructionExclude>;
 type CopyInstructionExcludes = z.infer<typeof zCopyInstructionExcludes>;
 type CopyInstructionParamObject = z.infer<typeof zCopyInstructionParamObject>;
 type CopyInstructionParams = z.infer<typeof zCopyInstructionParams>;
-interface ICopyInstruction extends Instruction {
+interface ICopyInstruction extends BuildableInstruction {
+    instruction: 'COPY';
     setFrom: (from: string | IStage) => this;
     setChown: (chown: string) => this;
     setChmod: (chmod: string) => this;
@@ -267,13 +384,15 @@ interface ICopyInstruction extends Instruction {
 }
 
 type EntryPointInstructionParams = string[];
-interface IEntryPointInstruction extends Instruction {
+interface IEntryPointInstruction extends BuildableInstruction {
+    instruction: 'ENTRYPOINT';
     addEntrypointArg: (entrypoint: string) => IEntryPointInstruction;
 }
 
 type EnvInstructionParamsObject = Record<string, string>;
 type EnvInstructionParams = string | string[] | EnvInstructionParamsObject;
-interface IEnvInstruction extends Instruction {
+interface IEnvInstruction extends BuildableInstruction {
+    instruction: 'ENV';
 }
 
 declare const zUnixUserGroupId: z.ZodUnion<[z.ZodNumber, z.ZodEffects<z.ZodString, string, string>]>;
@@ -290,7 +409,8 @@ interface ExposePortDefinition {
 type ExposePortDefinitionTuple = [ExposePortType, NetworkProtocols?];
 type ExposeInstructionParam = string | number | ExposePortDefinition | ExposePortDefinitionTuple;
 type ExposeInstructionParams = ExposeInstructionParam[];
-interface IExposeInstruction extends Instruction {
+interface IExposeInstruction extends BuildableInstruction {
+    instruction: 'EXPOSE';
 }
 
 declare const zHealthCheckDurationParam: z.ZodString;
@@ -300,21 +420,21 @@ declare const zHealthCheckCmdsStringArray: z.ZodArray<z.ZodString, "many">;
 declare const zHealthCheckCmdsParam: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">]>;
 declare const zHealthCheckRetriesParam: z.ZodNumber;
 declare const zHealthCheckParamsObject: z.ZodObject<{
-    instruction: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">]>;
+    cmds: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">]>;
     interval: z.ZodOptional<z.ZodString>;
     timeout: z.ZodOptional<z.ZodString>;
     startPeriod: z.ZodOptional<z.ZodString>;
     startInterval: z.ZodOptional<z.ZodString>;
     retries: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    instruction: (string | string[]) & (string | string[] | undefined);
+    cmds: (string | string[]) & (string | string[] | undefined);
     interval?: string | undefined;
     timeout?: string | undefined;
     startPeriod?: string | undefined;
     startInterval?: string | undefined;
     retries?: number | undefined;
 }, {
-    instruction: (string | string[]) & (string | string[] | undefined);
+    cmds: (string | string[]) & (string | string[] | undefined);
     interval?: string | undefined;
     timeout?: string | undefined;
     startPeriod?: string | undefined;
@@ -322,21 +442,21 @@ declare const zHealthCheckParamsObject: z.ZodObject<{
     retries?: number | undefined;
 }>;
 declare const zHealthCheckParams: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">, z.ZodObject<{
-    instruction: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">]>;
+    cmds: z.ZodUnion<[z.ZodLiteral<"NONE">, z.ZodString, z.ZodArray<z.ZodString, "many">]>;
     interval: z.ZodOptional<z.ZodString>;
     timeout: z.ZodOptional<z.ZodString>;
     startPeriod: z.ZodOptional<z.ZodString>;
     startInterval: z.ZodOptional<z.ZodString>;
     retries: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    instruction: (string | string[]) & (string | string[] | undefined);
+    cmds: (string | string[]) & (string | string[] | undefined);
     interval?: string | undefined;
     timeout?: string | undefined;
     startPeriod?: string | undefined;
     startInterval?: string | undefined;
     retries?: number | undefined;
 }, {
-    instruction: (string | string[]) & (string | string[] | undefined);
+    cmds: (string | string[]) & (string | string[] | undefined);
     interval?: string | undefined;
     timeout?: string | undefined;
     startPeriod?: string | undefined;
@@ -352,13 +472,15 @@ type HealthCheckCmdsParam = z.infer<typeof zHealthCheckCmdsParam>;
 type HealthCheckRetriesParam = z.infer<typeof zHealthCheckRetriesParam>;
 type HealthCheckParamsObject = z.infer<typeof zHealthCheckParamsObject>;
 type HealthCheckParams = z.infer<typeof zHealthCheckParams>;
-interface IHealthCheckInstruction extends Instruction {
+interface IHealthCheckInstruction extends BuildableInstruction {
+    instruction: 'HEALTHCHECK';
     addHealthCheckInstruction: (healthCheckCmd: HealthCheckCmdsString) => this;
 }
 
 type LabelInstructionParamsObject = Record<string, string>;
 type LabelInstructionParams = string | string[] | LabelInstructionParamsObject;
-interface ILabelInstruction extends Instruction {
+interface ILabelInstruction extends BuildableInstruction {
+    instruction: 'LABEL';
     addLabel: (labelParam: string) => void;
 }
 
@@ -848,54 +970,54 @@ declare const zRunInstructionMountTypeCache: z.ZodUnion<[z.ZodObject<{
     gid?: number | undefined;
 }>]>;
 declare const zRunInstructionMountTypeSecret: z.ZodObject<{
-    type: z.ZodLiteral<"secret">;
-    id: z.ZodString;
-    target: z.ZodOptional<z.ZodString>;
-    required: z.ZodOptional<z.ZodBoolean>;
-    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
+    id: z.ZodOptional<z.ZodString>;
+    required: z.ZodOptional<z.ZodBoolean>;
+    target: z.ZodOptional<z.ZodString>;
+    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
+    type: z.ZodLiteral<"secret">;
 }, "strip", z.ZodTypeAny, {
     type: "secret";
-    id: string;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | undefined;
 }, {
     type: "secret";
-    id: string;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | number | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | number | undefined;
 }>;
 declare const zRunInstructionMountTypeSSH: z.ZodObject<{
-    type: z.ZodLiteral<"ssh">;
-    id: z.ZodOptional<z.ZodString>;
-    target: z.ZodOptional<z.ZodString>;
-    required: z.ZodOptional<z.ZodBoolean>;
-    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
+    id: z.ZodOptional<z.ZodString>;
+    required: z.ZodOptional<z.ZodBoolean>;
+    target: z.ZodOptional<z.ZodString>;
+    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
+    type: z.ZodLiteral<"ssh">;
 }, "strip", z.ZodTypeAny, {
     type: "ssh";
-    id?: string | undefined;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | undefined;
 }, {
     type: "ssh";
-    id?: string | undefined;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | number | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | number | undefined;
 }>;
 declare const zRunInstructionMountTypeTmpFS: z.ZodObject<{
     type: z.ZodLiteral<"tmpfs">;
@@ -1148,53 +1270,53 @@ declare const zRunInstructionMountType: z.ZodUnion<[z.ZodObject<{
     uid?: number | undefined;
     gid?: number | undefined;
 }>, z.ZodObject<{
-    type: z.ZodLiteral<"ssh">;
+    uid: z.ZodOptional<z.ZodNumber>;
+    gid: z.ZodOptional<z.ZodNumber>;
     id: z.ZodOptional<z.ZodString>;
-    target: z.ZodOptional<z.ZodString>;
     required: z.ZodOptional<z.ZodBoolean>;
+    target: z.ZodOptional<z.ZodString>;
     mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
-    uid: z.ZodOptional<z.ZodNumber>;
-    gid: z.ZodOptional<z.ZodNumber>;
+    type: z.ZodLiteral<"ssh">;
 }, "strict", z.ZodTypeAny, {
     type: "ssh";
-    id?: string | undefined;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | undefined;
 }, {
     type: "ssh";
-    id?: string | undefined;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | number | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | number | undefined;
 }>, z.ZodObject<{
-    type: z.ZodLiteral<"secret">;
-    id: z.ZodString;
-    target: z.ZodOptional<z.ZodString>;
-    required: z.ZodOptional<z.ZodBoolean>;
-    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
     uid: z.ZodOptional<z.ZodNumber>;
     gid: z.ZodOptional<z.ZodNumber>;
+    id: z.ZodOptional<z.ZodString>;
+    required: z.ZodOptional<z.ZodBoolean>;
+    target: z.ZodOptional<z.ZodString>;
+    mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
+    type: z.ZodLiteral<"secret">;
 }, "strict", z.ZodTypeAny, {
     type: "secret";
-    id: string;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | undefined;
 }, {
     type: "secret";
-    id: string;
-    target?: string | undefined;
-    required?: boolean | undefined;
-    mode?: string | number | undefined;
     uid?: number | undefined;
     gid?: number | undefined;
+    id?: string | undefined;
+    required?: boolean | undefined;
+    target?: string | undefined;
+    mode?: string | number | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"tmpfs">;
     target: z.ZodString;
@@ -1450,53 +1572,53 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         uid?: number | undefined;
         gid?: number | undefined;
     }>, z.ZodObject<{
-        type: z.ZodLiteral<"ssh">;
+        uid: z.ZodOptional<z.ZodNumber>;
+        gid: z.ZodOptional<z.ZodNumber>;
         id: z.ZodOptional<z.ZodString>;
-        target: z.ZodOptional<z.ZodString>;
         required: z.ZodOptional<z.ZodBoolean>;
+        target: z.ZodOptional<z.ZodString>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
-        uid: z.ZodOptional<z.ZodNumber>;
-        gid: z.ZodOptional<z.ZodNumber>;
+        type: z.ZodLiteral<"ssh">;
     }, "strict", z.ZodTypeAny, {
         type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     }, {
         type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     }>, z.ZodObject<{
-        type: z.ZodLiteral<"secret">;
-        id: z.ZodString;
-        target: z.ZodOptional<z.ZodString>;
-        required: z.ZodOptional<z.ZodBoolean>;
-        mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
+        id: z.ZodOptional<z.ZodString>;
+        required: z.ZodOptional<z.ZodBoolean>;
+        target: z.ZodOptional<z.ZodString>;
+        mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
+        type: z.ZodLiteral<"secret">;
     }, "strict", z.ZodTypeAny, {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     }, {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"tmpfs">;
         target: z.ZodString;
@@ -1582,21 +1704,21 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         uid?: number | undefined;
         gid?: number | undefined;
     } | {
-        type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
-        uid?: number | undefined;
-        gid?: number | undefined;
-    } | {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
+    } | {
+        type: "ssh";
+        uid?: number | undefined;
+        gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     } | {
         type: "tmpfs";
         target: string;
@@ -1674,21 +1796,21 @@ declare const zRunInstructionParamsObject: z.ZodObject<{
         uid?: number | undefined;
         gid?: number | undefined;
     } | {
-        type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
-        uid?: number | undefined;
-        gid?: number | undefined;
-    } | {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
+    } | {
+        type: "ssh";
+        uid?: number | undefined;
+        gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     } | {
         type: "tmpfs";
         target: string;
@@ -1937,53 +2059,53 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         uid?: number | undefined;
         gid?: number | undefined;
     }>, z.ZodObject<{
-        type: z.ZodLiteral<"ssh">;
+        uid: z.ZodOptional<z.ZodNumber>;
+        gid: z.ZodOptional<z.ZodNumber>;
         id: z.ZodOptional<z.ZodString>;
-        target: z.ZodOptional<z.ZodString>;
         required: z.ZodOptional<z.ZodBoolean>;
+        target: z.ZodOptional<z.ZodString>;
         mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
-        uid: z.ZodOptional<z.ZodNumber>;
-        gid: z.ZodOptional<z.ZodNumber>;
+        type: z.ZodLiteral<"ssh">;
     }, "strict", z.ZodTypeAny, {
         type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     }, {
         type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     }>, z.ZodObject<{
-        type: z.ZodLiteral<"secret">;
-        id: z.ZodString;
-        target: z.ZodOptional<z.ZodString>;
-        required: z.ZodOptional<z.ZodBoolean>;
-        mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
         uid: z.ZodOptional<z.ZodNumber>;
         gid: z.ZodOptional<z.ZodNumber>;
+        id: z.ZodOptional<z.ZodString>;
+        required: z.ZodOptional<z.ZodBoolean>;
+        target: z.ZodOptional<z.ZodString>;
+        mode: z.ZodOptional<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodNumber, z.ZodString]>, string | number, string | number>, string, string | number>>;
+        type: z.ZodLiteral<"secret">;
     }, "strict", z.ZodTypeAny, {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     }, {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     }>, z.ZodObject<{
         type: z.ZodLiteral<"tmpfs">;
         target: z.ZodString;
@@ -2069,21 +2191,21 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         uid?: number | undefined;
         gid?: number | undefined;
     } | {
-        type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
-        uid?: number | undefined;
-        gid?: number | undefined;
-    } | {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
+    } | {
+        type: "ssh";
+        uid?: number | undefined;
+        gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | undefined;
     } | {
         type: "tmpfs";
         target: string;
@@ -2161,21 +2283,21 @@ declare const zRunInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodString], null>
         uid?: number | undefined;
         gid?: number | undefined;
     } | {
-        type: "ssh";
-        id?: string | undefined;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
-        uid?: number | undefined;
-        gid?: number | undefined;
-    } | {
         type: "secret";
-        id: string;
-        target?: string | undefined;
-        required?: boolean | undefined;
-        mode?: string | number | undefined;
         uid?: number | undefined;
         gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
+    } | {
+        type: "ssh";
+        uid?: number | undefined;
+        gid?: number | undefined;
+        id?: string | undefined;
+        required?: boolean | undefined;
+        target?: string | undefined;
+        mode?: string | number | undefined;
     } | {
         type: "tmpfs";
         target: string;
@@ -2204,14 +2326,16 @@ type RunInstructionParams = z.input<typeof zRunInstructionParams>;
 type RunInstructionParamsObject = z.input<typeof zRunInstructionParamsObject>;
 type RunInstructionSecurityType = z.input<typeof zRunInstructionSecurityType>;
 type RunInstructions = z.input<typeof zRunInstructions>;
-interface IRunInstruction extends Instruction {
+interface IRunInstruction extends BuildableInstruction {
+    instruction: 'RUN';
     setMount: (mount: RunInstructionMountType) => void;
     setNetwork: (network: RunInstructionNetworkType) => void;
     setSecurity: (security: RunInstructionSecurityType) => void;
 }
 
 type ShellInstructionParams = string[];
-interface IShellInstruction extends Instruction {
+interface IShellInstruction extends BuildableInstruction {
+    instruction: 'SHELL';
     addShell: (shell: string) => this;
 }
 
@@ -2221,7 +2345,8 @@ declare const zStopSignalNumber: z.ZodNumber;
 type StopSignalInstructionParams = string | number;
 type StopSignalString = z.infer<typeof zStopSignalString>;
 type StopSignalNumber = z.infer<typeof zStopSignalNumber>;
-interface IStopSignalInstruction extends Instruction {
+interface IStopSignalInstruction extends BuildableInstruction {
+    instruction: 'STOPSIGNAL';
 }
 
 declare const zUserInstructionPrimaryParam: z.ZodUnion<[z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodString, string, string>, string, string>, number[], string>, z.ZodUnion<[z.ZodTuple<[z.ZodUnion<[z.ZodNumber, z.ZodEffects<z.ZodString, string, string>]>], null>, z.ZodTuple<[z.ZodUnion<[z.ZodNumber, z.ZodEffects<z.ZodString, string, string>]>, z.ZodUnion<[z.ZodNumber, z.ZodEffects<z.ZodString, string, string>]>], null>]>, z.ZodArray<z.ZodNumber, "atleastone">, z.ZodNumber]>;
@@ -2238,14 +2363,17 @@ declare const zUserInstructionParams: z.ZodUnion<[z.ZodTuple<[z.ZodObject<{
 
 type UserInstructionPrimaryParam = z.input<typeof zUserInstructionPrimaryParam>;
 type UserInstructionParams = z.input<typeof zUserInstructionParams>;
-interface IUserInstruction extends Instruction {
+interface IUserInstruction extends BuildableInstruction {
+    instruction: 'USER';
 }
 
 type VolumeInstructionParams = string[];
-interface IVolumeInstruction extends Instruction {
+interface IVolumeInstruction extends BuildableInstruction {
+    instruction: 'VOLUME';
 }
 
-interface IWorkDirInstruction extends Instruction {
+interface IWorkDirInstruction extends BuildableInstruction {
+    instruction: 'WORKDIR';
 }
 
 declare const zStage: z.ZodObject<{
@@ -2378,8 +2506,9 @@ declare class DockerConfigTool implements IDockerConfigTool {
     toString(): string;
 }
 
-declare class AddInstruction implements IAddInstruction {
+declare class AddInstruction extends AbstractBuildableInstruction implements IAddInstruction {
     type: "instruction";
+    instruction: "ADD";
     sources: string[];
     destination: string;
     keepGitDir: boolean;
@@ -2399,16 +2528,18 @@ declare class AddInstruction implements IAddInstruction {
     toString(): string;
 }
 
-declare class CmdInstruction implements ICmdInstruction {
+declare class CmdInstruction extends AbstractBuildableInstruction implements ICmdInstruction {
     type: "instruction";
+    instruction: "CMD";
     commands: string[];
     constructor(...cmdParams: CmdInstructionParams);
     addCmd(cmdParam: string): this;
     toString(): string;
 }
 
-declare class CopyInstruction implements ICopyInstruction {
+declare class CopyInstruction extends AbstractBuildableInstruction implements ICopyInstruction {
     type: "instruction";
+    instruction: "COPY";
     sources: string[];
     destination: string;
     from?: string;
@@ -2429,32 +2560,40 @@ declare class CopyInstruction implements ICopyInstruction {
     toString(): string;
 }
 
-declare class EntryPointInstruction implements IEntryPointInstruction {
+declare class EntryPointInstruction extends AbstractBuildableInstruction implements IEntryPointInstruction {
     type: "instruction";
+    instruction: "ENTRYPOINT";
     entrypointCmds: string[];
     constructor(...entrypointParams: EntryPointInstructionParams);
     addEntrypointArg(entrypoint: string): this;
     toString(): string;
 }
 
-declare class EnvInstruction implements IEnvInstruction {
+declare class EnvInstruction extends AbstractBuildableInstruction implements IEnvInstruction {
     type: "instruction";
+    instruction: "ENV";
     envs: Record<string, string>;
     constructor(envParam: EnvInstructionParams);
     addEnv(envName: string, envVal: unknown): this;
     toString(): string;
 }
 
-declare class ExposeInstruction implements IExposeInstruction {
+declare class ExposeInstruction extends AbstractBuildableInstruction implements IExposeInstruction {
     type: "instruction";
+    instruction: "EXPOSE";
     exposeCmds: ExposePortDefinition[];
     constructor(...exposeParams: ExposeInstructionParams);
     addExposeParam(exposeParam: ExposeInstructionParam): this;
     toString(): string;
 }
 
-declare class FromInstruction implements IFromInstruction {
+declare abstract class AbstractGenericInstruction extends AbstractBaseInstruction implements GenericInstruction {
+    buildable: false;
+}
+
+declare class FromInstruction extends AbstractGenericInstruction implements IFromInstruction {
     type: "instruction";
+    instruction: "FROM";
     from: string;
     platform?: string;
     as?: string;
@@ -2463,9 +2602,10 @@ declare class FromInstruction implements IFromInstruction {
     toString(): string;
 }
 
-declare class HealthCheckInstruction implements IHealthCheckInstruction {
+declare class HealthCheckInstruction extends AbstractBuildableInstruction implements IHealthCheckInstruction {
     type: "instruction";
-    instruction: string[];
+    instruction: "HEALTHCHECK";
+    cmds: string[];
     interval: string | undefined;
     timeout: string | undefined;
     startPeriod: string | undefined;
@@ -2476,16 +2616,18 @@ declare class HealthCheckInstruction implements IHealthCheckInstruction {
     toString(): string;
 }
 
-declare class LabelInstruction implements ILabelInstruction {
+declare class LabelInstruction extends AbstractBuildableInstruction implements ILabelInstruction {
     type: "instruction";
+    instruction: "LABEL";
     labels: Record<string, string>;
     constructor(labelParam: LabelInstructionParams);
     addLabel(labelParam: string): void;
     toString(): string;
 }
 
-declare class RunInstruction implements IRunInstruction {
+declare class RunInstruction extends AbstractBuildableInstruction implements IRunInstruction {
     type: "instruction";
+    instruction: "RUN";
     commands: string[];
     mountOpts: RunInstructionMountType[];
     network?: RunInstructionNetworkType;
@@ -2497,39 +2639,44 @@ declare class RunInstruction implements IRunInstruction {
     toString(): string;
 }
 
-declare class ShellInstruction implements IShellInstruction {
+declare class ShellInstruction extends AbstractBuildableInstruction implements IShellInstruction {
     type: "instruction";
+    instruction: "SHELL";
     commands: string[];
     constructor(...shellParams: ShellInstructionParams);
     addShell(shellParam: string): this;
     toString(): string;
 }
 
-declare class StopSignalInstruction implements IStopSignalInstruction {
+declare class StopSignalInstruction extends AbstractBuildableInstruction implements IStopSignalInstruction {
     type: "instruction";
-    stopsignal: string | number;
+    instruction: "STOPSIGNAL";
+    stopsignal: string;
     constructor(stopsignalParam: StopSignalInstructionParams);
     toString(): string;
 }
 
-declare class UserInstruction implements IUserInstruction {
+declare class UserInstruction extends AbstractBuildableInstruction implements IUserInstruction {
     type: "instruction";
+    instruction: "USER";
     uid?: UnixUserGroupId;
     gid?: UnixUserGroupId;
     constructor(...userInstructionParams: UserInstructionParams);
     toString(): string;
 }
 
-declare class VolumeInstruction implements IVolumeInstruction {
+declare class VolumeInstruction extends AbstractBuildableInstruction implements IVolumeInstruction {
     type: "instruction";
+    instruction: "VOLUME";
     commands: string[];
     constructor(...volumeParams: VolumeInstructionParams);
     addVolume(volume: string): this;
     toString(): string;
 }
 
-declare class WorkDirInstruction implements IWorkDirInstruction {
+declare class WorkDirInstruction extends AbstractBuildableInstruction implements IWorkDirInstruction {
     type: "instruction";
+    instruction: "WORKDIR";
     workdir: string;
     constructor(workdirParam: string);
     toString(): string;
@@ -2563,4 +2710,4 @@ declare class Stage implements IStage {
     toString(): string;
 }
 
-export { AddInstruction, type AddInstructionParamObject, type AddInstructionParams, ArgInstruction, type ArgInstructionParams, type ArgInstructionParamsObject, CmdInstruction, type CmdInstructionParams, CopyInstruction, type CopyInstructionChmod, type CopyInstructionChown, type CopyInstructionDestination, type CopyInstructionExclude, type CopyInstructionExcludes, type CopyInstructionFrom, type CopyInstructionLink, type CopyInstructionParamObject, type CopyInstructionParams, type CopyInstructionParents, type CopyInstructionSources, DockerConfigTool, EntryPointInstruction, type EntryPointInstructionParams, EnvInstruction, type EnvInstructionParams, type EnvInstructionParamsObject, ExposeInstruction, type ExposeInstructionParam, type ExposeInstructionParams, type ExposePortDefinition, type ExposePortDefinitionTuple, FromInstruction, type FromInstructionObjectParam, type FromInstructionParams, type HealthCheckCmdsNone, type HealthCheckCmdsParam, type HealthCheckCmdsString, type HealthCheckCmdsStringArray, type HealthCheckDurationParam, HealthCheckInstruction, type HealthCheckParams, type HealthCheckParamsObject, type HealthCheckRetriesParam, type IAddInstruction, type IArgInstruction, type ICmdInstruction, type ICopyInstruction, type IDockerConfigTool, type IEntryPointInstruction, type IEnvInstruction, type IExposeInstruction, type IFromInstruction, type IHealthCheckInstruction, type ILabelInstruction, type IRunInstruction, type IShellInstruction, type IStage, type IStopSignalInstruction, type IUserInstruction, type IVolumeInstruction, type IWorkDirInstruction, LabelInstruction, type LabelInstructionParams, type LabelInstructionParamsObject, RunInstruction, type RunInstructionBooleanFields, type RunInstructionCacheSharingTypes, type RunInstructionMountType, type RunInstructionMountTypeBind, type RunInstructionMountTypeBindCommon, type RunInstructionMountTypeBindRW, type RunInstructionMountTypeBindReadWrite, type RunInstructionMountTypeCache, type RunInstructionMountTypeCacheCommon, type RunInstructionMountTypeCacheRO, type RunInstructionMountTypeCacheReadOnly, type RunInstructionMountTypeSSH, type RunInstructionMountTypeSecret, type RunInstructionMountTypeTmpFS, type RunInstructionNetworkType, type RunInstructionParams, type RunInstructionParamsObject, type RunInstructionSecurityType, type RunInstructions, ShellInstruction, type ShellInstructionParams, Stage, type StageFromInstructionObjectParam, type StageParam, type StageParams, StopSignalInstruction, type StopSignalInstructionParams, type StopSignalNumber, type StopSignalString, UserInstruction, type UserInstructionParams, type UserInstructionPrimaryParam, VolumeInstruction, type VolumeInstructionParams, WorkDirInstruction };
+export { AddInstruction, type AddInstructionExclude, type AddInstructionExcludes, type AddInstructionParamObject, type AddInstructionParams, ArgInstruction, type ArgInstructionParams, type ArgInstructionParamsObject, CmdInstruction, type CmdInstructionParams, CopyInstruction, type CopyInstructionChmod, type CopyInstructionChown, type CopyInstructionDestination, type CopyInstructionExclude, type CopyInstructionExcludes, type CopyInstructionFrom, type CopyInstructionLink, type CopyInstructionParamObject, type CopyInstructionParams, type CopyInstructionParents, type CopyInstructionSources, DockerConfigTool, EntryPointInstruction, type EntryPointInstructionParams, EnvInstruction, type EnvInstructionParams, type EnvInstructionParamsObject, ExposeInstruction, type ExposeInstructionParam, type ExposeInstructionParams, type ExposePortDefinition, type ExposePortDefinitionTuple, FromInstruction, type FromInstructionObjectParam, type FromInstructionParams, type HealthCheckCmdsNone, type HealthCheckCmdsParam, type HealthCheckCmdsString, type HealthCheckCmdsStringArray, type HealthCheckDurationParam, HealthCheckInstruction, type HealthCheckParams, type HealthCheckParamsObject, type HealthCheckRetriesParam, type IAddInstruction, type IArgInstruction, type ICmdInstruction, type ICopyInstruction, type IDockerConfigTool, type IEntryPointInstruction, type IEnvInstruction, type IExposeInstruction, type IFromInstruction, type IHealthCheckInstruction, type ILabelInstruction, type IRunInstruction, type IShellInstruction, type IStage, type IStopSignalInstruction, type IUserInstruction, type IVolumeInstruction, type IWorkDirInstruction, LabelInstruction, type LabelInstructionParams, type LabelInstructionParamsObject, RunInstruction, type RunInstructionBooleanFields, type RunInstructionCacheSharingTypes, type RunInstructionMountType, type RunInstructionMountTypeBind, type RunInstructionMountTypeBindCommon, type RunInstructionMountTypeBindRW, type RunInstructionMountTypeBindReadWrite, type RunInstructionMountTypeCache, type RunInstructionMountTypeCacheCommon, type RunInstructionMountTypeCacheRO, type RunInstructionMountTypeCacheReadOnly, type RunInstructionMountTypeSSH, type RunInstructionMountTypeSecret, type RunInstructionMountTypeTmpFS, type RunInstructionNetworkType, type RunInstructionParams, type RunInstructionParamsObject, type RunInstructionSecurityType, type RunInstructions, ShellInstruction, type ShellInstructionParams, Stage, type StageFromInstructionObjectParam, type StageParam, type StageParams, StopSignalInstruction, type StopSignalInstructionParams, type StopSignalNumber, type StopSignalString, UserInstruction, type UserInstructionParams, type UserInstructionPrimaryParam, VolumeInstruction, type VolumeInstructionParams, WorkDirInstruction };
