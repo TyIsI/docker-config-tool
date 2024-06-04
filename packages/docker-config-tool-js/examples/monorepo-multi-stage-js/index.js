@@ -2,6 +2,9 @@ const { DockerConfigTool } = require('../../dist/index.js')
 
 const dct = new DockerConfigTool()
 
+dct.withArg('PRIVATE_REGISTRY_PROXY_URI')
+dct.withArg('TAG')
+
 const workspaceStage = dct.withStage({ from: 'scratch', as: 'workspace' })
 
 workspaceStage.withCopy('.', '/workspace').setLinked()
@@ -9,6 +12,8 @@ workspaceStage.withCopy('.', '/workspace').setLinked()
 const baseStage = dct.withStage({ from: 'node:lts-alpine', as: 'base' })
 
 baseStage.withRun('apk add --no-cache libc6-compat vips vips-cpp')
+
+baseStage.withRun('npm', 'install').setOnBuild()
 
 baseStage.withCmd('npm', 'start')
 
