@@ -1,0 +1,7 @@
+{
+    "threshold": 2,
+    "reporters": ["html", "console", "badge"],
+    "ignore": ["**/__snapshots__/**"],
+    "ignorePattern": ["import.*froms*'.*'", ".+describe\\(.+", ".+output.push.+"],
+    "pattern": "./packages/docker-config-tool-js/src/**"
+}
