@@ -6,19 +6,15 @@ import {
     isAddInstructionChecksum,
     isAddInstructionChmod,
     isAddInstructionChown,
+    isAddInstructionExclude,
+    isAddInstructionExcludes,
     isAddInstructionKeepGitDir,
     isAddInstructionLink,
     isAddInstructionParamObject,
-    isAddInstructionSources
+    isAddInstructionSources,
+    isOptionalAddInstructionKeepGitDir,
+    isOptionalAddInstructionLink
 } from './guards'
-import {
-    zAddInstructionChecksum,
-    zAddInstructionChmod,
-    zAddInstructionChown,
-    zAddInstructionExclude,
-    zAddInstructionKeepGitDir,
-    zAddInstructionLink
-} from './schema'
 import { type AddInstructionParamObject, type AddInstructionParams, type IAddInstruction } from './types'
 import { validateAddInstructionParams } from './validators'
 
@@ -70,20 +66,20 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
 
         if (isAddInstructionLink(addParamsObject.link)) this.link = addParamsObject.link
 
-        if (isString(addParamsObject.exclude)) {
+        if (isAddInstructionExclude(addParamsObject.exclude)) {
             if (this.excludes == null) this.excludes = []
 
             this.excludes.push(addParamsObject.exclude)
         }
 
-        if (isStringArray(addParamsObject.excludes)) {
+        if (isAddInstructionExcludes(addParamsObject.excludes)) {
             if (this.excludes != null) this.excludes = this.excludes.concat(addParamsObject.excludes)
             else this.excludes = addParamsObject.excludes
         }
     }
 
     public setKeepGitDir(keepGitDir?: boolean): this {
-        if (!zAddInstructionKeepGitDir.optional().safeParse(keepGitDir).success)
+        if (!isOptionalAddInstructionKeepGitDir(keepGitDir))
             throw new Error(`Invalid input for setKeepGitDir: ${JSON.stringify(keepGitDir)}`)
 
         keepGitDir = keepGitDir ?? true
@@ -94,7 +90,7 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
     }
 
     public setChecksum(checksum: string): this {
-        if (!zAddInstructionChecksum.safeParse(checksum).success)
+        if (!isAddInstructionChecksum(checksum))
             throw new Error(`Invalid input for setChecksum: ${JSON.stringify(checksum)}`)
 
         this.checksum = checksum
@@ -103,8 +99,7 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
     }
 
     public setChown(chown: string): this {
-        if (!zAddInstructionChown.safeParse(chown).success)
-            throw new Error(`Invalid input for setChown: ${JSON.stringify(chown)}`)
+        if (!isAddInstructionChown(chown)) throw new Error(`Invalid input for setChown: ${JSON.stringify(chown)}`)
 
         this.chown = chown
 
@@ -112,8 +107,7 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
     }
 
     public setChmod(chmod: string): this {
-        if (!zAddInstructionChmod.safeParse(chmod).success)
-            throw new Error(`Invalid input for setChmod: ${JSON.stringify(chmod)}`)
+        if (!isAddInstructionChmod(chmod)) throw new Error(`Invalid input for setChmod: ${JSON.stringify(chmod)}`)
 
         this.chmod = chmod
 
@@ -121,8 +115,7 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
     }
 
     public setLink(link?: boolean): this {
-        if (!zAddInstructionLink.optional().safeParse(link).success)
-            throw new Error(`Invalid input for setLink: ${JSON.stringify(link)}`)
+        if (!isOptionalAddInstructionLink(link)) throw new Error(`Invalid input for setLink: ${JSON.stringify(link)}`)
 
         link = link ?? true
 
@@ -132,7 +125,7 @@ export class AddInstruction extends AbstractBuildableInstruction implements IAdd
     }
 
     public addExclude(exclude: string): this {
-        if (!zAddInstructionExclude.safeParse(exclude).success)
+        if (!isAddInstructionExclude(exclude))
             throw new Error(`Invalid input for addExclude: "${JSON.stringify(exclude)}"`)
 
         if (this.excludes == null) this.excludes = []

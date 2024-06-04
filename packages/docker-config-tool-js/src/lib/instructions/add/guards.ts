@@ -30,12 +30,20 @@ export const isAddInstructionSources = (value: unknown): value is string | strin
 export const isAddInstructionKeepGitDir = (value: unknown): value is boolean =>
     zAddInstructionKeepGitDir.safeParse(value).success
 
+export const isOptionalAddInstructionKeepGitDir = (value: unknown): value is boolean =>
+    zAddInstructionKeepGitDir.optional().safeParse(value).success
+
 export const isAddInstructionChecksum = (value: unknown): value is string =>
     zAddInstructionChecksum.safeParse(value).success
 
 export const isAddInstructionChown = (value: unknown): value is string => zAddInstructionChown.safeParse(value).success
+
 export const isAddInstructionChmod = (value: unknown): value is number => zAddInstructionChmod.safeParse(value).success
+
 export const isAddInstructionLink = (value: unknown): value is boolean => zAddInstructionLink.safeParse(value).success
+
+export const isOptionalAddInstructionLink = (value: unknown): value is boolean =>
+    zAddInstructionLink.optional().safeParse(value).success
 
 export const isAddInstructionExclude = (value: unknown): value is AddInstructionExclude =>
     zAddInstructionExclude.safeParse(value).success
