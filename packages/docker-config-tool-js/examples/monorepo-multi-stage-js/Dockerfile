@@ -1,3 +1,7 @@
+ARG PRIVATE_REGISTRY_PROXY_URI
+
+ARG TAG
+
 FROM scratch AS workspace
 
 COPY --link . /workspace
@@ -5,6 +9,8 @@ COPY --link . /workspace
 FROM node:lts-alpine AS base
 
 RUN apk add --no-cache libc6-compat vips vips-cpp
+
+ONBUILD RUN npm install
 
 CMD ["npm","start"]
 
