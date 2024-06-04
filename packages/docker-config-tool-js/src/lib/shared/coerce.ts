@@ -17,15 +17,13 @@ export const coerceNumber = (value: unknown): number => {
 }
 
 export const coerceString = (value: unknown): string => {
-    const result = z.coerce.string().safeParse(value)
-
-    return result.success ? result.data : ''
+    return z.coerce.string().parse(value)
 }
 
 export const coerceStringArray = (value: unknown): string[] => {
-    if (isStringArray(value)) return value
-    if (isString(value)) return [value]
-    throw new Error('Invalid string array')
+    if (!isStringArray(value) && !isString(value)) throw new Error('Invalid string array')
+
+    return isStringArray(value) ? value : [value]
 }
 
 export const coerceFirstValue = <T = unknown>(...value: Array<T | null | undefined>): T => {
