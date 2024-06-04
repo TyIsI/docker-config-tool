@@ -1,3 +1,4 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { isExposeInstructionParam, isExposeInstructionParams } from './guards'
 import {
@@ -8,12 +9,16 @@ import {
 } from './types'
 import { coerceExposeDefinition } from './utils'
 
-export class ExposeInstruction implements IExposeInstruction {
+export class ExposeInstruction extends AbstractBuildableInstruction implements IExposeInstruction {
     type = 'instruction' as const
+
+    instruction = 'EXPOSE' as const
 
     exposeCmds: ExposePortDefinition[]
 
     public constructor(...exposeParams: ExposeInstructionParams) {
+        super()
+
         if (!isExposeInstructionParams(exposeParams))
             throw new Error(generateConstructorErrorMessage('EXPOSE', exposeParams))
 
@@ -29,6 +34,12 @@ export class ExposeInstruction implements IExposeInstruction {
     }
 
     public toString(): string {
-        return ['EXPOSE', ...this.exposeCmds.map(({ port, proto }) => `${port}/${proto}`)].join(' ')
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        this.exposeCmds.map(({ port, proto }) => `${port}/${proto}`).forEach((e) => output.push(e))
+
+        return output.join(' ')
     }
 }

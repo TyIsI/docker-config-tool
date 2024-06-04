@@ -1,16 +1,21 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { type UnixUserGroupId } from '../../shared/types'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { isUserInstructionParamObject, isUserInstructionParamTuple } from './guards'
 import { type IUserInstruction, type UserInstructionParams } from './types'
 import { validateUserInstructionParams } from './validators'
 
-export class UserInstruction implements IUserInstruction {
+export class UserInstruction extends AbstractBuildableInstruction implements IUserInstruction {
     type = 'instruction' as const
+
+    instruction = 'USER' as const
 
     uid?: UnixUserGroupId
     gid?: UnixUserGroupId
 
     public constructor(...userInstructionParams: UserInstructionParams) {
+        super()
+
         const [valid, result] = validateUserInstructionParams(userInstructionParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('USER', userInstructionParams, result))
@@ -44,6 +49,12 @@ export class UserInstruction implements IUserInstruction {
     }
 
     toString(): string {
-        return ['USER', [this.uid, this.gid].join(':')].join(' ')
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        output.push([this.uid, this.gid].join(':'))
+
+        return output.join(' ')
     }
 }

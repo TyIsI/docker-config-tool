@@ -1,3 +1,4 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { coerceString, coerceStringArray } from '../../shared/coerce'
 import { isStringArray, isTrueBoolean } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
@@ -5,6 +6,8 @@ import { coerceRunInstructionMountParam } from './coerce'
 import {
     isRunInstructionBooleanFields,
     isRunInstructionMountParam,
+    isRunInstructionMountTypeBind,
+    isRunInstructionMountTypeCache,
     isRunInstructionNetworkParam,
     isRunInstructionParamsObject,
     isRunInstructionSecurityParam
@@ -19,8 +22,10 @@ import {
 import { mapMountOptions } from './utils'
 import { validateRunInstructionParams } from './validators'
 
-export class RunInstruction implements IRunInstruction {
+export class RunInstruction extends AbstractBuildableInstruction implements IRunInstruction {
     type = 'instruction' as const
+
+    instruction = 'RUN' as const
 
     commands: string[] = []
     mountOpts: RunInstructionMountType[] = []
@@ -28,6 +33,8 @@ export class RunInstruction implements IRunInstruction {
     security?: RunInstructionSecurityType
 
     public constructor(...runParams: RunInstructionParams) {
+        super()
+
         const [valid, result] = validateRunInstructionParams(runParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage('RUN', runParams, result))
@@ -55,6 +62,9 @@ export class RunInstruction implements IRunInstruction {
     setMount(mount: RunInstructionMountType): void {
         if (!isRunInstructionMountParam(mount)) throw new Error('Invalid mount type')
 
+        if ((isRunInstructionMountTypeBind(mount) || isRunInstructionMountTypeCache(mount)) && this.onBuild)
+            throw new Error(`ONBUILD is not supported with from RUN mount option`)
+
         this.mountOpts.push(coerceRunInstructionMountParam(mount))
     }
 
@@ -71,10 +81,18 @@ export class RunInstruction implements IRunInstruction {
     }
 
     public toString(): string {
-        const result = ['RUN']
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
 
         if (this.mountOpts.length > 0 && this.mountOpts.every((mountOpt) => isRunInstructionMountParam(mountOpt))) {
             this.mountOpts.forEach((mountOpt) => {
+                if (
+                    (isRunInstructionMountTypeBind(mountOpt) || isRunInstructionMountTypeCache(mountOpt)) &&
+                    this.onBuild
+                )
+                    throw new Error(`ONBUILD is not supported with from RUN mount option`)
+
                 const mountOptsArray = [`--mount=type=${mountOpt.type}`]
 
                 Object.entries(mountOpt)
@@ -87,14 +105,16 @@ export class RunInstruction implements IRunInstruction {
                         }
                     })
 
-                result.push(mountOptsArray.join(','))
+                output.push(mountOptsArray.join(','))
             })
         }
 
-        if (isRunInstructionNetworkParam(this.network)) result.push(`--network=${coerceString(this.network)}`)
+        if (isRunInstructionNetworkParam(this.network)) output.push(`--network=${coerceString(this.network)}`)
 
-        if (isRunInstructionSecurityParam(this.security)) result.push(`--security=${coerceString(this.security)}`)
+        if (isRunInstructionSecurityParam(this.security)) output.push(`--security=${coerceString(this.security)}`)
 
-        return [...result, ...this.commands].join(' ')
+        output.push(...this.commands)
+
+        return output.join(' ')
     }
 }

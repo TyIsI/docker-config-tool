@@ -1,5 +1,7 @@
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 
 export type VolumeInstructionParams = string[]
 
-export interface IVolumeInstruction extends Instruction {}
+export interface IVolumeInstruction extends BuildableInstruction {
+    instruction: 'VOLUME'
+}

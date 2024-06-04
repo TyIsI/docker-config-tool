@@ -1,5 +1,5 @@
 import { type NetworkProtocols } from '../../shared/types'
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 
 type ExposePortType = number | string
 
@@ -13,4 +13,6 @@ export type ExposePortDefinitionTuple = [ExposePortType, NetworkProtocols?]
 export type ExposeInstructionParam = string | number | ExposePortDefinition | ExposePortDefinitionTuple
 export type ExposeInstructionParams = ExposeInstructionParam[]
 
-export interface IExposeInstruction extends Instruction {}
+export interface IExposeInstruction extends BuildableInstruction {
+    instruction: 'EXPOSE'
+}

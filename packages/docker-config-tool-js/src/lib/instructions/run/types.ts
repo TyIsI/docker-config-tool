@@ -1,6 +1,6 @@
 import { type z } from 'zod'
 
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 import {
     type zRunInstructionBooleanFields,
     type zRunInstructionCacheSharingTypes,
@@ -43,7 +43,9 @@ export type RunInstructionParamsObject = z.input<typeof zRunInstructionParamsObj
 export type RunInstructionSecurityType = z.input<typeof zRunInstructionSecurityType>
 export type RunInstructions = z.input<typeof zRunInstructions>
 
-export interface IRunInstruction extends Instruction {
+export interface IRunInstruction extends BuildableInstruction {
+    instruction: 'RUN'
+
     setMount: (mount: RunInstructionMountType) => void
 
     setNetwork: (network: RunInstructionNetworkType) => void

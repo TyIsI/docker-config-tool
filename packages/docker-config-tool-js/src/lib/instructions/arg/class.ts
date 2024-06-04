@@ -1,15 +1,20 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { isString } from '../../shared/guards'
-import { generateConstructorErrorMessage } from '../../shared/utils'
+import { generateConstructorErrorMessage, generateInvalidArgumentErrorMessage } from '../../shared/utils'
 import { isArgInstructionParamObject, isArgInstructionParams } from './guards'
 import { type ArgInstructionParams, type IArgInstruction } from './types'
 
-export class ArgInstruction implements IArgInstruction {
+export class ArgInstruction extends AbstractBuildableInstruction implements IArgInstruction {
     type = 'instruction' as const
+
+    instruction = 'ARG' as const
 
     argName?: string
     argValue?: string
 
     public constructor(argParam: ArgInstructionParams) {
+        super()
+
         if (!isArgInstructionParams(argParam)) throw new Error(generateConstructorErrorMessage('ARG', argParam))
 
         if (isArgInstructionParamObject(argParam)) {
@@ -32,7 +37,20 @@ export class ArgInstruction implements IArgInstruction {
         }
     }
 
-    toString(): string {
-        return `ARG ${[this.argName, this.argValue].filter((e) => e != null && e !== '').join('=')}`
+    public toString(): string {
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        if (this.argName == null || this.argName === '')
+            throw new Error(generateInvalidArgumentErrorMessage('ARG', 'Invalid argname'))
+
+        output.push(
+            [this.argName, this.argValue != null && this.argValue !== '' ? this.argValue : null]
+                .filter((e) => e != null)
+                .join('=')
+        )
+
+        return output.join(' ')
     }
 }

@@ -21,7 +21,7 @@ export const zHealthCheckRetriesParam = z.coerce.number({ invalid_type_error: 'I
 
 export const zHealthCheckParamsObject = z.object(
     {
-        instruction: zHealthCheckCmdsParam,
+        cmds: zHealthCheckCmdsParam,
         interval: zHealthCheckDurationParam.optional(),
         timeout: zHealthCheckDurationParam.optional(),
         startPeriod: zHealthCheckDurationParam.optional(),

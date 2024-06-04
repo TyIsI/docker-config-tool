@@ -1,3 +1,4 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { coerceStringArray } from '../../shared/coerce'
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
@@ -21,8 +22,10 @@ import {
 import { type AddInstructionParamObject, type AddInstructionParams, type IAddInstruction } from './types'
 import { validateAddInstructionParams } from './validators'
 
-export class AddInstruction implements IAddInstruction {
+export class AddInstruction extends AbstractBuildableInstruction implements IAddInstruction {
     type = 'instruction' as const
+
+    instruction = 'ADD' as const
 
     sources: string[] = []
     destination: string = ''
@@ -35,6 +38,8 @@ export class AddInstruction implements IAddInstruction {
     excludes?: string[]
 
     public constructor(...addInstructionParams: AddInstructionParams) {
+        super()
+
         const [valid, error] = validateAddInstructionParams(addInstructionParams)
 
         if (!valid) {
@@ -138,24 +143,26 @@ export class AddInstruction implements IAddInstruction {
     }
 
     public toString(): string {
-        const result = ['ADD']
+        const output: string[] = [this.instruction]
 
-        if (this.keepGitDir) result.push(`--keepGitDir`)
+        if (this.onBuild) output.unshift('ONBUILD')
 
-        if (this.checksum != null) result.push(`--checksum=${this.checksum}`)
+        if (this.keepGitDir) output.push(`--keepGitDir`)
 
-        if (this.chown != null) result.push(`--chown=${this.chown}`)
+        if (this.checksum != null) output.push(`--checksum=${this.checksum}`)
 
-        if (this.chmod != null) result.push(`--chmod=${this.chmod}`)
+        if (this.chown != null) output.push(`--chown=${this.chown}`)
 
-        if (this.link != null && this.link) result.push(`--link`)
+        if (this.chmod != null) output.push(`--chmod=${this.chmod}`)
 
-        if (this.excludes != null) this.excludes.forEach((e) => result.push(`--exclude=${e}`))
+        if (this.link != null && this.link) output.push(`--link`)
 
-        this.sources.forEach((s) => result.push(s))
+        if (this.excludes != null) this.excludes.forEach((e) => output.push(`--exclude=${e}`))
 
-        result.push(this.destination)
+        this.sources.forEach((s) => output.push(s))
 
-        return result.join(' ')
+        output.push(this.destination)
+
+        return output.join(' ')
     }
 }

@@ -1,13 +1,18 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage, generateInvalidArgumentErrorMessage } from '../../shared/utils'
 import { type IShellInstruction, type ShellInstructionParams } from './types'
 
-export class ShellInstruction implements IShellInstruction {
+export class ShellInstruction extends AbstractBuildableInstruction implements IShellInstruction {
     type = 'instruction' as const
+
+    instruction = 'SHELL' as const
 
     commands: string[]
 
     public constructor(...shellParams: ShellInstructionParams) {
+        super()
+
         if (isStringArray(shellParams)) {
             this.commands = shellParams.length === 1 ? shellParams[0].split(' ') : shellParams
         } else {
@@ -24,6 +29,12 @@ export class ShellInstruction implements IShellInstruction {
     }
 
     public toString(): string {
-        return ['SHELL', JSON.stringify(this.commands)].join(' ')
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        output.push(JSON.stringify(this.commands))
+
+        return output.join(' ')
     }
 }

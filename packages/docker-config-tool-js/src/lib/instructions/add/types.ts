@@ -1,28 +1,24 @@
 import { type z } from 'zod'
 
-import { type Instruction } from '../common/types'
-import { type zAddInstructionParamObject, type zAddInstructionParams } from './schema'
-
-// export interface AddInstructionParamObject {
-//     sources: string | string[]
-//     destination: string
-
-//     keepGitDir?: boolean
-//     checksum?: string
-//     chown?: string
-//     chmod?: string
-//     link?: boolean
-//     exclude?: string | string[]
-//     excludes?: string[]
-// }
+import { type BuildableInstruction } from '../../common/classes/instructions/buildable/types'
+import {
+    type zAddInstructionExclude,
+    type zAddInstructionExcludes,
+    type zAddInstructionParamObject,
+    type zAddInstructionParams
+} from './schema'
 
 export type AddInstructionParamObject = z.input<typeof zAddInstructionParamObject>
 
-// export type AddInstructionParams = string[] | [AddInstructionParamObject]
-
 export type AddInstructionParams = z.input<typeof zAddInstructionParams>
 
-export interface IAddInstruction extends Instruction {
+export type AddInstructionExclude = z.infer<typeof zAddInstructionExclude>
+
+export type AddInstructionExcludes = z.infer<typeof zAddInstructionExcludes>
+
+export interface IAddInstruction extends BuildableInstruction {
+    instruction: 'ADD'
+
     setKeepGitDir: (keepGitDir?: boolean) => this
 
     setChecksum: (checksum: string) => this

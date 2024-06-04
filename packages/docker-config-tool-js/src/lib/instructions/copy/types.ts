@@ -1,7 +1,7 @@
 import { type z } from 'zod'
 
 import { type IStage } from '../../stage/types'
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 import {
     type zCopyInstructionChmod,
     type zCopyInstructionChown,
@@ -38,7 +38,9 @@ export type CopyInstructionParamObject = z.infer<typeof zCopyInstructionParamObj
 
 export type CopyInstructionParams = z.infer<typeof zCopyInstructionParams>
 
-export interface ICopyInstruction extends Instruction {
+export interface ICopyInstruction extends BuildableInstruction {
+    instruction: 'COPY'
+
     setFrom: (from: string | IStage) => this
     setChown: (chown: string) => this
     setChmod: (chmod: string) => this

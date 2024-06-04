@@ -1,7 +1,9 @@
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 
 export type EntryPointInstructionParams = string[]
 
-export interface IEntryPointInstruction extends Instruction {
+export interface IEntryPointInstruction extends BuildableInstruction {
+    instruction: 'ENTRYPOINT'
+
     addEntrypointArg: (entrypoint: string) => IEntryPointInstruction
 }

@@ -10,7 +10,7 @@ import {
     type zHealthCheckParamsObject,
     type zHealthCheckRetriesParam
 } from './schema'
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 
 export type HealthCheckDurationParam = z.infer<typeof zHealthCheckDurationParam>
 
@@ -28,6 +28,8 @@ export type HealthCheckParamsObject = z.infer<typeof zHealthCheckParamsObject>
 
 export type HealthCheckParams = z.infer<typeof zHealthCheckParams>
 
-export interface IHealthCheckInstruction extends Instruction {
+export interface IHealthCheckInstruction extends BuildableInstruction {
+    instruction: 'HEALTHCHECK'
+
     addHealthCheckInstruction: (healthCheckCmd: HealthCheckCmdsString) => this
 }

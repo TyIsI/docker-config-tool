@@ -69,9 +69,8 @@ export const zRunInstructionMountTypeCache = z.union([
     zRunInstructionMountTypeCacheCommon.strict()
 ])
 
-export const zRunInstructionMountTypeSecret = z.object({
-    type: z.literal('secret'),
-    id: zRequiredString(),
+const zRunInstructionMountTypeUnixCommon = z.object({
+    id: zRequiredString().optional(),
     target: zRequiredString().optional(),
     required: z.boolean().optional(),
     mode: zFileAccessMode.optional(),
@@ -79,14 +78,12 @@ export const zRunInstructionMountTypeSecret = z.object({
     gid: zUnixUserGroupNumericId.optional()
 })
 
-export const zRunInstructionMountTypeSSH = z.object({
-    type: z.literal('ssh'),
-    id: zRequiredString().optional(),
-    target: zRequiredString().optional(),
-    required: z.boolean().optional(),
-    mode: zFileAccessMode.optional(),
-    uid: zUnixUserGroupNumericId.optional(),
-    gid: zUnixUserGroupNumericId.optional()
+export const zRunInstructionMountTypeSecret = zRunInstructionMountTypeUnixCommon.extend({
+    type: z.literal('secret')
+})
+
+export const zRunInstructionMountTypeSSH = zRunInstructionMountTypeUnixCommon.extend({
+    type: z.literal('ssh')
 })
 
 export const zRunInstructionMountTypeTmpFS = z.object({

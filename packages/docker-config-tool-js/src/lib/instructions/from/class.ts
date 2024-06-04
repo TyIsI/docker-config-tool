@@ -1,16 +1,21 @@
+import { AbstractGenericInstruction } from '../../common/classes/instructions/generic/class'
 import { isString } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { isFromInstructionAsParam, isFromInstructionObjectParam, isFromInstructionParams } from './guards'
 import { type FromInstructionParams, type IFromInstruction } from './types'
 
-export class FromInstruction implements IFromInstruction {
+export class FromInstruction extends AbstractGenericInstruction implements IFromInstruction {
     type = 'instruction' as const
+
+    instruction = 'FROM' as const
 
     from: string = ''
     platform?: string
     as?: string
 
     public constructor(fromParam: FromInstructionParams) {
+        super()
+
         if (!isFromInstructionParams(fromParam)) throw new Error(generateConstructorErrorMessage(`FROM`, fromParam))
 
         if (isString(fromParam)) this.from = fromParam
@@ -34,14 +39,14 @@ export class FromInstruction implements IFromInstruction {
     }
 
     toString(): string {
-        const result = ['FROM']
+        const output: string[] = [this.instruction]
 
-        if (isString(this.platform)) result.push(`--platform=${this.platform}`)
+        if (isString(this.platform)) output.push(`--platform=${this.platform}`)
 
-        result.push(this.from)
+        output.push(this.from)
 
-        if (isString(this.as)) result.push(`AS ${this.as}`)
+        if (isString(this.as)) output.push(`AS ${this.as}`)
 
-        return result.join(' ')
+        return output.join(' ')
     }
 }

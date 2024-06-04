@@ -1,3 +1,4 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { coerceStringArray } from '../../shared/coerce'
 import { isObjectWithProperty, isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
@@ -21,8 +22,10 @@ import {
     validateCopyInstructionParents
 } from './validators'
 
-export class CopyInstruction implements ICopyInstruction {
+export class CopyInstruction extends AbstractBuildableInstruction implements ICopyInstruction {
     type = 'instruction' as const
+
+    instruction = 'COPY' as const
 
     sources: string[] = []
     destination: string = ''
@@ -36,6 +39,8 @@ export class CopyInstruction implements ICopyInstruction {
     excludes?: string[]
 
     public constructor(...copyInstructionParams: CopyInstructionParams) {
+        super()
+
         const [valid, error] = validateCopyInstructionParams(copyInstructionParams)
 
         if (!valid) throw new Error(generateConstructorErrorMessage(`COPY`, copyInstructionParams, error))
@@ -80,6 +85,8 @@ export class CopyInstruction implements ICopyInstruction {
     }
 
     public setFrom(from: string | IStage): this {
+        if (this.onBuild) throw new Error(`COPY does not support ONBUILD with from parameter`)
+
         if (isString(from)) this.from = from
         if (isObjectWithProperty<IStage>(from, 'id')) this.from = from.id
 
@@ -144,24 +151,30 @@ export class CopyInstruction implements ICopyInstruction {
     }
 
     public toString(): string {
-        const result = ['COPY']
+        const output: string[] = [this.instruction]
 
-        if (this.from != null) result.push(`--from=${this.from}`)
+        if (this.onBuild) output.unshift('ONBUILD')
 
-        if (this.chown != null) result.push(`--chown=${this.chown}`)
+        if (this.from != null) {
+            if (this.onBuild) throw new Error(`COPY does not support ONBUILD with from parameter`)
 
-        if (this.chmod != null) result.push(`--chmod=${this.chmod}`)
+            output.push(`--from=${this.from}`)
+        }
 
-        if (this.link != null && this.link) result.push(`--link`)
+        if (this.chown != null) output.push(`--chown=${this.chown}`)
 
-        if (this.parents != null && this.parents) result.push(`--parents`)
+        if (this.chmod != null) output.push(`--chmod=${this.chmod}`)
 
-        if (this.excludes != null) this.excludes.forEach((e) => result.push(`--exclude=${e}`))
+        if (this.link != null && this.link) output.push(`--link`)
 
-        this.sources.forEach((s) => result.push(s))
+        if (this.parents != null && this.parents) output.push(`--parents`)
 
-        result.push(this.destination)
+        if (this.excludes != null) this.excludes.forEach((e) => output.push(`--exclude=${e}`))
 
-        return result.join(' ')
+        this.sources.forEach((s) => output.push(s))
+
+        output.push(this.destination)
+
+        return output.join(' ')
     }
 }

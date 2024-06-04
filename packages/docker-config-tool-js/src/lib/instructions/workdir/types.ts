@@ -1,3 +1,5 @@
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/types'
 
-export interface IWorkDirInstruction extends Instruction {}
+export interface IWorkDirInstruction extends BuildableInstruction {
+    instruction: 'WORKDIR'
+}

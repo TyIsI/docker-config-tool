@@ -1,14 +1,19 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { coerceString } from '../../shared/coerce'
 import { isEnvVar, isEnvVarArray, isStringArray, isStringRecord } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { type EnvInstructionParams, type IEnvInstruction } from './types'
 
-export class EnvInstruction implements IEnvInstruction {
+export class EnvInstruction extends AbstractBuildableInstruction implements IEnvInstruction {
     type = 'instruction' as const
+
+    instruction = 'ENV' as const
 
     envs: Record<string, string> = {}
 
     public constructor(envParam: EnvInstructionParams) {
+        super()
+
         if (isEnvVar(envParam)) {
             const [envKey, envVal] = envParam.split('=')
 
@@ -33,8 +38,14 @@ export class EnvInstruction implements IEnvInstruction {
     }
 
     toString(): string {
-        return `ENV ${Object.entries(this.envs)
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        Object.entries(this.envs)
             .map(([k, v]) => [k, v.includes(' ') ? `"${v}"` : v].join('='))
-            .join(' ')}`
+            .forEach((e) => output.push(e))
+
+        return output.join(' ')
     }
 }

@@ -1,11 +1,11 @@
+import { isInstruction } from '../common/classes/instructions/guards'
+import { type Instruction } from '../common/classes/instructions/types'
 import { AddInstruction } from '../instructions/add/class'
 import { type AddInstructionParams, type IAddInstruction } from '../instructions/add/types'
 import { ArgInstruction } from '../instructions/arg/class'
 import { type ArgInstructionParams, type IArgInstruction } from '../instructions/arg/types'
 import { CmdInstruction } from '../instructions/cmd/class'
 import { type CmdInstructionParams, type ICmdInstruction } from '../instructions/cmd/types'
-import { isInstruction } from '../instructions/common/guards'
-import { type Instruction } from '../instructions/common/types'
 import { CopyInstruction } from '../instructions/copy/class'
 import { type CopyInstructionParams, type ICopyInstruction } from '../instructions/copy/types'
 import { EntryPointInstruction } from '../instructions/entrypoint/class'
@@ -186,7 +186,6 @@ export class Stage implements IStage {
     }
 
     toString(): string {
-        // Render everything
-        return this.stack.map((e) => e.toString()).join('\n\n') + '\n'
+        return this.stack.map((e) => e.toString()).join('\n\n')
     }
 }

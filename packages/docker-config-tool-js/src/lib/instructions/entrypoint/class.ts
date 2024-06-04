@@ -1,13 +1,18 @@
+import { AbstractBuildableInstruction } from '../../common/classes/instructions/buildable/class'
 import { isString, isStringArray } from '../../shared/guards'
 import { generateConstructorErrorMessage } from '../../shared/utils'
 import { type EntryPointInstructionParams, type IEntryPointInstruction } from './types'
 
-export class EntryPointInstruction implements IEntryPointInstruction {
+export class EntryPointInstruction extends AbstractBuildableInstruction implements IEntryPointInstruction {
     type = 'instruction' as const
+
+    instruction = 'ENTRYPOINT' as const
 
     entrypointCmds: string[]
 
     public constructor(...entrypointParams: EntryPointInstructionParams) {
+        super()
+
         if (!isStringArray(entrypointParams))
             throw new Error(generateConstructorErrorMessage('ENTRYPOINT', entrypointParams))
 
@@ -26,6 +31,12 @@ export class EntryPointInstruction implements IEntryPointInstruction {
     }
 
     public toString(): string {
-        return ['ENTRYPOINT', JSON.stringify(this.entrypointCmds)].join(' ')
+        const output: string[] = [this.instruction]
+
+        if (this.onBuild) output.unshift('ONBUILD')
+
+        output.push(JSON.stringify(this.entrypointCmds))
+
+        return output.join(' ')
     }
 }

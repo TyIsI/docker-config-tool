@@ -1,4 +1,4 @@
-import { type Instruction } from '../common/types'
+import { type BuildableInstruction } from '../../common/classes/instructions/buildable/types'
 
 export interface ArgInstructionParamsObject {
     name: string
@@ -7,4 +7,6 @@ export interface ArgInstructionParamsObject {
 
 export type ArgInstructionParams = string | ArgInstructionParamsObject
 
-export interface IArgInstruction extends Instruction {}
+export interface IArgInstruction extends BuildableInstruction {
+    instruction: 'ARG'
+}
