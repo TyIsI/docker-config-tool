@@ -3,7 +3,9 @@
     "name": "@tyisi/docker-config-tool",
     "version": "1.0.0rc3",
     "description": "Multi language Dockerfile as Code library",
-    "scripts": {},
+    "scripts": {
+        "commit": "git-cz --scope=docker-config-tool"
+    },
     "keywords": [
         "docker",
         "dockerfile",
