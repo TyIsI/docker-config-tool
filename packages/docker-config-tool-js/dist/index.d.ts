@@ -1,18 +1,69 @@
 import { z } from 'zod';
 
-declare const zValidInstructions: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+declare const zCommentInstruction: z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"comment">;
+    instruction: z.ZodLiteral<"#">;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "comment";
+    instruction: "#";
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "comment";
+    instruction: "#";
+}>;
+
+type ICommentInstruction = z.infer<typeof zCommentInstruction>;
+
+declare class CommentInstruction implements ICommentInstruction {
+    type: "comment";
+    instruction: "#";
+    comment?: string;
+    constructor(comment: string);
+    toString(): string;
+}
+
+declare const zDirectiveInstruction: z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"directive">;
+    instruction: z.ZodLiteral<"#">;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "directive";
+    instruction: "#";
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "directive";
+    instruction: "#";
+}>;
+declare const zValidDirective: z.ZodUnion<[z.ZodLiteral<"syntax">, z.ZodLiteral<"escape">]>;
+
+type IDirectiveInstruction = z.infer<typeof zDirectiveInstruction>;
+type ValidDirectives = z.infer<typeof zValidDirective>;
+
+declare class DirectiveInstruction implements IDirectiveInstruction {
+    type: "directive";
+    instruction: "#";
+    directiveType: ValidDirectives;
+    directiveValue?: string;
+    constructor(directiveType: string, directiveValue: string);
+    toString(): string;
+}
+
+declare const zValidInstructions: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
 declare const zBaseInstruction: z.ZodObject<{
     type: z.ZodLiteral<"instruction">;
-    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
     toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
 }, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
 }>;
 
 interface BaseInstruction extends z.infer<typeof zBaseInstruction> {
@@ -29,19 +80,19 @@ declare abstract class AbstractBaseInstruction implements BaseInstruction {
 declare const zBuildableInstruction: z.ZodObject<{
     toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
     type: z.ZodLiteral<"instruction">;
-    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
     buildable: z.ZodLiteral<true>;
     setOnBuild: z.ZodFunction<z.ZodTuple<[z.ZodOptional<z.ZodBoolean>], z.ZodUnknown>, z.ZodVoid>;
 }, "strip", z.ZodTypeAny, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: true;
     setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
 }, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: true;
     setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
 }>;
@@ -77,52 +128,76 @@ declare class ArgInstruction extends AbstractBuildableInstruction implements IAr
 declare const zInstruction: z.ZodUnion<[z.ZodObject<{
     toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
     type: z.ZodLiteral<"instruction">;
-    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
     buildable: z.ZodLiteral<false>;
 }, "strip", z.ZodTypeAny, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: false;
 }, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: false;
 }>, z.ZodObject<{
     toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
     type: z.ZodLiteral<"instruction">;
-    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
     buildable: z.ZodLiteral<true>;
     setOnBuild: z.ZodFunction<z.ZodTuple<[z.ZodOptional<z.ZodBoolean>], z.ZodUnknown>, z.ZodVoid>;
 }, "strip", z.ZodTypeAny, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: true;
     setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
 }, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: true;
     setOnBuild: (args_0: boolean | undefined, ...args_1: unknown[]) => void;
+}>, z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"comment">;
+    instruction: z.ZodLiteral<"#">;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "comment";
+    instruction: "#";
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "comment";
+    instruction: "#";
+}>, z.ZodObject<{
+    toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+    type: z.ZodLiteral<"directive">;
+    instruction: z.ZodLiteral<"#">;
+}, "strip", z.ZodTypeAny, {
+    toString: (...args: unknown[]) => string;
+    type: "directive";
+    instruction: "#";
+}, {
+    toString: (...args: unknown[]) => string;
+    type: "directive";
+    instruction: "#";
 }>]>;
 
 declare const zGenericInstruction: z.ZodObject<{
     toString: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
     type: z.ZodLiteral<"instruction">;
-    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
+    instruction: z.ZodUnion<[z.ZodLiteral<"# NOP">, z.ZodLiteral<"ADD">, z.ZodLiteral<"ARG">, z.ZodLiteral<"CMD">, z.ZodLiteral<"#">, z.ZodLiteral<"COPY">, z.ZodLiteral<"ENTRYPOINT">, z.ZodLiteral<"ENV">, z.ZodLiteral<"EXPOSE">, z.ZodLiteral<"FROM">, z.ZodLiteral<"HEALTHCHECK">, z.ZodLiteral<"LABEL">, z.ZodLiteral<"RUN">, z.ZodLiteral<"SHELL">, z.ZodLiteral<"STOPSIGNAL">, z.ZodLiteral<"USER">, z.ZodLiteral<"VOLUME">, z.ZodLiteral<"WORKDIR">]>;
     buildable: z.ZodLiteral<false>;
 }, "strip", z.ZodTypeAny, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: false;
 }, {
     toString: (...args: unknown[]) => string;
     type: "instruction";
-    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
+    instruction: "# NOP" | "ADD" | "ARG" | "CMD" | "#" | "COPY" | "ENTRYPOINT" | "ENV" | "EXPOSE" | "FROM" | "HEALTHCHECK" | "LABEL" | "RUN" | "SHELL" | "STOPSIGNAL" | "USER" | "VOLUME" | "WORKDIR";
     buildable: false;
 }>;
 
@@ -2472,6 +2547,7 @@ interface IStage {
     withAdd: (...addParams: AddInstructionParams) => IAddInstruction;
     withArg: (argParam: ArgInstructionParams) => IArgInstruction;
     withCmd: (...cmdParams: CmdInstructionParams) => ICmdInstruction;
+    withComment: (comment: string) => ICommentInstruction;
     withCopy: (...copyParams: CopyInstructionParams) => ICopyInstruction;
     withEntryPoint: (...entryPointParams: EntryPointInstructionParams) => IEntryPointInstruction;
     withEnv: (envParam: EnvInstructionParams) => IEnvInstruction;
@@ -2493,15 +2569,19 @@ type StageParams = z.infer<typeof zStageParams>;
 
 interface IDockerConfigTool {
     withArg: (arg: ArgInstructionParams) => this;
+    withComment: (comment: string) => this;
+    withDirective: (directiveType: string, directiveValue: string) => this;
     withStage: (from: FromInstructionParams | StageFromInstructionObjectParam | IStage) => IStage;
     toString: () => string;
 }
 
 declare class DockerConfigTool implements IDockerConfigTool {
-    args: ArgInstruction[];
-    stack: IStage[];
+    directives: DirectiveInstruction[];
+    stack: Array<ArgInstruction | CommentInstruction | IStage>;
     constructor(stackParam?: IStage[]);
     withArg(arg: ArgInstructionParams): this;
+    withComment(comment: string): this;
+    withDirective(directiveType: string, directiveValue: string): this;
     withStage(fromParam: FromInstructionParams | StageFromInstructionObjectParam | IStage): IStage;
     toString(): string;
 }
@@ -2693,6 +2773,7 @@ declare class Stage implements IStage {
     withAdd(...addParams: AddInstructionParams): IAddInstruction;
     withArg(argParam: ArgInstructionParams): IArgInstruction;
     withCmd(...cmdParams: CmdInstructionParams): ICmdInstruction;
+    withComment(comment: string): ICommentInstruction;
     withCopy(...copyInstructionParams: CopyInstructionParams): ICopyInstruction;
     withFrom(from: FromInstructionParams): IFromInstruction;
     withEntryPoint(...entrypointCmds: EntryPointInstructionParams): IEntryPointInstruction;

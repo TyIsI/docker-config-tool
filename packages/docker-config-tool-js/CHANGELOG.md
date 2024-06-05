@@ -1,5 +1,14 @@
 # @tyisi/docker-config-tool-js
 
+## 1.3.0
+
+### Minor Changes
+
+- comments and directives support
+
+  - improved and reorganized examples
+  - improved and expanded tests
+
 ## 1.2.0
 
 ### Minor Changes

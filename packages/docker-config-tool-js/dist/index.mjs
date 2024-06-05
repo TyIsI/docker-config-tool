@@ -1,3 +1,160 @@
+// src/lib/common/classes/instructions/comment/class.ts
+var CommentInstruction = class {
+  type = "comment";
+  instruction = "#";
+  comment;
+  constructor(comment) {
+    if (typeof comment !== "string")
+      throw new Error("Invalid comment");
+    this.comment = comment;
+  }
+  toString() {
+    if (typeof this.comment !== "string")
+      throw new Error("Missing comment");
+    return ["#", this.comment].join(" ").trim();
+  }
+};
+
+// src/lib/shared/guards.ts
+import { z as z2 } from "zod";
+
+// src/lib/shared/schema.ts
+import { z } from "zod";
+
+// src/lib/shared/matching.ts
+var substVar = "\\$\\{.+\\}";
+var ImageRefRegExParts = "^((" + substVar + `|([\\w-]+(\\.[\\w-]+)*(:\\d{1,5})?))\\/)?(${substVar}\\/|([\\w-]+\\/)*)?(${substVar}|[a-zA-Z]\\w+[\\w.-]+)((:[\\w/.-]+)|(@sha\\d{3}:[\\w/.-]+)|([:@]${substVar}))?$`;
+var DockerImageReferenceRE = new RegExp(ImageRefRegExParts);
+
+// src/lib/shared/schema.ts
+var zRequiredString = (message) => z.string().trim().regex(/.+/, message ?? "Invalid string input");
+var zUnixUserGroupNumericId = z.coerce.number({ invalid_type_error: "invalid numeric unix id" }).min(1).max(65535);
+var zUnixUserGroupStringId = z.string({ invalid_type_error: "invalid unix id string" }).refine((val) => zUnixUserGroupNumericId.safeParse(val).success);
+var zUnixUserGroupId = z.union([zUnixUserGroupNumericId, zUnixUserGroupStringId]);
+var zUnixUserGroupIdComboString = z.string({ invalid_type_error: "invalid unix id string tuple" }).regex(/\d{1,5}(:\d{1,5})/).refine((val) => val.includes(":") ? val.split(":").filter((e) => e != null && e !== "").length === 2 : true).refine((val) => val.split(":").every((e) => zUnixUserGroupNumericId.safeParse(e).success)).transform((val) => val.split(":").map((e) => Number(e)));
+var zFileAccessMode = z.union([z.number(), z.string()], { invalid_type_error: "invalid unix file access mode permission" }).refine((val) => /^[0-7]{3,4}$/.test(val.toString())).transform(String);
+var zUIDOpt = z.object({ uid: zUnixUserGroupId }, { invalid_type_error: "invalid unix uid opt" });
+var zGIDOpt = z.object({ gid: zUnixUserGroupId }, { invalid_type_error: "invalid unix gid opt" });
+var zUIDGIDTuple = z.union([z.tuple([zUnixUserGroupId]), z.tuple([zUnixUserGroupId, zUnixUserGroupId])], {
+  invalid_type_error: "invalid unix uid/gid tuple"
+});
+var zUIDGIDObj = zUIDOpt.extend({ gid: zUnixUserGroupId.optional() });
+var zRWOpt = z.object({ rw: z.boolean() });
+var zReadWriteOpt = z.object({ readwrite: z.boolean() });
+var zROOpt = z.object({ ro: z.boolean() });
+var zReadOnlyOpt = z.object({ readonly: z.boolean() });
+var zStringRecord = z.record(z.string(), z.coerce.string()).refine((val) => Object.keys(val).length > 0);
+var zPartialEnvVar = z.string().regex(/^([a-zA-Z_]\w*)(=.+)?$/);
+var zEnvVar = z.string().regex(/^([a-zA-Z_]\w*)=.+$/);
+var zPartialEnvVarArray = z.array(zPartialEnvVar).nonempty();
+var zEnvVarArray = z.array(zEnvVar).nonempty();
+var zPartialLabelVar = z.string().regex(/^([a-zA-Z_.][\w.]*)(=.+)?$/);
+var zLabelVar = z.string().regex(/^([a-zA-Z_.][\w.]*)=.+$/);
+var zPartialLabelVarArray = z.array(zPartialLabelVar).nonempty();
+var zLabelVarArray = z.array(zLabelVar).nonempty();
+var zNetworkProtocolTCP = z.literal("tcp");
+var zNetworkProtocolUDP = z.literal("udp");
+var zNetworkProtocols = z.union([zNetworkProtocolTCP, zNetworkProtocolUDP]);
+var zDockerImageReference = zRequiredString("Empty docker image resource location").min(2, "Docker image reference should be at least 2 characters").regex(DockerImageReferenceRE, "Invalid docker image reference");
+
+// src/lib/shared/guards.ts
+var isDockerImageReference = (value) => zDockerImageReference.safeParse(value).success;
+var isTrueBoolean = (value) => z2.literal(true).safeParse(value).success;
+var isString = (value) => zRequiredString().safeParse(value).success;
+var isStringArray = (value) => z2.array(zRequiredString()).nonempty().safeParse(value).success;
+var isObjectWithProperty = (value, property) => z2.object({
+  [property]: z2.unknown()
+}).required().refine((val) => Object.keys(val).length > 0).safeParse(value).success;
+var isEnvVar = (value) => zEnvVar.safeParse(value).success;
+var isEnvVarArray = (value) => zEnvVarArray.safeParse(value).success;
+var isPartialLabelVar = (value) => zPartialLabelVar.safeParse(value).success;
+var isPartialLabelVarArray = (value) => zPartialLabelVarArray.safeParse(value).success;
+var isStringRecord = (value) => zStringRecord.safeParse(value).success;
+
+// src/lib/common/classes/instructions/directive/schema.ts
+import { z as z4 } from "zod";
+
+// src/lib/common/classes/instructions/base/schema.ts
+import { z as z3 } from "zod";
+var zNopInstructionLiteral = z3.literal("# NOP");
+var zAddInstructionLiteral = z3.literal("ADD");
+var zArgInstructionLiteral = z3.literal("ARG");
+var zCmdInstructionLiteral = z3.literal("CMD");
+var zCommentInstructionLiteral = z3.literal("#");
+var zCopyInstructionLiteral = z3.literal("COPY");
+var zEntryPointInstructionLiteral = z3.literal("ENTRYPOINT");
+var zEnvInstructionLiteral = z3.literal("ENV");
+var zExposeInstructionLiteral = z3.literal("EXPOSE");
+var zFromInstructionLiteral = z3.literal("FROM");
+var zHealthCheckInstructionLiteral = z3.literal("HEALTHCHECK");
+var zLabelInstructionLiteral = z3.literal("LABEL");
+var zRunInstructionLiteral = z3.literal("RUN");
+var zShellInstructionLiteral = z3.literal("SHELL");
+var zStopSignalInstructionLiteral = z3.literal("STOPSIGNAL");
+var zUserInstructionLiteral = z3.literal("USER");
+var zVolumeInstructionLiteral = z3.literal("VOLUME");
+var zWorkDirInstructionLiteral = z3.literal("WORKDIR");
+var zValidInstructions = z3.union([
+  zNopInstructionLiteral,
+  zAddInstructionLiteral,
+  zArgInstructionLiteral,
+  zCmdInstructionLiteral,
+  zCommentInstructionLiteral,
+  zCopyInstructionLiteral,
+  zEntryPointInstructionLiteral,
+  zEnvInstructionLiteral,
+  zExposeInstructionLiteral,
+  zFromInstructionLiteral,
+  zHealthCheckInstructionLiteral,
+  zLabelInstructionLiteral,
+  zRunInstructionLiteral,
+  zShellInstructionLiteral,
+  zStopSignalInstructionLiteral,
+  zUserInstructionLiteral,
+  zVolumeInstructionLiteral,
+  zWorkDirInstructionLiteral
+]);
+var zBaseInstruction = z3.object({
+  type: z3.literal("instruction"),
+  instruction: zValidInstructions,
+  toString: z3.function().args().returns(z3.string())
+});
+
+// src/lib/common/classes/instructions/directive/schema.ts
+var zDirectiveInstruction = zBaseInstruction.extend({
+  type: z4.literal("directive"),
+  instruction: zCommentInstructionLiteral
+});
+var zSyntaxDirective = z4.literal("syntax");
+var zEscapeDirective = z4.literal("escape");
+var zValidDirective = z4.union([zSyntaxDirective, zEscapeDirective]);
+
+// src/lib/common/classes/instructions/directive/guards.ts
+var isEscapeDirective = (value) => zEscapeDirective.safeParse(value).success;
+var isSyntaxDirective = (value) => zSyntaxDirective.safeParse(value).success;
+var isValidDirective = (value) => zValidDirective.safeParse(value).success;
+
+// src/lib/common/classes/instructions/directive/class.ts
+var DirectiveInstruction = class {
+  type = "directive";
+  instruction = "#";
+  directiveType;
+  directiveValue;
+  constructor(directiveType, directiveValue) {
+    if (!isValidDirective(directiveType))
+      throw new Error(`Invalid directive type: ${String(directiveType)}`);
+    this.directiveType = directiveType;
+    if (isSyntaxDirective(directiveType) && !isDockerImageReference(directiveValue))
+      throw new Error("Invalid syntax directive value");
+    if (isEscapeDirective(directiveType) && !isString(directiveValue))
+      throw new Error("Invalid escape directive value");
+    this.directiveValue = directiveValue;
+  }
+  toString() {
+    return `# ${this.directiveType}=${this.directiveValue}`;
+  }
+};
+
 // src/lib/shared/utils.ts
 var generateErrorMessage = (baseErrorMessage, ...args) => {
   return args.reduce((c, e) => `${c} ${typeof e} ${JSON.stringify(e)}`, baseErrorMessage);
@@ -51,69 +208,13 @@ var AbstractBuildableInstruction = class extends AbstractBaseInstruction {
   }
 };
 
-// src/lib/shared/guards.ts
-import { z as z2 } from "zod";
-
-// src/lib/shared/schema.ts
-import { z } from "zod";
-
-// src/lib/shared/matching.ts
-var substVar = "\\$\\{.+\\}";
-var ImageRefRegExParts = "^((" + substVar + `|([\\w-]+(\\.[\\w-]+)*(:\\d{1,5})?))\\/)?(${substVar}\\/|([\\w-]+\\/)*)?(${substVar}|[\\w.-]+)((:[\\w/.-]+)|(@sha\\d{3}:[\\w/.-]+)|([:@]${substVar}))?$`;
-var DockerImageReferenceRE = new RegExp(ImageRefRegExParts);
-
-// src/lib/shared/schema.ts
-var zRequiredString = (message) => z.string().trim().regex(/.+/, message ?? "Invalid string input");
-var zUnixUserGroupNumericId = z.coerce.number({ invalid_type_error: "invalid numeric unix id" }).min(1).max(65535);
-var zUnixUserGroupStringId = z.string({ invalid_type_error: "invalid unix id string" }).refine((val) => zUnixUserGroupNumericId.safeParse(val).success);
-var zUnixUserGroupId = z.union([zUnixUserGroupNumericId, zUnixUserGroupStringId]);
-var zUnixUserGroupIdComboString = z.string({ invalid_type_error: "invalid unix id string tuple" }).regex(/\d{1,5}(:\d{1,5})/).refine((val) => val.includes(":") ? val.split(":").filter((e) => e != null && e !== "").length === 2 : true).refine((val) => val.split(":").every((e) => zUnixUserGroupNumericId.safeParse(e).success)).transform((val) => val.split(":").map((e) => Number(e)));
-var zFileAccessMode = z.union([z.number(), z.string()], { invalid_type_error: "invalid unix file access mode permission" }).refine((val) => /^[0-7]{3,4}$/.test(val.toString())).transform(String);
-var zUIDOpt = z.object({ uid: zUnixUserGroupId }, { invalid_type_error: "invalid unix uid opt" });
-var zGIDOpt = z.object({ gid: zUnixUserGroupId }, { invalid_type_error: "invalid unix gid opt" });
-var zUIDGIDTuple = z.union([z.tuple([zUnixUserGroupId]), z.tuple([zUnixUserGroupId, zUnixUserGroupId])], {
-  invalid_type_error: "invalid unix uid/gid tuple"
-});
-var zUIDGIDObj = zUIDOpt.extend({ gid: zUnixUserGroupId.optional() });
-var zRWOpt = z.object({ rw: z.boolean() });
-var zReadWriteOpt = z.object({ readwrite: z.boolean() });
-var zROOpt = z.object({ ro: z.boolean() });
-var zReadOnlyOpt = z.object({ readonly: z.boolean() });
-var zStringRecord = z.record(z.string(), z.coerce.string()).refine((val) => Object.keys(val).length > 0);
-var zPartialEnvVar = z.string().regex(/^([a-zA-Z_]\w*)(=.+)?$/);
-var zEnvVar = z.string().regex(/^([a-zA-Z_]\w*)=.+$/);
-var zPartialEnvVarArray = z.array(zPartialEnvVar).nonempty();
-var zEnvVarArray = z.array(zEnvVar).nonempty();
-var zPartialLabelVar = z.string().regex(/^([a-zA-Z_.][\w.]*)(=.+)?$/);
-var zLabelVar = z.string().regex(/^([a-zA-Z_.][\w.]*)=.+$/);
-var zPartialLabelVarArray = z.array(zPartialLabelVar).nonempty();
-var zLabelVarArray = z.array(zLabelVar).nonempty();
-var zNetworkProtocolTCP = z.literal("tcp");
-var zNetworkProtocolUDP = z.literal("udp");
-var zNetworkProtocols = z.union([zNetworkProtocolTCP, zNetworkProtocolUDP]);
-var zDockerImageReference = zRequiredString("Empty docker image resource location").min(2, "Docker image reference should be at least 2 characters").regex(DockerImageReferenceRE, "Invalid docker image reference");
-
-// src/lib/shared/guards.ts
-var isDockerImageReference = (value) => zDockerImageReference.safeParse(value).success;
-var isTrueBoolean = (value) => z2.literal(true).safeParse(value).success;
-var isString = (value) => zRequiredString().safeParse(value).success;
-var isStringArray = (value) => z2.array(zRequiredString()).nonempty().safeParse(value).success;
-var isObjectWithProperty = (value, property) => z2.object({
-  [property]: z2.unknown()
-}).required().refine((val) => Object.keys(val).length > 0).safeParse(value).success;
-var isEnvVar = (value) => zEnvVar.safeParse(value).success;
-var isEnvVarArray = (value) => zEnvVarArray.safeParse(value).success;
-var isPartialLabelVar = (value) => zPartialLabelVar.safeParse(value).success;
-var isPartialLabelVarArray = (value) => zPartialLabelVarArray.safeParse(value).success;
-var isStringRecord = (value) => zStringRecord.safeParse(value).success;
-
 // src/lib/instructions/arg/schema.ts
-import { z as z3 } from "zod";
-var zArgInstructionParamsObject = z3.object({
-  name: z3.string().trim().min(2),
-  value: z3.string().trim().min(2).optional()
+import { z as z5 } from "zod";
+var zArgInstructionParamsObject = z5.object({
+  name: z5.string().trim().min(2),
+  value: z5.string().trim().min(2).optional()
 });
-var zArgInstructionParams = z3.union([z3.string().trim().min(2), zArgInstructionParamsObject]);
+var zArgInstructionParams = z5.union([z5.string().trim().min(2), zArgInstructionParamsObject]);
 
 // src/lib/instructions/arg/guards.ts
 var isArgInstructionParamObject = (value) => {
@@ -159,59 +260,7 @@ var ArgInstruction = class extends AbstractBuildableInstruction {
 };
 
 // src/lib/common/classes/instructions/schema.ts
-import { z as z7 } from "zod";
-
-// src/lib/common/classes/instructions/generic/schema.ts
-import { z as z5 } from "zod";
-
-// src/lib/common/classes/instructions/base/schema.ts
-import { z as z4 } from "zod";
-var zNopInstruction = z4.literal("# NOP");
-var zAddInstruction = z4.literal("ADD");
-var zArgInstruction = z4.literal("ARG");
-var zCmdInstruction = z4.literal("CMD");
-var zCopyInstruction = z4.literal("COPY");
-var zEntryPointInstruction = z4.literal("ENTRYPOINT");
-var zEnvInstruction = z4.literal("ENV");
-var zExposeInstruction = z4.literal("EXPOSE");
-var zFromInstruction = z4.literal("FROM");
-var zHealthCheckInstruction = z4.literal("HEALTHCHECK");
-var zLabelInstruction = z4.literal("LABEL");
-var zRunInstruction = z4.literal("RUN");
-var zShellInstruction = z4.literal("SHELL");
-var zStopSignalInstruction = z4.literal("STOPSIGNAL");
-var zUserInstruction = z4.literal("USER");
-var zVolumeInstruction = z4.literal("VOLUME");
-var zWorkDirInstruction = z4.literal("WORKDIR");
-var zValidInstructions = z4.union([
-  zNopInstruction,
-  zAddInstruction,
-  zArgInstruction,
-  zCmdInstruction,
-  zCopyInstruction,
-  zEntryPointInstruction,
-  zEnvInstruction,
-  zExposeInstruction,
-  zFromInstruction,
-  zHealthCheckInstruction,
-  zLabelInstruction,
-  zRunInstruction,
-  zShellInstruction,
-  zStopSignalInstruction,
-  zUserInstruction,
-  zVolumeInstruction,
-  zWorkDirInstruction
-]);
-var zBaseInstruction = z4.object({
-  type: z4.literal("instruction"),
-  instruction: zValidInstructions,
-  toString: z4.function().args().returns(z4.string())
-});
-
-// src/lib/common/classes/instructions/generic/schema.ts
-var zGenericInstruction = zBaseInstruction.extend({
-  buildable: z5.literal(false)
-});
+import { z as z9 } from "zod";
 
 // src/lib/common/classes/instructions/buildable/schema.ts
 import { z as z6 } from "zod";
@@ -220,16 +269,34 @@ var zBuildableInstruction = zBaseInstruction.extend({
   setOnBuild: z6.function().args(z6.boolean().optional()).returns(z6.void())
 });
 
+// src/lib/common/classes/instructions/comment/schema.ts
+import { z as z7 } from "zod";
+var zCommentInstruction = zBaseInstruction.extend({
+  type: z7.literal("comment"),
+  instruction: zCommentInstructionLiteral
+});
+
+// src/lib/common/classes/instructions/generic/schema.ts
+import { z as z8 } from "zod";
+var zGenericInstruction = zBaseInstruction.extend({
+  buildable: z8.literal(false)
+});
+
 // src/lib/common/classes/instructions/schema.ts
-var zInstruction = z7.union([zGenericInstruction, zBuildableInstruction]);
+var zInstruction = z9.union([
+  zGenericInstruction,
+  zBuildableInstruction,
+  zCommentInstruction,
+  zDirectiveInstruction
+]);
 
 // src/lib/common/classes/instructions/guards.ts
 var isInstruction = (value) => zInstruction.safeParse(value).success;
 
 // src/lib/shared/coerce.ts
-import { z as z8 } from "zod";
+import { z as z10 } from "zod";
 var coerceString = (value) => {
-  return z8.coerce.string().parse(value);
+  return z10.coerce.string().parse(value);
 };
 var coerceStringArray = (value) => {
   if (!isStringArray(value) && !isString(value))
@@ -238,17 +305,17 @@ var coerceStringArray = (value) => {
 };
 
 // src/lib/instructions/add/schema.ts
-import { z as z9 } from "zod";
-var zAddInstructionSources = z9.union([z9.string(), z9.array(z9.string())]);
-var zAddInstructionDestination = z9.string();
-var zAddInstructionKeepGitDir = z9.boolean();
-var zAddInstructionChecksum = z9.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
-var zAddInstructionChown = z9.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
-var zAddInstructionChmod = z9.string().regex(/^[0-7]{3,4}$/).transform(Number);
-var zAddInstructionLink = z9.boolean();
-var zAddInstructionExclude = z9.string().regex(/^[/.a-z0-9_-]+/);
-var zAddInstructionExcludes = z9.array(zAddInstructionExclude);
-var zAddInstructionParamObject = z9.object({
+import { z as z11 } from "zod";
+var zAddInstructionSources = z11.union([z11.string(), z11.array(z11.string())]);
+var zAddInstructionDestination = z11.string();
+var zAddInstructionKeepGitDir = z11.boolean();
+var zAddInstructionChecksum = z11.string().regex(/^sha256:[0-9a-f]{64}/, "Invalid checksum");
+var zAddInstructionChown = z11.string().regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
+var zAddInstructionChmod = z11.string().regex(/^[0-7]{3,4}$/).transform(Number);
+var zAddInstructionLink = z11.boolean();
+var zAddInstructionExclude = z11.string().regex(/^[/.a-z0-9_-]+/);
+var zAddInstructionExcludes = z11.array(zAddInstructionExclude);
+var zAddInstructionParamObject = z11.object({
   sources: zAddInstructionSources,
   destination: zAddInstructionDestination,
   keepGitDir: zAddInstructionKeepGitDir.optional(),
@@ -259,10 +326,10 @@ var zAddInstructionParamObject = z9.object({
   exclude: zAddInstructionExclude.optional(),
   excludes: zAddInstructionExcludes.optional()
 });
-var zAddInstructionParams = z9.union(
+var zAddInstructionParams = z11.union(
   [
-    z9.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
-    z9.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
+    z11.array(zRequiredString(), { invalid_type_error: "Invalid Add Instruction string array" }).min(2, "Not enough Add Instruction string parameters"),
+    z11.tuple([zAddInstructionParamObject], { invalid_type_error: "Invalid Add Instruction param object" })
   ],
   { invalid_type_error: "Invalid Add Instruction param" }
 );
@@ -429,26 +496,26 @@ var CmdInstruction = class extends AbstractBuildableInstruction {
 };
 
 // src/lib/stage/schema.ts
-import { z as z11 } from "zod";
+import { z as z13 } from "zod";
 
 // src/lib/instructions/from/schema.ts
-import { z as z10 } from "zod";
+import { z as z12 } from "zod";
 var zFromInstructionPlatformParam = zRequiredString().min(2);
 var zFromInstructionAsParam = zRequiredString().min(2);
-var zFromInstructionObjectParam = z10.object({
+var zFromInstructionObjectParam = z12.object({
   from: zDockerImageReference,
   platform: zFromInstructionPlatformParam.optional(),
   as: zFromInstructionAsParam.optional()
 });
-var zFromInstructionParams = z10.union([zDockerImageReference, zFromInstructionObjectParam]);
+var zFromInstructionParams = z12.union([zDockerImageReference, zFromInstructionObjectParam]);
 
 // src/lib/stage/schema.ts
-var zStage = z11.object({
-  type: z11.literal("stage"),
-  id: z11.string()
+var zStage = z13.object({
+  type: z13.literal("stage"),
+  id: z13.string()
 });
 var zStageFromInstructionObjectParam = zFromInstructionObjectParam.omit({ from: true }).extend({ from: zStage });
-var zStageParams = z11.union([
+var zStageParams = z13.union([
   zDockerImageReference,
   zFromInstructionObjectParam,
   zStage,
@@ -461,17 +528,17 @@ var isStageParam = (value) => zStage.safeParse(value).success;
 var isStageFromInstructionObjectParam = (value) => zStageFromInstructionObjectParam.safeParse(value).success;
 
 // src/lib/instructions/copy/schema.ts
-import { z as z12 } from "zod";
-var zCopyInstructionSources = z12.union([zRequiredString(), z12.array(zRequiredString()).nonempty()]);
+import { z as z14 } from "zod";
+var zCopyInstructionSources = z14.union([zRequiredString(), z14.array(zRequiredString()).nonempty()]);
 var zCopyInstructionDestination = zRequiredString();
-var zCopyInstructionFrom = z12.union([zDockerImageReference, zStage]);
+var zCopyInstructionFrom = z14.union([zDockerImageReference, zStage]);
 var zCopyInstructionChown = zRequiredString().min(2).regex(/^(\d{1,5}|[a-z]{4,})(:(\d{1,5}|[a-z]{4,}))?$/);
-var zCopyInstructionChmod = z12.coerce.string().trim().regex(/^[0-7]{3,4}$/);
-var zCopyInstructionLink = z12.boolean();
-var zCopyInstructionParents = z12.boolean();
+var zCopyInstructionChmod = z14.coerce.string().trim().regex(/^[0-7]{3,4}$/);
+var zCopyInstructionLink = z14.boolean();
+var zCopyInstructionParents = z14.boolean();
 var zCopyInstructionExclude = zRequiredString().regex(/^[/.a-z0-9_-]+/);
-var zCopyInstructionExcludes = z12.array(zCopyInstructionExclude);
-var zCopyInstructionParamObject = z12.object({
+var zCopyInstructionExcludes = z14.array(zCopyInstructionExclude);
+var zCopyInstructionParamObject = z14.object({
   sources: zCopyInstructionSources,
   destination: zCopyInstructionDestination,
   from: zCopyInstructionFrom.optional(),
@@ -482,7 +549,7 @@ var zCopyInstructionParamObject = z12.object({
   exclude: zCopyInstructionExclude.optional(),
   excludes: zCopyInstructionExcludes.optional()
 });
-var zCopyInstructionParams = z12.tuple([z12.union([zRequiredString(), zCopyInstructionParamObject])]).rest(zRequiredString());
+var zCopyInstructionParams = z14.tuple([z14.union([zRequiredString(), zCopyInstructionParamObject])]).rest(zRequiredString());
 
 // src/lib/instructions/copy/guards.ts
 var isCopyInstructionSources = (value) => zCopyInstructionSources.safeParse(value).success;
@@ -696,31 +763,31 @@ var EnvInstruction = class extends AbstractBuildableInstruction {
 };
 
 // src/lib/instructions/expose/schema.ts
-import { z as z13 } from "zod";
-var zExposeInstructionPort = z13.coerce.number().min(1).max(65535);
-var zExposeInstructionProto = z13.union([z13.literal("tcp"), z13.literal("udp")]);
-var zExposeInstructionPortProtoString = z13.string().regex(/^(\d{1,5})(\/(tcp|udp))?$/).refine(
+import { z as z15 } from "zod";
+var zExposeInstructionPort = z15.coerce.number().min(1).max(65535);
+var zExposeInstructionProto = z15.union([z15.literal("tcp"), z15.literal("udp")]);
+var zExposeInstructionPortProtoString = z15.string().regex(/^(\d{1,5})(\/(tcp|udp))?$/).refine(
   (val) => {
     const splitVal = val.split("/");
     return zExposeInstructionPort.safeParse(splitVal[0]).success && zExposeInstructionProto.safeParse(splitVal[1]).success;
   },
   { message: "Invalid port protocol combination" }
 );
-var zExposeInstructionPortProtoTuple = z13.union([
-  z13.tuple([zExposeInstructionPort]),
-  z13.tuple([zExposeInstructionPort, zExposeInstructionProto])
+var zExposeInstructionPortProtoTuple = z15.union([
+  z15.tuple([zExposeInstructionPort]),
+  z15.tuple([zExposeInstructionPort, zExposeInstructionProto])
 ]);
-var zExposeInstructionPortProtoObject = z13.object({
+var zExposeInstructionPortProtoObject = z15.object({
   port: zExposeInstructionPort,
   proto: zExposeInstructionProto.optional()
 });
-var zExposeInstructionParam = z13.union([
+var zExposeInstructionParam = z15.union([
   zExposeInstructionPortProtoObject,
   zExposeInstructionPortProtoTuple,
   zExposeInstructionPortProtoString,
   zExposeInstructionPort
 ]);
-var zExposeInstructionParams = z13.array(zExposeInstructionParam);
+var zExposeInstructionParams = z15.array(zExposeInstructionParam);
 
 // src/lib/instructions/expose/guards.ts
 var isExposeInstructionPortProtoString = (exposes) => {
@@ -836,19 +903,19 @@ var FromInstruction = class extends AbstractGenericInstruction {
 };
 
 // src/lib/instructions/healthcheck/schema.ts
-import { z as z14 } from "zod";
+import { z as z16 } from "zod";
 var zHealthCheckDurationParam = zRequiredString().regex(/^\d+(ms|s|m|h)/, "Invalid duration parameter");
-var zHealthCheckCmdsNone = z14.literal("NONE");
-var zHealthCheckCmdsString = z14.string().min(3);
-var zHealthCheckCmdsStringArray = z14.array(z14.string().min(3));
-var zHealthCheckCmdsParam = z14.union(
+var zHealthCheckCmdsNone = z16.literal("NONE");
+var zHealthCheckCmdsString = z16.string().min(3);
+var zHealthCheckCmdsStringArray = z16.array(z16.string().min(3));
+var zHealthCheckCmdsParam = z16.union(
   [zHealthCheckCmdsNone, zHealthCheckCmdsString, zHealthCheckCmdsStringArray],
   {
     invalid_type_error: "Invalid health check instruction parameter(s)"
   }
 );
-var zHealthCheckRetriesParam = z14.coerce.number({ invalid_type_error: "Invalid retries parameter" });
-var zHealthCheckParamsObject = z14.object(
+var zHealthCheckRetriesParam = z16.coerce.number({ invalid_type_error: "Invalid retries parameter" });
+var zHealthCheckParamsObject = z16.object(
   {
     cmds: zHealthCheckCmdsParam,
     interval: zHealthCheckDurationParam.optional(),
@@ -859,7 +926,7 @@ var zHealthCheckParamsObject = z14.object(
   },
   { invalid_type_error: "Invalid health check parameters object" }
 );
-var zHealthCheckParams = z14.union([
+var zHealthCheckParams = z16.union([
   zHealthCheckCmdsNone,
   zHealthCheckCmdsString,
   zHealthCheckCmdsStringArray,
@@ -984,38 +1051,38 @@ var coerceRunInstructionMountParam = (value) => {
 };
 
 // src/lib/instructions/run/schema.ts
-import { z as z15 } from "zod";
-var zRunInstructionBooleanFields = z15.union([
-  z15.literal("rw"),
-  z15.literal("readwrite"),
-  z15.literal("ro"),
-  z15.literal("readonly"),
-  z15.literal("required")
+import { z as z17 } from "zod";
+var zRunInstructionBooleanFields = z17.union([
+  z17.literal("rw"),
+  z17.literal("readwrite"),
+  z17.literal("ro"),
+  z17.literal("readonly"),
+  z17.literal("required")
 ]);
-var zRunInstructionCacheSharingTypes = z15.union([
-  z15.literal("shared"),
-  z15.literal("private"),
-  z15.literal("locked")
+var zRunInstructionCacheSharingTypes = z17.union([
+  z17.literal("shared"),
+  z17.literal("private"),
+  z17.literal("locked")
 ]);
-var zRunInstructions = z15.union([zRequiredString(), z15.array(zRequiredString()).nonempty()]);
-var zRunInstructionMountFrom = z15.union([zDockerImageReference, zStage]);
-var zRunInstructionMountTypeBindCommon = z15.object({
-  type: z15.literal("bind"),
-  target: z15.string().min(3),
+var zRunInstructions = z17.union([zRequiredString(), z17.array(zRequiredString()).nonempty()]);
+var zRunInstructionMountFrom = z17.union([zDockerImageReference, zStage]);
+var zRunInstructionMountTypeBindCommon = z17.object({
+  type: z17.literal("bind"),
+  target: z17.string().min(3),
   from: zRunInstructionMountFrom.optional(),
-  source: z15.string().min(3).optional()
+  source: z17.string().min(3).optional()
 });
 var zRunInstructionMountTypeBindReadWrite = zRunInstructionMountTypeBindCommon.merge(zReadWriteOpt);
 var zRunInstructionMountTypeBindRW = zRunInstructionMountTypeBindCommon.merge(zRWOpt);
-var zRunInstructionMountTypeBind = z15.union([
+var zRunInstructionMountTypeBind = z17.union([
   zRunInstructionMountTypeBindReadWrite.strict(),
   zRunInstructionMountTypeBindRW.strict(),
   zRunInstructionMountTypeBindCommon.strict()
 ]);
-var zRunInstructionMountTypeCacheCommon = z15.object({
-  type: z15.literal("cache"),
+var zRunInstructionMountTypeCacheCommon = z17.object({
+  type: z17.literal("cache"),
   target: zRequiredString(),
-  id: z15.string().optional(),
+  id: z17.string().optional(),
   sharing: zRunInstructionCacheSharingTypes.optional(),
   from: zRunInstructionMountFrom.optional(),
   source: zRequiredString().optional(),
@@ -1025,31 +1092,31 @@ var zRunInstructionMountTypeCacheCommon = z15.object({
 });
 var zRunInstructionMountTypeCacheReadOnly = zRunInstructionMountTypeCacheCommon.merge(zReadOnlyOpt);
 var zRunInstructionMountTypeCacheRO = zRunInstructionMountTypeCacheCommon.merge(zROOpt);
-var zRunInstructionMountTypeCache = z15.union([
+var zRunInstructionMountTypeCache = z17.union([
   zRunInstructionMountTypeCacheReadOnly.strict(),
   zRunInstructionMountTypeCacheRO.strict(),
   zRunInstructionMountTypeCacheCommon.strict()
 ]);
-var zRunInstructionMountTypeUnixCommon = z15.object({
+var zRunInstructionMountTypeUnixCommon = z17.object({
   id: zRequiredString().optional(),
   target: zRequiredString().optional(),
-  required: z15.boolean().optional(),
+  required: z17.boolean().optional(),
   mode: zFileAccessMode.optional(),
   uid: zUnixUserGroupNumericId.optional(),
   gid: zUnixUserGroupNumericId.optional()
 });
 var zRunInstructionMountTypeSecret = zRunInstructionMountTypeUnixCommon.extend({
-  type: z15.literal("secret")
+  type: z17.literal("secret")
 });
 var zRunInstructionMountTypeSSH = zRunInstructionMountTypeUnixCommon.extend({
-  type: z15.literal("ssh")
+  type: z17.literal("ssh")
 });
-var zRunInstructionMountTypeTmpFS = z15.object({
-  type: z15.literal("tmpfs"),
-  target: z15.string(),
-  size: z15.number().min(1)
+var zRunInstructionMountTypeTmpFS = z17.object({
+  type: z17.literal("tmpfs"),
+  target: z17.string(),
+  size: z17.number().min(1)
 });
-var zRunInstructionMountType = z15.union([
+var zRunInstructionMountType = z17.union([
   zRunInstructionMountTypeBindReadWrite.strict(),
   zRunInstructionMountTypeBindRW.strict(),
   zRunInstructionMountTypeBindCommon.strict(),
@@ -1060,19 +1127,19 @@ var zRunInstructionMountType = z15.union([
   zRunInstructionMountTypeSecret.strict(),
   zRunInstructionMountTypeTmpFS.strict()
 ]);
-var zRunInstructionNetworkType = z15.union([z15.literal("default"), z15.literal("none"), z15.literal("host")]);
-var zRunInstructionSecurityType = z15.union([z15.literal("sandbox"), z15.literal("insecure")]);
-var zRunInstructionParamsObject = z15.object({
+var zRunInstructionNetworkType = z17.union([z17.literal("default"), z17.literal("none"), z17.literal("host")]);
+var zRunInstructionSecurityType = z17.union([z17.literal("sandbox"), z17.literal("insecure")]);
+var zRunInstructionParamsObject = z17.object({
   commands: zRunInstructions,
   mount: zRunInstructionMountType.optional(),
   network: zRunInstructionNetworkType.optional(),
   security: zRunInstructionSecurityType.optional()
 });
-var zRunInstructionParams = z15.union([
-  z15.tuple([zRequiredString()]),
-  z15.tuple([zRequiredString()]).rest(zRequiredString()),
-  z15.tuple([z15.array(zRequiredString()).nonempty()]),
-  z15.tuple([zRunInstructionParamsObject])
+var zRunInstructionParams = z17.union([
+  z17.tuple([zRequiredString()]),
+  z17.tuple([zRequiredString()]).rest(zRequiredString()),
+  z17.tuple([z17.array(zRequiredString()).nonempty()]),
+  z17.tuple([zRunInstructionParamsObject])
 ]);
 
 // src/lib/instructions/run/guards.ts
@@ -1197,11 +1264,11 @@ var ShellInstruction = class extends AbstractBuildableInstruction {
 };
 
 // src/lib/instructions/stopsignal/schema.ts
-import { z as z16 } from "zod";
-var zStopSignalString = z16.string().toUpperCase().regex(
+import { z as z18 } from "zod";
+var zStopSignalString = z18.string().toUpperCase().regex(
   /(SIG)?(ABRT|ALRM|BUS|CHLD|CLD|CONT|FPE|HUP|ILL|INT|IO|IOT|KILL|LOST|PIPE|POLL|PROF|PWR|QUIT|RTMAX|RTMIN|SEGV|STKFLT|STKSZ|STOP|SYS|TERM|TRAP|TSTP|TTIN|TTOU|UNUSED|URG|USR1|USR2|VTALRM|WINCH|XCPU|XFSZ)/
 );
-var zStopSignalNumber = z16.number().min(1).max(31);
+var zStopSignalNumber = z18.number().min(1).max(31);
 
 // src/lib/instructions/stopsignal/guards.ts
 var isStopSignalString = (value) => zStopSignalString.safeParse(value).success;
@@ -1231,21 +1298,21 @@ var StopSignalInstruction = class extends AbstractBuildableInstruction {
 };
 
 // src/lib/instructions/user/schema.ts
-import { z as z17 } from "zod";
-var zUserInstructionPrimaryParam = z17.union([
+import { z as z19 } from "zod";
+var zUserInstructionPrimaryParam = z19.union([
   zUnixUserGroupIdComboString,
   zUIDGIDTuple,
-  z17.array(zUnixUserGroupNumericId).nonempty().max(2),
+  z19.array(zUnixUserGroupNumericId).nonempty().max(2),
   zUnixUserGroupNumericId
 ]);
-var zUserInstructionParams = z17.union(
+var zUserInstructionParams = z19.union(
   [
-    z17.tuple([zUIDGIDObj], { invalid_type_error: "Invalid UIDGIDObj" }),
-    z17.tuple([zUnixUserGroupIdComboString], { invalid_type_error: "Invalid UnixUserGroupIdComboString" }),
-    z17.tuple([zUIDGIDTuple], { invalid_type_error: "Invalid UIDGIDTuple" }),
-    z17.tuple(
+    z19.tuple([zUIDGIDObj], { invalid_type_error: "Invalid UIDGIDObj" }),
+    z19.tuple([zUnixUserGroupIdComboString], { invalid_type_error: "Invalid UnixUserGroupIdComboString" }),
+    z19.tuple([zUIDGIDTuple], { invalid_type_error: "Invalid UIDGIDTuple" }),
+    z19.tuple(
       [
-        z17.array(zUnixUserGroupId, {
+        z19.array(zUnixUserGroupId, {
           invalid_type_error: "Invalid UnixUserGroupId array elements"
         }).nonempty().max(2)
       ],
@@ -1253,14 +1320,14 @@ var zUserInstructionParams = z17.union(
         invalid_type_error: "Invalid UnixUserGroupId array"
       }
     ),
-    z17.tuple([zUnixUserGroupId, zUnixUserGroupId], {
+    z19.tuple([zUnixUserGroupId, zUnixUserGroupId], {
       invalid_type_error: "Invalid UnixUserGroupId,UnixUserGroupId tuple"
     }),
-    z17.tuple([zUnixUserGroupId], { invalid_type_error: "Invalid UnixUserGroupId tuple" }),
-    z17.tuple([zRequiredString(), zRequiredString()], {
+    z19.tuple([zUnixUserGroupId], { invalid_type_error: "Invalid UnixUserGroupId tuple" }),
+    z19.tuple([zRequiredString(), zRequiredString()], {
       invalid_type_error: "Invalid RequiredString,RequiredString tuple"
     }),
-    z17.tuple([zRequiredString()], { invalid_type_error: "Invalid RequiredString tuple" })
+    z19.tuple([zRequiredString()], { invalid_type_error: "Invalid RequiredString tuple" })
   ],
   { invalid_type_error: "Invalid UserInstructionParams" }
 );
@@ -1431,6 +1498,9 @@ var Stage = class {
   withCmd(...cmdParams) {
     return this.withInstruction(new CmdInstruction(...cmdParams));
   }
+  withComment(comment) {
+    return this.withInstruction(new CommentInstruction(comment));
+  }
   withCopy(...copyInstructionParams) {
     return this.withInstruction(new CopyInstruction(...copyInstructionParams));
   }
@@ -1486,14 +1556,26 @@ var Stage = class {
 
 // src/dct/class.ts
 var DockerConfigTool = class {
-  args = [];
+  directives = [];
   stack = [];
   constructor(stackParam) {
     this.stack = stackParam ?? [];
   }
   withArg(arg) {
     const argInstruction = new ArgInstruction(arg);
-    this.args.push(argInstruction);
+    if (this.stack.length > 0 && this.stack.some((e) => e != null && e.type === "stage"))
+      throw new Error("ARGs can only be added before stages");
+    this.stack.push(argInstruction);
+    return this;
+  }
+  withComment(comment) {
+    const commentInstruction = new CommentInstruction(comment);
+    this.stack.push(commentInstruction);
+    return this;
+  }
+  withDirective(directiveType, directiveValue) {
+    const directiveInstruction = new DirectiveInstruction(directiveType, directiveValue);
+    this.directives.push(directiveInstruction);
     return this;
   }
   withStage(fromParam) {
@@ -1504,9 +1586,7 @@ var DockerConfigTool = class {
   toString() {
     if (this.stack.length === 0)
       throw new Error("Empty stack. Nothing to print.");
-    return (this.args.length > 0 ? [...this.args, ...this.stack] : this.stack).map((e) => {
-      return e.toString();
-    }).join("\n\n");
+    return (this.directives.length > 0 ? [...this.directives, ...this.stack] : this.stack).map((e) => e.toString()).join("\n\n");
   }
 };
 export {
