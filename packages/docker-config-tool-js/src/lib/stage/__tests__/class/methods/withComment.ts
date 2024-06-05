@@ -14,6 +14,14 @@ describe(`DCT`, () => {
                             expect(stage.toString()).toBeTruthy()
                         })
 
+                        test(`create a stage from string and add an empty comment`, () => {
+                            const stage = new Stage('scratch')
+
+                            stage.withComment('')
+
+                            expect(stage.toString()).toBeTruthy()
+                        })
+
                         test(`don't append an invalid comment`, () => {
                             const testVal = undefined
 
@@ -21,18 +29,6 @@ describe(`DCT`, () => {
                                 const stage = new Stage('scratch')
 
                                 // @ts-expect-error invalid
-                                stage.withComment(testVal)
-
-                                stage.toString()
-                            }).toThrow()
-                        })
-
-                        test(`don't append an empty comment`, () => {
-                            const testVal = ''
-
-                            expect(() => {
-                                const stage = new Stage('scratch')
-
                                 stage.withComment(testVal)
 
                                 stage.toString()
