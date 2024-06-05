@@ -1,5 +1,11 @@
 # @tyisi/docker-config-tool-js
 
+## 1.2.0
+
+### Minor Changes
+
+- ONBUILD support and improved persistent IDs
+
 ## 1.1.0
 
 ### Minor Changes
