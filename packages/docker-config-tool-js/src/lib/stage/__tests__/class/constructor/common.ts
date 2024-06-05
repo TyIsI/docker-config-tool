@@ -118,7 +118,7 @@ describe(`DCT`, () => {
                         test('automatically generated id', () => {
                             const stage = new Stage('scratch')
 
-                            expect(stage.id).toMatch('stage-4c81bf7e')
+                            expect(stage.id).toMatch('stage-d505e1ae')
                         })
                     })
                 })
