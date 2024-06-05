@@ -1,11 +1,19 @@
-const { DockerConfigTool } = require('../../dist/index.js')
+const { DockerConfigTool } = require('../../../dist/index.js')
 
 const dct = new DockerConfigTool()
+
+dct.withComment('This file uses a syntax directive')
+
+dct.withDirective('syntax', 'docker/dockerfile:1')
+
+dct.withComment('Pre stage args')
 
 dct.withArg('PRIVATE_REGISTRY_PROXY_URI')
 dct.withArg('TAG')
 
 const workspaceStage = dct.withStage({ from: 'scratch', as: 'workspace' })
+
+workspaceStage.withComment('workspace stage')
 
 workspaceStage.withCopy('.', '/workspace').setLinked()
 

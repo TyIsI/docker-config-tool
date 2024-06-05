@@ -1,8 +1,16 @@
+# syntax=docker/dockerfile:1
+
+# This file uses a syntax directive
+
+# Pre stage args
+
 ARG PRIVATE_REGISTRY_PROXY_URI
 
 ARG TAG
 
 FROM scratch AS workspace
+
+# workspace stage
 
 COPY --link . /workspace
 
