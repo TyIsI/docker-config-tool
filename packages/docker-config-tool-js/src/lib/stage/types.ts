@@ -1,9 +1,10 @@
 import { type z } from 'zod'
 
+import { type ICommentInstruction } from '../common/classes/instructions/comment/types'
+import { type Instruction, type Instructions } from '../common/classes/instructions/types'
 import { type AddInstructionParams, type IAddInstruction } from '../instructions/add/types'
 import { type ArgInstructionParams, type IArgInstruction } from '../instructions/arg/types'
 import { type CmdInstructionParams, type ICmdInstruction } from '../instructions/cmd/types'
-import { type Instruction, type Instructions } from '../common/classes/instructions/types'
 import { type CopyInstructionParams, type ICopyInstruction } from '../instructions/copy/types'
 import { type EntryPointInstructionParams, type IEntryPointInstruction } from '../instructions/entrypoint/types'
 import { type EnvInstructionParams, type IEnvInstruction } from '../instructions/env/types'
@@ -32,6 +33,8 @@ export interface IStage {
     withArg: (argParam: ArgInstructionParams) => IArgInstruction
 
     withCmd: (...cmdParams: CmdInstructionParams) => ICmdInstruction
+
+    withComment: (comment: string) => ICommentInstruction
 
     withCopy: (...copyParams: CopyInstructionParams) => ICopyInstruction
 

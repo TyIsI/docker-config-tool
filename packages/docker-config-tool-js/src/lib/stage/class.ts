@@ -1,3 +1,5 @@
+import { CommentInstruction } from '../common/classes/instructions/comment/class'
+import { type ICommentInstruction } from '../common/classes/instructions/comment/types'
 import { isInstruction } from '../common/classes/instructions/guards'
 import { type Instruction } from '../common/classes/instructions/types'
 import { AddInstruction } from '../instructions/add/class'
@@ -64,6 +66,7 @@ export class Stage implements IStage {
     private getRandomId(): string {
         const stack = new Error('getRandomId').stack
 
+        /* istanbul ignore next */
         if (stack == null) return this.forceRandomId()
 
         const cwd = process.cwd()
@@ -108,6 +111,10 @@ export class Stage implements IStage {
 
     withCmd(...cmdParams: CmdInstructionParams): ICmdInstruction {
         return this.withInstruction<CmdInstruction>(new CmdInstruction(...cmdParams))
+    }
+
+    withComment(comment: string): ICommentInstruction {
+        return this.withInstruction<CommentInstruction>(new CommentInstruction(comment))
     }
 
     withCopy(...copyInstructionParams: CopyInstructionParams): ICopyInstruction {

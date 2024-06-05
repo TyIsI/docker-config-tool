@@ -13,6 +13,16 @@ describe(`DCT`, () => {
 
                     expect(dct.toString()).toMatch(`ARG TESTARG\n\nFROM scratch AS ${stage.id}`)
                 })
+
+                test(`don't add an ARG if there's already a stage`, () => {
+                    expect(() => {
+                        const dct = new DockerConfigTool()
+
+                        dct.withStage('scratch')
+
+                        dct.withArg('TESTARG')
+                    }).toThrow()
+                })
             })
         })
     })

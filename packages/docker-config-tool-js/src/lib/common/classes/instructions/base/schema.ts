@@ -1,41 +1,43 @@
 import { z } from 'zod'
 
-export const zNopInstruction = z.literal('# NOP')
-export const zAddInstruction = z.literal('ADD')
-export const zArgInstruction = z.literal('ARG')
-export const zCmdInstruction = z.literal('CMD')
-export const zCopyInstruction = z.literal('COPY')
-export const zEntryPointInstruction = z.literal('ENTRYPOINT')
-export const zEnvInstruction = z.literal('ENV')
-export const zExposeInstruction = z.literal('EXPOSE')
-export const zFromInstruction = z.literal('FROM')
-export const zHealthCheckInstruction = z.literal('HEALTHCHECK')
-export const zLabelInstruction = z.literal('LABEL')
-export const zRunInstruction = z.literal('RUN')
-export const zShellInstruction = z.literal('SHELL')
-export const zStopSignalInstruction = z.literal('STOPSIGNAL')
-export const zUserInstruction = z.literal('USER')
-export const zVolumeInstruction = z.literal('VOLUME')
-export const zWorkDirInstruction = z.literal('WORKDIR')
+export const zNopInstructionLiteral = z.literal('# NOP')
+export const zAddInstructionLiteral = z.literal('ADD')
+export const zArgInstructionLiteral = z.literal('ARG')
+export const zCmdInstructionLiteral = z.literal('CMD')
+export const zCommentInstructionLiteral = z.literal('#')
+export const zCopyInstructionLiteral = z.literal('COPY')
+export const zEntryPointInstructionLiteral = z.literal('ENTRYPOINT')
+export const zEnvInstructionLiteral = z.literal('ENV')
+export const zExposeInstructionLiteral = z.literal('EXPOSE')
+export const zFromInstructionLiteral = z.literal('FROM')
+export const zHealthCheckInstructionLiteral = z.literal('HEALTHCHECK')
+export const zLabelInstructionLiteral = z.literal('LABEL')
+export const zRunInstructionLiteral = z.literal('RUN')
+export const zShellInstructionLiteral = z.literal('SHELL')
+export const zStopSignalInstructionLiteral = z.literal('STOPSIGNAL')
+export const zUserInstructionLiteral = z.literal('USER')
+export const zVolumeInstructionLiteral = z.literal('VOLUME')
+export const zWorkDirInstructionLiteral = z.literal('WORKDIR')
 
 export const zValidInstructions = z.union([
-    zNopInstruction,
-    zAddInstruction,
-    zArgInstruction,
-    zCmdInstruction,
-    zCopyInstruction,
-    zEntryPointInstruction,
-    zEnvInstruction,
-    zExposeInstruction,
-    zFromInstruction,
-    zHealthCheckInstruction,
-    zLabelInstruction,
-    zRunInstruction,
-    zShellInstruction,
-    zStopSignalInstruction,
-    zUserInstruction,
-    zVolumeInstruction,
-    zWorkDirInstruction
+    zNopInstructionLiteral,
+    zAddInstructionLiteral,
+    zArgInstructionLiteral,
+    zCmdInstructionLiteral,
+    zCommentInstructionLiteral,
+    zCopyInstructionLiteral,
+    zEntryPointInstructionLiteral,
+    zEnvInstructionLiteral,
+    zExposeInstructionLiteral,
+    zFromInstructionLiteral,
+    zHealthCheckInstructionLiteral,
+    zLabelInstructionLiteral,
+    zRunInstructionLiteral,
+    zShellInstructionLiteral,
+    zStopSignalInstructionLiteral,
+    zUserInstructionLiteral,
+    zVolumeInstructionLiteral,
+    zWorkDirInstructionLiteral
 ])
 
 export const zBaseInstruction = z.object({
