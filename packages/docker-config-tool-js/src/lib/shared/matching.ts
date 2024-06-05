@@ -11,7 +11,7 @@ const ImageRefRegExParts =
     ')' +
     '\\/)?' +
     `(${substVar}\\/|([\\w-]+\\/)*)?` + // Path
-    `(${substVar}|[\\w.-]+)` + // Image
+    `(${substVar}|[a-zA-Z]\\w+[\\w.-]+)` + // Image
     // Tag OR Digest
     '(' +
     '(:[\\w/.-]+)' + // Tag
